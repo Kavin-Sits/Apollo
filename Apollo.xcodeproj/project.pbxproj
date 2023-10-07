@@ -16,6 +16,7 @@
 		8AB2E2ED2AD0DEEE0066AB1A /* ApolloTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2EC2AD0DEEE0066AB1A /* ApolloTests.swift */; };
 		8AB2E2F72AD0DEEE0066AB1A /* ApolloUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2F62AD0DEEE0066AB1A /* ApolloUITests.swift */; };
 		8AB2E2F92AD0DEEE0066AB1A /* ApolloUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2F82AD0DEEE0066AB1A /* ApolloUITestsLaunchTests.swift */; };
+		8AB2E3062AD0E3180066AB1A /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AB2E3052AD0E3180066AB1A /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		8AB2E2F22AD0DEEE0066AB1A /* ApolloUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApolloUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AB2E2F62AD0DEEE0066AB1A /* ApolloUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloUITests.swift; sourceTree = "<group>"; };
 		8AB2E2F82AD0DEEE0066AB1A /* ApolloUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		8AB2E3052AD0E3180066AB1A /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 			children = (
 				8AB2E2D62AD0DEEA0066AB1A /* ApolloApp.swift */,
 				8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */,
+				8AB2E3052AD0E3180066AB1A /* Launch Screen.storyboard */,
 				8AB2E2DA2AD0DEED0066AB1A /* Assets.xcassets */,
 				8AB2E2DF2AD0DEED0066AB1A /* Persistence.swift */,
 				8AB2E2E12AD0DEED0066AB1A /* Apollo.xcdatamodeld */,
@@ -237,6 +240,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AB2E3062AD0E3180066AB1A /* Launch Screen.storyboard in Resources */,
 				8AB2E2DE2AD0DEED0066AB1A /* Preview Assets.xcassets in Resources */,
 				8AB2E2DB2AD0DEED0066AB1A /* Assets.xcassets in Resources */,
 			);
@@ -436,6 +440,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -465,6 +470,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
