@@ -9,8 +9,13 @@ import Foundation
 import SwiftUI
 
 struct CardView: View {
+    
+    let newsImg: String
+    let title: String
+    let subTitle: String
+    
     var body: some View {
-        Image(.bidenPhoto)
+        Image(newsImg)
             .resizable()
             .scaledToFill()
             .frame(width:350, height: 650)
@@ -18,7 +23,7 @@ struct CardView: View {
             .cornerRadius(24)
             .overlay(
                 VStack(alignment: .center, spacing: 12){
-                    Text("How Biden’s Promises to Reverse Trump’s Immigration Policies Crumbled")
+                    Text(title)
                         .foregroundColor(.white)
                         .font(.headline)
                         .fontWeight(.bold)
@@ -31,7 +36,7 @@ struct CardView: View {
                                 .frame(height:1),
                             alignment:.bottom
                         )
-                    Text("President Biden has tried to contain a surge of migration by embracing, or at least tolerating, some of his predecessor’s approaches.")
+                    Text(subTitle)
                         .foregroundColor(.black)
                         .font(.caption)
                         .fontWeight(.bold)
@@ -52,5 +57,5 @@ struct CardView: View {
 
 #Preview {
     
-    CardView().previewLayout(.fixed(width: 375, height: 600)).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    CardView(newsImg: "BidenPhoto", title: "How Biden’s Promises to Reverse Trump’s Immigration Policies Crumbled", subTitle: "President Biden has tried to contain a surge of migration by embracing, or at least tolerating, some of his predecessor’s approaches.").previewLayout(.fixed(width: 375, height: 600)).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
