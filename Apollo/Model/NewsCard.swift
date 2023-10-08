@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
-struct Destination{
-    
+struct NewsCard{
+    var newsImg:String
+    var title:String
+    var subTitle:String
 }
