@@ -10,9 +10,6 @@ import SwiftUI
 struct HeaderView: View {
     var body: some View {
         VStack(spacing: 0){
-            Text("Apollo")
-                .font(.title)
-                .bold()
             HStack{
                 VStack{
                     HStack{
@@ -37,7 +34,11 @@ struct HeaderView: View {
                 })
                 .accentColor(Color.primary)
             }
-            .padding()
+            .padding(10)
+            Text("What news would you like to view today?")
+                .font(.title3)
+                .multilineTextAlignment(.center)
+                .bold()
         }
     }
 }
