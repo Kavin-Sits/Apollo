@@ -11,14 +11,10 @@ import SwiftUI
 struct CardView: View {
     
     let article: Article
-//    let newsImg: String
-//    let title: String
-//    let subTitle: String
     
     var body: some View {
-        VStack {
-            AsyncImage(url: article.imageURL){
-                phase in
+        VStack(alignment: .leading, spacing: 16, content: {
+            AsyncImage(url: article.imageURL){ phase in
                 switch phase {
                 case .empty:
                     HStack{
@@ -29,7 +25,7 @@ struct CardView: View {
                 case .success(let image):
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: .fill)
                 case .failure:
                     HStack{
                         Spacer()
@@ -41,64 +37,55 @@ struct CardView: View {
                     fatalError()
                 }
             }
-            .frame(width:350, height: 175)
-            .background(Color.white)
+            .frame(minHeight:200, maxHeight: 300)
+            .background(Color.gray.opacity(0.3))
             .clipped()
             
             VStack(alignment: .leading, spacing: 8, content: {
                 Text(article.title)
                     .font(.headline)
+                    .lineLimit(3)
                 
                 Text(article.descriptionText)
                     .font(.subheadline)
+                    .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
+                
+                
+                HStack{
+                    Text(article.captionText)
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                    
+                    Spacer()
+                    
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "bookmark")
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Button {
+                        presentSharesheet(url: article.articleURL)
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                    .buttonStyle(.bordered)
+                }
             })
             .padding([.horizontal, .bottom])
             
-            HStack{
-                Text(article.captionText)
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
-            }
-        }
-        .cornerRadius(24)
-        .background()
-        /*Image(newsImg)
-            .resizable()
-            .scaledToFill()
-            .frame(width:350, height: 650)
-            .clipped()
-            .cornerRadius(24)
-            .overlay(
-                VStack(alignment: .center, spacing: 12){
-                    Text(title)
-                        .foregroundColor(.white)
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .shadow(radius: 1)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .overlay(
-                            Rectangle()
-                                .fill(Color.white)
-                                .frame(height:1),
-                            alignment:.bottom
-                        )
-                    Text(subTitle)
-                        .foregroundColor(.black)
-                        .font(.caption)
-                        .fontWeight(.bold)
-                        .frame(minWidth: 85)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(
-                            Rectangle().fill(Color.white)
-                                .opacity(0.7)
-                        )
-                }
-                    .frame(minWidth: 280)
-                    .padding(.bottom, 50),
-                alignment: .bottom
-            )*/
+        })
+    }
+}
+
+extension View{
+    func presentSharesheet(url: URL){
+        let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        (UIApplication.shared.connectedScenes.first as? UIWindowScene)?
+            .keyWindow?
+            .rootViewController?
+            .present(activityVC, animated: true)
     }
 }
 
@@ -108,6 +95,6 @@ struct CardView: View {
             CardView(article: .previewData[0])
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
+        .listStyle(.plain)
     }
-//    CardView(article: .previewData[0]).previewLayout(.fixed(width: 375, height: 600)).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

@@ -13,25 +13,26 @@ struct ArticleSpreadView: View {
     
     var body: some View {
         VStack {
-            HeaderView()
-            ZStack(alignment: .center, content: {
+            List {
                 ForEach(articles) { article in
-                    CardView(article: article).frame(width: 350, height: 400)
+                    CardView(article: article)
                         .onTapGesture {
                             selectedArticle = article
                         }
                 }
-            }).padding()
-                .sheet(item: $selectedArticle, content: {
-                    SafariView(url: $0.articleURL)
-                })
-            Spacer()
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowSeparator(.hidden)
+            }
+            .listStyle(.plain)
+            .sheet(item: $selectedArticle, content: {
+                SafariView(url: $0.articleURL)
+            })
         }
     }
 }
 
 #Preview {
     NavigationView {
-        ArticleSpreadView(articles: Article.previewData).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        ArticleSpreadView(articles: Article.previewData)//.environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
