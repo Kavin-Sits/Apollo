@@ -14,44 +14,47 @@ struct OldCardView: View {
     let subTitle: String
     
     var body: some View {
-        VStack{
-            Image(newsImg)
-                .resizable()
-                .scaledToFill()
-                .frame(width:350, height: 650)
-                .clipped()
-                .cornerRadius(24)
-                .overlay(
-                    VStack(alignment: .center, spacing: 12){
-                        Text(title)
-                            .foregroundColor(.white)
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .shadow(radius: 1)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .overlay(
-                                Rectangle()
-                                    .fill(Color.white)
-                                    .frame(height:1),
-                                alignment:.bottom
-                            )
-                        Text(subTitle)
-                            .foregroundColor(.black)
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .frame(minWidth: 85)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .background(
-                                Rectangle().fill(Color.white)
-                                    .opacity(0.7)
-                            )
-                    }
-                        .frame(minWidth: 280)
-                        .padding(.bottom, 50),
-                    alignment: .bottom
-                )
+        NavigationStack {
+            VStack{
+                Image(newsImg)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width:350, height: 650)
+                    .clipped()
+                    .cornerRadius(24)
+                    .overlay(
+                        VStack(alignment: .center, spacing: 12){
+                            Text(title)
+                                .foregroundColor(.white)
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .shadow(radius: 1)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 4)
+                                .overlay(
+                                    Rectangle()
+                                        .fill(Color.white)
+                                        .frame(height:1),
+                                    alignment:.bottom
+                                )
+                            Text(subTitle)
+                                .foregroundColor(.black)
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .frame(minWidth: 85)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(
+                                    Rectangle().fill(Color.white)
+                                        .opacity(0.7)
+                                )
+                        }
+                            .frame(minWidth: 280)
+                            .padding(.bottom, 50),
+                        alignment: .bottom
+                    )
+            }
+            NavigationLink("nextCard") { OldCardView(newsImg: newsImg, title: "next", subTitle: "worked")}
         }
     }
 }

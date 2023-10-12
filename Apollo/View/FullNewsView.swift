@@ -14,10 +14,19 @@ struct FullNewsView: View {
                 .tabItem {
                     Label("News", systemImage: "newspaper")
                 }
+            
+            BookmarkTabView()
+                .tabItem {
+                    Label("Saved", systemImage: "bookmark")
+                }
         }
     }
 }
 
-#Preview {
-    FullNewsView()
+struct FullNewsView_Previews: PreviewProvider {
+    
+    static var previews: some View {
+        FullNewsView()
+    }
+    
 }
