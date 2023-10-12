@@ -11,10 +11,14 @@ import SwiftUI
 struct ApolloApp: App {
     let persistenceController = PersistenceController.shared
 
+    @StateObject var articleBookmarkVM = ArticleBookmarkViewModel()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            FullNewsView()
+                .environmentObject(articleBookmarkVM)
         }
     }
 }

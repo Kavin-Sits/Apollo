@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8A674DB42AD7876D00A63CC1 /* FullNewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB32AD7876D00A63CC1 /* FullNewsView.swift */; };
+		8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */; };
+		8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB72AD78C1C00A63CC1 /* RetryView.swift */; };
+		8A674DBA2AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */; };
 		8AB2E2D72AD0DEEA0066AB1A /* ApolloApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2D62AD0DEEA0066AB1A /* ApolloApp.swift */; };
 		8AB2E2D92AD0DEEA0066AB1A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */; };
 		8AB2E2DB2AD0DEED0066AB1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AB2E2DA2AD0DEED0066AB1A /* Assets.xcassets */; };
@@ -49,6 +53,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8A674DB32AD7876D00A63CC1 /* FullNewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullNewsView.swift; sourceTree = "<group>"; };
+		8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPlaceholderView.swift; sourceTree = "<group>"; };
+		8A674DB72AD78C1C00A63CC1 /* RetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryView.swift; sourceTree = "<group>"; };
+		8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBookmarkViewModel.swift; sourceTree = "<group>"; };
 		8AB2E2D32AD0DEEA0066AB1A /* Apollo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Apollo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AB2E2D62AD0DEEA0066AB1A /* ApolloApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloApp.swift; sourceTree = "<group>"; };
 		8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -186,6 +194,9 @@
 				8AB2E31B2AD63FA90066AB1A /* SafariView.swift */,
 				8AB2E31D2AD6413B0066AB1A /* ArticleSpreadView.swift */,
 				8AB2E3292AD64C850066AB1A /* NewsTabView.swift */,
+				8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */,
+				8A674DB32AD7876D00A63CC1 /* FullNewsView.swift */,
+				8A674DB72AD78C1C00A63CC1 /* RetryView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -201,6 +212,7 @@
 		8AB2E3262AD649090066AB1A /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */,
 				8AB2E3272AD649240066AB1A /* ArticleNewsViewModel.swift */,
 			);
 			path = ViewModel;
@@ -341,11 +353,15 @@
 				8AB2E3282AD649240066AB1A /* ArticleNewsViewModel.swift in Sources */,
 				8AB2E2E02AD0DEED0066AB1A /* Persistence.swift in Sources */,
 				8AB2E31C2AD63FA90066AB1A /* SafariView.swift in Sources */,
+				8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */,
 				8AB2E32A2AD64C850066AB1A /* NewsTabView.swift in Sources */,
 				8AB2E2D92AD0DEEA0066AB1A /* ContentView.swift in Sources */,
 				8AB2E2E32AD0DEED0066AB1A /* Apollo.xcdatamodeld in Sources */,
+				8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */,
 				8AB2E31E2AD6413B0066AB1A /* ArticleSpreadView.swift in Sources */,
 				8AB2E3192AD5BDB30066AB1A /* NewsAPIResponse.swift in Sources */,
+				8A674DB42AD7876D00A63CC1 /* FullNewsView.swift in Sources */,
+				8A674DBA2AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift in Sources */,
 				8AB2E2D72AD0DEEA0066AB1A /* ApolloApp.swift in Sources */,
 				8AB2E3172AD5BB9D0066AB1A /* Article.swift in Sources */,
 				8AB2E3202AD641C00066AB1A /* OldCardView.swift in Sources */,

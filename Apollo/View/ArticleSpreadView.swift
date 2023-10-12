@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ArticleSpreadView: View {
+    
+    @EnvironmentObject var articleBookmarkVM: ArticleBookmarkViewModel
+    
     let articles: [Article]
     @State private var selectedArticle: Article?
     
@@ -31,8 +34,15 @@ struct ArticleSpreadView: View {
     }
 }
 
-#Preview {
-    NavigationView {
-        ArticleSpreadView(articles: Article.previewData)//.environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+struct ArticleSpreadView_Previews: PreviewProvider {
+    
+    @StateObject static var articleBookmarkVM = ArticleBookmarkViewModel()
+    
+    static var previews: some View {
+        NavigationView {
+            ArticleSpreadView(articles: Article.previewData)
+                .environmentObject(articleBookmarkVM)
+            //.environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        }
     }
 }
