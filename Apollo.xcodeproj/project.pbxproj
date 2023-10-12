@@ -12,6 +12,7 @@
 		8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB72AD78C1C00A63CC1 /* RetryView.swift */; };
 		8A674DBA2AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */; };
 		8A674DBC2AD7B07D00A63CC1 /* BookmarkTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DBB2AD7B07D00A63CC1 /* BookmarkTabView.swift */; };
+		8A674DBE2AD84F2700A63CC1 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DBD2AD84F2700A63CC1 /* TestView.swift */; };
 		8AB2E2D72AD0DEEA0066AB1A /* ApolloApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2D62AD0DEEA0066AB1A /* ApolloApp.swift */; };
 		8AB2E2D92AD0DEEA0066AB1A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */; };
 		8AB2E2DB2AD0DEED0066AB1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AB2E2DA2AD0DEED0066AB1A /* Assets.xcassets */; };
@@ -59,6 +60,7 @@
 		8A674DB72AD78C1C00A63CC1 /* RetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryView.swift; sourceTree = "<group>"; };
 		8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBookmarkViewModel.swift; sourceTree = "<group>"; };
 		8A674DBB2AD7B07D00A63CC1 /* BookmarkTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTabView.swift; sourceTree = "<group>"; };
+		8A674DBD2AD84F2700A63CC1 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		8AB2E2D32AD0DEEA0066AB1A /* Apollo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Apollo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AB2E2D62AD0DEEA0066AB1A /* ApolloApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloApp.swift; sourceTree = "<group>"; };
 		8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				8AB2E30B2AD0E7930066AB1A /* CardView.swift */,
 				8A674DBB2AD7B07D00A63CC1 /* BookmarkTabView.swift */,
 				8AB2E31F2AD641C00066AB1A /* OldCardView.swift */,
+				8A674DBD2AD84F2700A63CC1 /* TestView.swift */,
 				8AB2E30E2AD2F3850066AB1A /* HeaderView.swift */,
 				8AB2E31B2AD63FA90066AB1A /* SafariView.swift */,
 				8AB2E31D2AD6413B0066AB1A /* ArticleSpreadView.swift */,
@@ -353,6 +356,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A674DBE2AD84F2700A63CC1 /* TestView.swift in Sources */,
 				8AB2E3282AD649240066AB1A /* ArticleNewsViewModel.swift in Sources */,
 				8AB2E2E02AD0DEED0066AB1A /* Persistence.swift in Sources */,
 				8AB2E31C2AD63FA90066AB1A /* SafariView.swift in Sources */,
