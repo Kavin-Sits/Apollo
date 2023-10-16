@@ -62,6 +62,7 @@ struct MainSettingsView: View {
             }
             .background(Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1))
             .scrollContentBackground(.hidden)
+            .environment(\.colorScheme, isNightModeOn ? .dark : .light)
             .navigationBarTitle("Settings")
         }
         .background(Color.blue)
