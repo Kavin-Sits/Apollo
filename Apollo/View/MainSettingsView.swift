@@ -49,12 +49,10 @@ struct MainSettingsView: View {
                 
                 Section {
                     Button(action: {
-                        // Action for the first button
                     }) {
                         Text("View History")
                     }
                     Button(action: {
-                        // Action for the first button
                     }) {
                         Text("Delete Account")
                             .background(Color.white)
