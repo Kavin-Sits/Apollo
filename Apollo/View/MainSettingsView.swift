@@ -64,7 +64,6 @@ struct MainSettingsView: View {
             .environment(\.colorScheme, isNightModeOn ? .dark : .light)
             .navigationBarTitle("Settings")
         }
-        .background(Color.blue)
     }
 }
 
