@@ -55,7 +55,6 @@ struct MainSettingsView: View {
                     Button(action: {
                     }) {
                         Text("Delete Account")
-                            .background(Color.white)
                             .foregroundColor(.red)
                     }
                 }
@@ -69,6 +68,6 @@ struct MainSettingsView: View {
     }
 }
 
-#Preview{
+#Preview {
     MainSettingsView()
 }
