@@ -17,41 +17,50 @@ struct InterestSelectionView: View {
     ]
 
     var body: some View {
-        ZStack {
-            Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1)
-                .ignoresSafeArea()
+        NavigationStack {
+            ZStack {
+                Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1)
+                    .ignoresSafeArea()
 
-            VStack(spacing: 20) {
-                Text("Which topics interest you?")
-                    .font(.title)
-                    .foregroundColor(.white)
+                VStack(spacing: 20) {
+                    NavigationLink{
+                        TestView()
+                    } label: {
+                        Text("Continue")
+                            .frame(alignment: .leading)
+                    }
+                    
+                    Text("Which topics interest you?")
+                        .font(.title)
+                        .foregroundColor(.white)
 
-                Text("We'll try to curate your selection based on your preferences.")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
+                    Text("We'll try to curate your selection based on your preferences.")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
 
-                ScrollView {
-                    VStack(spacing: 15) {
-                        ForEach(optionNames, id: \.self) { option in
-                            RadioButton(
-                                text: option,
-                                isSelected: selectedOptions.contains(option),
-                                onTap: {
-                                    toggleOption(option)
-                                }
-                            )
-                            .frame(maxWidth: .infinity)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 8)
-                            .background(Color.white)
-                            .cornerRadius(10)
+                    ScrollView {
+                        VStack(spacing: 15) {
+                            ForEach(optionNames, id: \.self) { option in
+                                RadioButton(
+                                    text: option,
+                                    isSelected: selectedOptions.contains(option),
+                                    onTap: {
+                                        toggleOption(option)
+                                    }
+                                )
+                                .frame(maxWidth: .infinity)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 8)
+                                .background(Color.white)
+                                .cornerRadius(10)
+                            }
                         }
                     }
-                }
-                .padding()
+                    .padding()
 
-                Spacer()
+                    Spacer()
+                }
             }
         }
     }

@@ -22,66 +22,70 @@ struct LoginView: View {
     
     
     var body: some View {
-        backgroundColor.overlay(
-            VStack(alignment: .center, spacing: 25) {
-                Text("APOLLO")
-                    .font(Font.custom("Bodoni 72 Smallcaps", size: 52))
-                
-                VStack(alignment: .leading) {
-                    Text("Username/Email")
-                    TextField("username", text: $username)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.top, 10)
-                    Text("Password")
-                        .padding(.top, 10)
-                    SecureField("password", text: $password)
-                        .textFieldStyle(.roundedBorder)
-                        .padding(.top, 10)
-                    Button("Forgot password") {
-                        print("forgot password")
+        NavigationStack{
+            backgroundColor.overlay(
+                VStack(alignment: .center, spacing: 25) {
+                    Text("APOLLO")
+                        .font(Font.custom("Bodoni 72 Smallcaps", size: 52))
+                    
+                    VStack(alignment: .leading) {
+                        Text("Username/Email")
+                        TextField("username", text: $username)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.top, 10)
+                        Text("Password")
+                            .padding(.top, 10)
+                        SecureField("password", text: $password)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.top, 10)
+                        Button("Forgot password") {
+                            print("forgot password")
+                        }
+                        .controlSize(.small)
                     }
-                    .controlSize(.small)
+                    .padding(.top, 40)
+                    
+                    NavigationLink{
+                        InterestSelectionView()
+                    } label: {
+                        Text("Login")
+                        .frame(width: 150, height: 50)
+                        .background(Color(red: 1, green: 1, blue: 1))
+                        .clipShape(Capsule())
+                        .padding(.top, 50.0)
+                    }
+                    
+                    Text("or")
+                    
+                    NavigationLink{
+                        CreateAccountView()
+                    } label: {
+                        Text("Create account")
+                        .frame(width: 150, height: 50)
+                        .background(Color(red: 1, green: 1, blue: 1))
+                        .clipShape(Capsule())
+                    }
+                
+                    
+                    // replace this with Google sign on button
+                    Button("Sign in with Google") {
+                        print("Google sign on")
+                    }
+                    .frame(width: 150, height: 50)
+                    .background(Color(red: 1, green: 1, blue: 1))
+                    .clipShape(Capsule())
+                    
+                    
+                    Spacer()
+                    
                 }
-                .padding(.top, 40)
+                    .padding(.top, 175.0)
+                    .frame(width: 300)
                 
-                Button("Login") {
-                    // [TODO] need to add the action for login button
-                    print("login")
-                }
-                .frame(width: 150, height: 50)
-                .background(Color(red: 1, green: 1, blue: 1))
-                .clipShape(Capsule())
-                .padding(.top, 50.0)
-                
-                Text("or")
-                
-                Button("Create account") {
-                    // [TODO] need to add the action for create account button
-                    print("go to create account view")
-                }
-                .frame(width: 150, height: 50)
-                .background(Color(red: 1, green: 1, blue: 1))
-                .clipShape(Capsule())
-                
-                // replace this with Google sign on button
-                Button("Sign in with Google") {
-                    print("Google sign on")
-                }
-                .frame(width: 150, height: 50)
-                .background(Color(red: 1, green: 1, blue: 1))
-                .clipShape(Capsule())
-                
-                
-                Spacer()
-                
-            }
-            .padding(.top, 175.0)
-            .frame(width: 300)
+            )
+            .ignoresSafeArea()
             
-        )
-        .ignoresSafeArea()
-        
-        
+        }
     }
 }
 

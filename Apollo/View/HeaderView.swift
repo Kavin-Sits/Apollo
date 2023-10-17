@@ -9,36 +9,38 @@ import SwiftUI
 
 struct HeaderView: View {
     var body: some View {
-        VStack(spacing: 0){
-            HStack{
-                VStack{
-                    HStack{
-                        Text("Mon")
-                        Text("Tues")
-                        Text("Wed")
-                        Text("Thurs")
-                        Text("Fri")
-                        Text("Sat")
-                        Text("Sun")
+        NavigationStack {
+            VStack(spacing: 0){
+                HStack{
+                    VStack{
+                        HStack{
+                            Text("Mon")
+                            Text("Tues")
+                            Text("Wed")
+                            Text("Thurs")
+                            Text("Fri")
+                            Text("Sat")
+                            Text("Sun")
+                        }
+                        ProgressView(value: 0.25)
                     }
-                    ProgressView(value: 0.25)
+                    
+                    Spacer()
+                    
+                    NavigationLink{
+                        MainSettingsView()
+                    } label: {
+                        Image(systemName: "gearshape")
+                            .font(.system(size: 25, weight: .regular))
+                    }
+                    .accentColor(Color.primary)
                 }
-                
-                Spacer()
-                
-                Button(action: {
-                    print("Information")
-                }, label: {
-                    Image(systemName: "gearshape")
-                        .font(.system(size: 25, weight: .regular))
-                })
-                .accentColor(Color.primary)
+                .padding(10)
+                Text("What news would you like to view today?")
+                    .font(.title3)
+                    .multilineTextAlignment(.center)
+                    .bold()
             }
-            .padding(10)
-            Text("What news would you like to view today?")
-                .font(.title3)
-                .multilineTextAlignment(.center)
-                .bold()
         }
     }
 }
