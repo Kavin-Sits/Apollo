@@ -36,6 +36,7 @@
 		8AB2E3252AD646EF0066AB1A /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3242AD646EF0066AB1A /* Category.swift */; };
 		8AB2E3282AD649240066AB1A /* ArticleNewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3272AD649240066AB1A /* ArticleNewsViewModel.swift */; };
 		8AB2E32A2AD64C850066AB1A /* NewsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3292AD64C850066AB1A /* NewsTabView.swift */; };
+		B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B340272D2ADE165A00B78062 /* InterestSelectionView.swift */; };
 		F0D733002ADCFE2F0088DDAB /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +91,7 @@
 		8AB2E3242AD646EF0066AB1A /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		8AB2E3272AD649240066AB1A /* ArticleNewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleNewsViewModel.swift; sourceTree = "<group>"; };
 		8AB2E3292AD64C850066AB1A /* NewsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTabView.swift; sourceTree = "<group>"; };
+		B340272D2ADE165A00B78062 /* InterestSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestSelectionView.swift; sourceTree = "<group>"; };
 		F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -201,6 +203,7 @@
 				8AB2E31F2AD641C00066AB1A /* OldCardView.swift */,
 				8A674DBD2AD84F2700A63CC1 /* TestView.swift */,
 				202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */,
+				B340272D2ADE165A00B78062 /* InterestSelectionView.swift */,
 				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
 				8AB2E30E2AD2F3850066AB1A /* HeaderView.swift */,
 				8AB2E31B2AD63FA90066AB1A /* SafariView.swift */,
@@ -383,6 +386,7 @@
 				8AB2E3202AD641C00066AB1A /* OldCardView.swift in Sources */,
 				8AB2E3252AD646EF0066AB1A /* Category.swift in Sources */,
 				8AB2E30C2AD0E7930066AB1A /* CardView.swift in Sources */,
+				B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */,
 				8AB2E30F2AD2F3850066AB1A /* HeaderView.swift in Sources */,
 				8AB2E3232AD6466D0066AB1A /* NewsAPI.swift in Sources */,
 			);
