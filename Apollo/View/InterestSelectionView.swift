@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InterestSelectionView: View {
     @State private var selectedOptions: Set<String> = []
-
+    
     let optionNames = [
         "Sports", "Business", "Technology", "Art and Culture",
         "Literature", "Government and Politics", "Health and Medicine",
@@ -23,20 +23,14 @@ struct InterestSelectionView: View {
                     .ignoresSafeArea()
 
                 VStack(spacing: 20) {
-                    NavigationLink{
-                        TestView()
-                    } label: {
-                        Text("Continue")
-                            .frame(alignment: .leading)
-                    }
                     
                     Text("Which topics interest you?")
                         .font(.title)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
 
                     Text("We'll try to curate your selection based on your preferences.")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .multilineTextAlignment(.center)
 
                     ScrollView {
@@ -52,16 +46,24 @@ struct InterestSelectionView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 8)
-                                .background(Color.white)
+                                .foregroundColor(.black)
                                 .cornerRadius(10)
                             }
                         }
                     }
                     .padding()
-
+                    
+                        NavigationLink{
+                            TestView()
+                        } label: {
+                            Text("Continue")
+                                .frame(alignment: .leading)
+                        }
                     Spacer()
                 }
+                
             }
+            
         }
     }
 
@@ -82,7 +84,7 @@ struct RadioButton: View {
         HStack {
             Text(text)
                 .font(.headline)
-                .foregroundColor(Color.primary)
+                .foregroundColor(.black)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
             Spacer()

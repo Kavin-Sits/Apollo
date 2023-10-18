@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HeaderView: View {
+    @EnvironmentObject var nightModeManager: NightModeManager
     var body: some View {
         NavigationStack {
             VStack(spacing: 0){

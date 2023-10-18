@@ -14,7 +14,7 @@ extension UIScreen{
 }
 
 struct LoginView: View {
-    
+    @EnvironmentObject var nightModeManager: NightModeManager
     @State private var username = ""
     @State private var password = ""
     
@@ -46,7 +46,7 @@ struct LoginView: View {
                     .padding(.top, 40)
                     
                     NavigationLink{
-                        InterestSelectionView()
+                        TestView()
                     } label: {
                         Text("Login")
                         .frame(width: 150, height: 50)

@@ -12,6 +12,7 @@ let occupationsList = ["accountant", "actor/actress", "artist", "astronaut", "as
 
 struct CreateAccountView: View {
     
+    @EnvironmentObject var nightModeManager: NightModeManager
     @State private var username = ""
     @State private var password = ""
     @State private var email = ""
@@ -23,69 +24,73 @@ struct CreateAccountView: View {
     
     var body: some View {
         backgroundColor.overlay(
-            ZStack {
-                VStack(alignment: .center) {
-                    Spacer()
+            NavigationStack {
+                ZStack {
                     
-                    Button("Create Account") {
-                        // TODO add code to segue from this screen to set pfp screen
-                    }
-                    .frame(height: 200)
-                    .cornerRadius(20)
-                    .buttonStyle(.borderedProminent)
-                }
-                
-                
-                VStack(alignment: .center, spacing: 25) {
-                    
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .center, spacing: 25) {
                         
-                        Text("Full Name")
-                        TextField("", text: $username)
-                            .textFieldStyle(.roundedBorder)
-
-                        Text("Email")
-                            .padding(.top, 25)
-                        TextField("", text: $email)
-                            .textFieldStyle(.roundedBorder)
-                        
-                        Text("Password")
-                            .padding(.top, 25)
-                        TextField("", text: $password)
-                            .textFieldStyle(.roundedBorder)
-                        
-                        Text("Date of Birth")
-                            .padding(.top, 25)
-                        TextField("mm/dd/yyyy", text: $dateOfBirth)
-                            .textFieldStyle(.roundedBorder)
-                        
-                        Text("Location")
-                            .padding(.top, 25)
-                        
-//                        LocationButton(.currentLocation) {
-//
-//                        }
-//                        .tint(.white)
-//                        .labelStyle(.iconOnly)
-                        
-                        TextField("", text: $location)
-                            .textFieldStyle(.roundedBorder)
-                        
-                        Text("Occupation")
-                            .padding(.top, 25)
+                        VStack(alignment: .leading) {
                             
-                        OccupationListDropdownMenu() {
-                            option in
-                            self.occupation = option
+                            Text("Full Name")
+                            TextField("", text: $username)
+                                .textFieldStyle(.roundedBorder)
+
+                            Text("Email")
+                                .padding(.top, 25)
+                            TextField("", text: $email)
+                                .textFieldStyle(.roundedBorder)
+                            
+                            Text("Password")
+                                .padding(.top, 25)
+                            TextField("", text: $password)
+                                .textFieldStyle(.roundedBorder)
+                            
+                            Text("Date of Birth")
+                                .padding(.top, 25)
+                            TextField("mm/dd/yyyy", text: $dateOfBirth)
+                                .textFieldStyle(.roundedBorder)
+                            
+                            Text("Location")
+                                .padding(.top, 25)
+                            
+    //                        LocationButton(.currentLocation) {
+    //
+    //                        }
+    //                        .tint(.white)
+    //                        .labelStyle(.iconOnly)
+                            
+                            TextField("", text: $location)
+                                .textFieldStyle(.roundedBorder)
+                            
+                            Text("Occupation")
+                                .padding(.top, 25)
+                                
+                            OccupationListDropdownMenu() {
+                                option in
+                                self.occupation = option
+                            }
+                            .frame(width: 320)
+                            .foregroundStyle(nightModeManager.isNightMode ? .black : .white)
+                            .background(nightModeManager.isNightMode ? .black : .white)
+                            
+                            Spacer()
                         }
-                        .frame(width: 320)
+                        .foregroundStyle(.black)
                         
-                        Spacer()
+                        NavigationLink{
+                            InterestSelectionView()
+                        } label: {
+                            Text("Create Account")
+                                .frame(width: 150, height: 50, alignment: .center)
+                                .foregroundStyle(.white)
+                                .background(.blue)
+                            .clipShape(Capsule())
+                        }
                     }
+                    .padding(.top, 100)
+                    .padding(.bottom, 70)
+                    .frame(width: 320)
                 }
-                .padding(.top, 100)
-                .padding(.bottom, 70)
-                .frame(width: 320)
             }
             
         )

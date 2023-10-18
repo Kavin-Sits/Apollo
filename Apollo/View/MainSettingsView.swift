@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct MainSettingsView: View {
-    @State private var isNightModeOn = false
-    @State private var isSoundEffectsOn = false
+    @EnvironmentObject var nightModeManager: NightModeManager
+    @State public var isSoundEffectsOn = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section(header: Text("Account")) {
                     NavigationLink(destination: Text("Change Password")) {
@@ -36,7 +36,7 @@ struct MainSettingsView: View {
                 }
                 
                 Section(header: Text("Display")) {
-                    Toggle(isOn: $isNightModeOn) {
+                    Toggle(isOn: $nightModeManager.isNightMode) {
                         Text("Night Mode")
                     }
                 }
@@ -61,7 +61,7 @@ struct MainSettingsView: View {
             }
             .background(Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1))
             .scrollContentBackground(.hidden)
-            .environment(\.colorScheme, isNightModeOn ? .dark : .light)
+            .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
             .navigationBarTitle("Settings")
         }
     }

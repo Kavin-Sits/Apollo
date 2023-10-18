@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		202117DF2ADC8BD70083BC0B /* MainSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */; };
+		20F46AB52ADF5E78003C6B8A /* NightModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F46AB42ADF5E78003C6B8A /* NightModeManager.swift */; };
 		8A674DB42AD7876D00A63CC1 /* FullNewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB32AD7876D00A63CC1 /* FullNewsView.swift */; };
 		8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */; };
 		8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB72AD78C1C00A63CC1 /* RetryView.swift */; };
@@ -60,6 +61,7 @@
 
 /* Begin PBXFileReference section */
 		202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsView.swift; sourceTree = "<group>"; };
+		20F46AB42ADF5E78003C6B8A /* NightModeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightModeManager.swift; sourceTree = "<group>"; };
 		8A674DB32AD7876D00A63CC1 /* FullNewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullNewsView.swift; sourceTree = "<group>"; };
 		8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPlaceholderView.swift; sourceTree = "<group>"; };
 		8A674DB72AD78C1C00A63CC1 /* RetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryView.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 			isa = PBXGroup;
 			children = (
 				8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */,
+				20F46AB42ADF5E78003C6B8A /* NightModeManager.swift */,
 				8AB2E30B2AD0E7930066AB1A /* CardView.swift */,
 				8A674DBB2AD7B07D00A63CC1 /* BookmarkTabView.swift */,
 				8AB2E31F2AD641C00066AB1A /* OldCardView.swift */,
@@ -369,6 +372,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A674DBE2AD84F2700A63CC1 /* TestView.swift in Sources */,
+				20F46AB52ADF5E78003C6B8A /* NightModeManager.swift in Sources */,
 				8AB2E3282AD649240066AB1A /* ArticleNewsViewModel.swift in Sources */,
 				8AB2E2E02AD0DEED0066AB1A /* Persistence.swift in Sources */,
 				8AB2E31C2AD63FA90066AB1A /* SafariView.swift in Sources */,

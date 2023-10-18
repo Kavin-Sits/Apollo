@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TestView: View {
+    @EnvironmentObject var nightModeManager: NightModeManager
     var body: some View {
         NavigationStack{
             VStack{
