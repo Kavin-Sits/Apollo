@@ -7,28 +7,46 @@
 
 import SwiftUI
 import CoreLocationUI
+import FirebaseAuth
+import FirebaseFirestore
 
 let occupationsList = ["accountant", "actor/actress", "artist", "astronaut", "astronomer", "athelete", "banker", "barber", "biologist", "blacksmith", "butler", "cardiologist", "carpenter", "cashier", "chef", "chemist", "contractor", "dentist", "dermatologist", "designer", "doctor", "ecologist", "economist", "engineer", "entrepreneur", "geologist", "geographer", "hairdresser", "intern", "judge", "journalist", "landscaper", "lawyer", "manager", "marketer", "mechanic", "model", "nurse", "optometrist", "paralegal", "pediatrician", "photographer", "physician", "politician", "producer", "professor", "psychologist", "retailer", "salesperson", "scientist", "sheriff", "student", "statistician", "surgeon", "teacher", "technician", "trader", "usher", "veterinarian", "watier/waitress", "writer"]
 
 struct CreateAccountView: View {
     
-    @State private var username = ""
+    @State private var fullName = ""
     @State private var password = ""
     @State private var email = ""
     @State private var dateOfBirth = ""
     @State private var occupation = ""
     @State private var location = ""
+    @State private var errorMessage = ""
+    @State private var selectedOptions: Set<String> = []
     
     let backgroundColor = Color(red: 148/255, green: 172/255, blue: 255/255)
     
     var body: some View {
+        content
+    }
+    
+    var content: some View {
         backgroundColor.overlay(
             ZStack {
                 VStack(alignment: .center) {
                     Spacer()
                     
+
                     Button("Create Account") {
                         // TODO add code to segue from this screen to set pfp screen
+                        if fullName != "" && email != "" && password != "" && dateOfBirth != "" && location != "" && occupation != "" {
+                            createUser()
+                            if errorMessage == "" {
+                                storeUserData()
+                            }
+                        } else {
+                            errorMessage = "Please ensure that all fields are filled"
+                        }
+                        
                     }
                     .frame(height: 200)
                     .cornerRadius(20)
@@ -41,17 +59,18 @@ struct CreateAccountView: View {
                     VStack(alignment: .leading) {
                         
                         Text("Full Name")
-                        TextField("", text: $username)
+                        TextField("", text: $fullName)
                             .textFieldStyle(.roundedBorder)
 
                         Text("Email")
                             .padding(.top, 25)
                         TextField("", text: $email)
                             .textFieldStyle(.roundedBorder)
+                            .autocapitalization(.none)
                         
                         Text("Password")
                             .padding(.top, 25)
-                        TextField("", text: $password)
+                        SecureField("", text: $password)
                             .textFieldStyle(.roundedBorder)
                         
                         Text("Date of Birth")
@@ -80,6 +99,9 @@ struct CreateAccountView: View {
                         }
                         .frame(width: 320)
                         
+                        Text(errorMessage)
+                            .foregroundStyle(.red)
+                        
                         Spacer()
                     }
                 }
@@ -90,6 +112,30 @@ struct CreateAccountView: View {
             
         )
         .ignoresSafeArea()
+    }
+    
+    private func createUser() {
+        Auth.auth().createUser(withEmail: email, password: password) {
+            (authResult,error) in
+                if let error = error as NSError? {
+                    errorMessage = "\(error.localizedDescription)"
+                } else {
+                    errorMessage = ""
+                }
+        }
+    }
+    
+    private func storeUserData() {
+        let userData = ["email": email, "fullName": fullName, "dateOfBirth": dateOfBirth, "location": location, "occupation": occupation, "interests": Array(selectedOptions)] as [String : Any]
+        
+        Firestore.firestore().collection("users").document(email).setData(userData) {
+            error in
+            if let error = error {
+                errorMessage = "\(error)"
+            } else {
+                errorMessage = ""
+            }
+        }
     }
 }
 

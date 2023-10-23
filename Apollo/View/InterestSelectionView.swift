@@ -6,10 +6,18 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 struct InterestSelectionView: View {
+    var userEmail: String
     @State private var selectedOptions: Set<String> = []
+    @State private var errorMessage: String = ""
+    @State private var updateOptions: Bool = false
 
+    init(email: String) {
+        userEmail = email
+    }
+    
     let optionNames = [
         "Sports", "Business", "Technology", "Art and Culture",
         "Literature", "Government and Politics", "Health and Medicine",
@@ -18,49 +26,61 @@ struct InterestSelectionView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1)
-                    .ignoresSafeArea()
+            content.navigationDestination(isPresented: $updateOptions) {
+                TestView().navigationBarBackButtonHidden(true)
+            }
+        }
+    }
+    
+    var content: some View {
+        ZStack {
+            Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1)
+                .ignoresSafeArea()
 
-                VStack(spacing: 20) {
-                    NavigationLink{
-                        TestView()
-                    } label: {
-                        Text("Continue")
-                            .frame(alignment: .leading)
+            VStack(spacing: 20) {
+                Button("Continue") {
+                    // TODO action to store selections in database
+                    if selectedOptions.count == 0 {
+                        errorMessage = "Please select at least one option"
+                    } else {
+                        storeInterestSelections()
+                        errorMessage = ""
+                        updateOptions = true
                     }
-                    
-                    Text("Which topics interest you?")
-                        .font(.title)
-                        .foregroundColor(.white)
+                }
+                Text(errorMessage)
+                    .foregroundStyle(.red)
+                
+                Text("Which topics interest you?")
+                    .font(.title)
+                    .foregroundColor(.white)
 
-                    Text("We'll try to curate your selection based on your preferences.")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
+                Text("We'll try to curate your selection based on your preferences.")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
 
-                    ScrollView {
-                        VStack(spacing: 15) {
-                            ForEach(optionNames, id: \.self) { option in
-                                RadioButton(
-                                    text: option,
-                                    isSelected: selectedOptions.contains(option),
-                                    onTap: {
-                                        toggleOption(option)
-                                    }
-                                )
-                                .frame(maxWidth: .infinity)
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 8)
-                                .background(Color.white)
-                                .cornerRadius(10)
-                            }
+                ScrollView {
+                    VStack(spacing: 15) {
+                        ForEach(optionNames, id: \.self) { option in
+                            RadioButton(
+                                text: option,
+                                isSelected: selectedOptions.contains(option),
+                                onTap: {
+                                    toggleOption(option)
+                                }
+                            )
+                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 8)
+                            .background(Color.white)
+                            .cornerRadius(10)
                         }
                     }
-                    .padding()
-
-                    Spacer()
                 }
+                .padding()
+
+                Spacer()
             }
         }
     }
@@ -71,6 +91,10 @@ struct InterestSelectionView: View {
         } else {
             selectedOptions.insert(option)
         }
+    }
+    
+    private func storeInterestSelections() {
+        Firestore.firestore().collection("users").document(userEmail).setData(["interests": Array(selectedOptions)], merge: true)
     }
 }
 
@@ -96,6 +120,6 @@ struct RadioButton: View {
     }
 }
 
-#Preview {
-    InterestSelectionView()
-}
+//#Preview {
+//    InterestSelectionView()
+//}
