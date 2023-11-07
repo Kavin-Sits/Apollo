@@ -36,7 +36,7 @@ struct MainSettingsView: View {
                     NavigationLink(destination: Text("Update Occupation")) {
                         Text("Update Occupation")
                     }
-                    NavigationLink(destination: Text("Update Profile Photo")) {
+                    NavigationLink(destination: ProfilePhotoView(email: Auth.auth().currentUser?.email ?? "")) {
                         Text("Update Profile Photo")
                     }
 //                    Button(action: {

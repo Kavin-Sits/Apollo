@@ -33,56 +33,52 @@ struct InterestSelectionView: View {
     }
     
     var content: some View {
-        ZStack {
-            Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1)
-                .ignoresSafeArea()
 
-            VStack(spacing: 20) {
-                Button("Continue") {
-                    // TODO action to store selections in database
-                    if selectedOptions.count == 0 {
-                        errorMessage = "Please select at least one option"
-                    } else {
-                        storeInterestSelections()
-                        errorMessage = ""
-                        updateOptions = true
-                    }
+        VStack(spacing: 20) {
+            Button("Continue") {
+                if selectedOptions.count == 0 {
+                    errorMessage = "Please select at least one option"
+                } else {
+                    storeInterestSelections()
+                    errorMessage = ""
+                    updateOptions = true
                 }
-                Text(errorMessage)
-                    .foregroundStyle(.red)
-                
-                Text("Which topics interest you?")
-                    .font(.title)
-                    .foregroundColor(.white)
-
-                Text("We'll try to curate your selection based on your preferences.")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .multilineTextAlignment(.center)
-
-                ScrollView {
-                    VStack(spacing: 15) {
-                        ForEach(optionNames, id: \.self) { option in
-                            RadioButton(
-                                text: option,
-                                isSelected: selectedOptions.contains(option),
-                                onTap: {
-                                    toggleOption(option)
-                                }
-                            )
-                            .frame(maxWidth: .infinity)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 8)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                        }
-                    }
-                }
-                .padding()
-
-                Spacer()
             }
+            Text(errorMessage)
+                .foregroundStyle(.red)
+            
+            Text("Which topics interest you?")
+                .font(.title)
+                .foregroundColor(.white)
+
+            Text("We'll try to curate your selection based on your preferences.")
+                .font(.headline)
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+
+            ScrollView {
+                VStack(spacing: 15) {
+                    ForEach(optionNames, id: \.self) { option in
+                        RadioButton(
+                            text: option,
+                            isSelected: selectedOptions.contains(option),
+                            onTap: {
+                                toggleOption(option)
+                            }
+                        )
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
+                        .background(Color.white)
+                        .cornerRadius(10)
+                    }
+                }
+            }
+            .padding()
+
+            Spacer()
         }
+        .background(Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1))
     }
 
     func toggleOption(_ option: String) {
@@ -120,6 +116,6 @@ struct RadioButton: View {
     }
 }
 
-//#Preview {
-//    InterestSelectionView()
-//}
+#Preview {
+    InterestSelectionView(email: "test2@gmail.com")
+}

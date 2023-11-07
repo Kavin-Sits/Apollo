@@ -8,45 +8,43 @@
 import SwiftUI
 import CoreLocation
 import MapKit
+import FirebaseAuth
+import FirebaseFirestore
 
 struct UpdateLocationView: View {
     @StateObject private var locationPermission: LocationPermission = LocationPermission()
-    
+
     var body: some View {
-        ZStack {
-            Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1)
-                .ignoresSafeArea()
-            VStack {
-                switch locationPermission.authorizationStatus {
-                case .notDetermined:
-                    Text("Location access not determined")
-                    Button {
-                        locationPermission.requestLocationPermission()
-                    } label: {
-                        Text("Allow Location Access")
-                            .padding()
-                    }
-                case .restricted:
-                    Text("Location access restricted")
-                case .denied:
-                    Text("Location access denied")
-                case .authorizedWhenInUse, .authorizedAlways:
-                    MapView(coordinate: locationPermission.coordinates)
-                    if let placemark = locationPermission.placemark {
-                        Text("City: \(placemark.locality ?? "N/A")")
-                        Text("Country: \(placemark.country ?? "N/A")")
-                    }
-                default:
-                    Text("Location access not authorized")
+        VStack {
+            switch locationPermission.authorizationStatus {
+            case .notDetermined:
+                Text("Location access not determined")
+                Button {
+                    locationPermission.requestLocationPermission()
+                } label: {
+                    Text("Allow Location Access")
+                        .padding()
                 }
+            case .restricted:
+                Text("Location access restricted")
+            case .denied:
+                Text("Location access denied")
+            case .authorizedWhenInUse, .authorizedAlways:
+                MapView(coordinate: locationPermission.coordinates)
+                if let placemark = locationPermission.placemark {
+                    Text("City: \(placemark.locality ?? "N/A")")
+                    Text("Country: \(placemark.country ?? "N/A")")
+                }
+            default:
+                Text("Location access not authorized")
             }
-            .buttonStyle(.bordered)
         }
+        .buttonStyle(.bordered)
+        .background(Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1))
     }
 }
 
 class LocationPermission:NSObject, ObservableObject, CLLocationManagerDelegate {
-    
     @Published var authorizationStatus : CLAuthorizationStatus = .notDetermined
     private let locationManager = CLLocationManager()
     @Published var coordinates : CLLocationCoordinate2D?
@@ -76,6 +74,7 @@ class LocationPermission:NSObject, ObservableObject, CLLocationManagerDelegate {
         geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
             if let placemark = placemarks?.first {
                 self.placemark = placemark
+                Firestore.firestore().collection("users").document(Auth.auth().currentUser?.email ?? "").setData(["location": placemark.locality!], merge: true)
             }
         }
     }
@@ -103,6 +102,6 @@ struct MapView: UIViewRepresentable {
     }
 }
 
-#Preview {
-    UpdateLocationView()
-}
+//#Preview {
+//    UpdateLocationView()
+//}
