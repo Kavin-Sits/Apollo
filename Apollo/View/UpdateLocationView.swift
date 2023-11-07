@@ -15,32 +15,35 @@ struct UpdateLocationView: View {
     @StateObject private var locationPermission: LocationPermission = LocationPermission()
 
     var body: some View {
-        VStack {
-            switch locationPermission.authorizationStatus {
-            case .notDetermined:
-                Text("Location access not determined")
-                Button {
-                    locationPermission.requestLocationPermission()
-                } label: {
-                    Text("Allow Location Access")
-                        .padding()
+        ZStack {
+            Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1)
+                .ignoresSafeArea()
+            VStack {
+                switch locationPermission.authorizationStatus {
+                case .notDetermined:
+                    Text("Location access not determined")
+                    Button {
+                        locationPermission.requestLocationPermission()
+                    } label: {
+                        Text("Allow Location Access")
+                            .padding()
+                    }
+                case .restricted:
+                    Text("Location access restricted")
+                case .denied:
+                    Text("Location access denied")
+                case .authorizedWhenInUse, .authorizedAlways:
+                    MapView(coordinate: locationPermission.coordinates)
+                    if let placemark = locationPermission.placemark {
+                        Text("City: \(placemark.locality ?? "N/A")")
+                        Text("Country: \(placemark.country ?? "N/A")")
+                    }
+                default:
+                    Text("Location access not authorized")
                 }
-            case .restricted:
-                Text("Location access restricted")
-            case .denied:
-                Text("Location access denied")
-            case .authorizedWhenInUse, .authorizedAlways:
-                MapView(coordinate: locationPermission.coordinates)
-                if let placemark = locationPermission.placemark {
-                    Text("City: \(placemark.locality ?? "N/A")")
-                    Text("Country: \(placemark.country ?? "N/A")")
-                }
-            default:
-                Text("Location access not authorized")
             }
+            .buttonStyle(.bordered)
         }
-        .buttonStyle(.bordered)
-        .background(Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1))
     }
 }
 
