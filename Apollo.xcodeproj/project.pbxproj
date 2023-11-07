@@ -37,6 +37,7 @@
 		8AB2E3252AD646EF0066AB1A /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3242AD646EF0066AB1A /* Category.swift */; };
 		8AB2E3282AD649240066AB1A /* ArticleNewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3272AD649240066AB1A /* ArticleNewsViewModel.swift */; };
 		8AB2E32A2AD64C850066AB1A /* NewsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3292AD64C850066AB1A /* NewsTabView.swift */; };
+		8AC6118F2AFAA98800F88E52 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6118E2AFAA98800F88E52 /* GoogleService-Info.plist */; };
 		B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B340272D2ADE165A00B78062 /* InterestSelectionView.swift */; };
 		F0194CC92ADE5E3900A2A5C0 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */; };
 		F054F3C52AE3154A008597B6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = F054F3C42AE3154A008597B6 /* FirebaseAnalytics */; };
@@ -69,9 +70,6 @@
 		F093DCC12AFA0628009E8DCC /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = F093DCC02AFA0628009E8DCC /* GoogleSignIn */; };
 		F093DCC32AFA0628009E8DCC /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F093DCC22AFA0628009E8DCC /* GoogleSignInSwift */; };
 		F093DCC52AFA0794009E8DCC /* ForgotPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F093DCC42AFA0794009E8DCC /* ForgotPasswordView.swift */; };
-		F093DCC72AFA0B78009E8DCC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F093DCC62AFA0B78009E8DCC /* GoogleService-Info.plist */; };
-		F093DCC82AFA0B78009E8DCC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F093DCC62AFA0B78009E8DCC /* GoogleService-Info.plist */; };
-		F093DCC92AFA0B78009E8DCC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F093DCC62AFA0B78009E8DCC /* GoogleService-Info.plist */; };
 		F0D733002ADCFE2F0088DDAB /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */; };
 /* End PBXBuildFile section */
 
@@ -127,10 +125,10 @@
 		8AB2E3242AD646EF0066AB1A /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		8AB2E3272AD649240066AB1A /* ArticleNewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleNewsViewModel.swift; sourceTree = "<group>"; };
 		8AB2E3292AD64C850066AB1A /* NewsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTabView.swift; sourceTree = "<group>"; };
+		8AC6118E2AFAA98800F88E52 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B340272D2ADE165A00B78062 /* InterestSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestSelectionView.swift; sourceTree = "<group>"; };
 		F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		F093DCC42AFA0794009E8DCC /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
-		F093DCC62AFA0B78009E8DCC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -212,7 +210,7 @@
 		8AB2E2D52AD0DEEA0066AB1A /* Apollo */ = {
 			isa = PBXGroup;
 			children = (
-				F093DCC62AFA0B78009E8DCC /* GoogleService-Info.plist */,
+				8AC6118E2AFAA98800F88E52 /* GoogleService-Info.plist */,
 				8AB2E3262AD649090066AB1A /* ViewModel */,
 				8AB2E3212AD646560066AB1A /* API */,
 				8AB2E31A2AD5D1330066AB1A /* Info.plist */,
@@ -456,7 +454,7 @@
 				8AB2E2DE2AD0DEED0066AB1A /* Preview Assets.xcassets in Resources */,
 				8AB2E3152AD5BB3C0066AB1A /* News.json in Resources */,
 				8AB2E2DB2AD0DEED0066AB1A /* Assets.xcassets in Resources */,
-				F093DCC72AFA0B78009E8DCC /* GoogleService-Info.plist in Resources */,
+				8AC6118F2AFAA98800F88E52 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,7 +462,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F093DCC82AFA0B78009E8DCC /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,7 +469,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F093DCC92AFA0B78009E8DCC /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
