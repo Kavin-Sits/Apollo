@@ -30,7 +30,7 @@ struct MainSettingsView: View {
                     NavigationLink(destination: InterestSelectionView(email: Auth.auth().currentUser?.email ?? "")) {
                         Text("Update Preferences")
                     }
-                    NavigationLink(destination: Text("Update Location")) {
+                    NavigationLink(destination: UpdateLocationView()) {
                         Text("Update Location")
                     }
                     NavigationLink(destination: Text("Update Occupation")) {

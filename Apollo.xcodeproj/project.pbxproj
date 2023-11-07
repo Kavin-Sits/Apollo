@@ -39,6 +39,7 @@
 		8AB2E32A2AD64C850066AB1A /* NewsTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3292AD64C850066AB1A /* NewsTabView.swift */; };
 		8AC6118F2AFAA98800F88E52 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6118E2AFAA98800F88E52 /* GoogleService-Info.plist */; };
 		B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B340272D2ADE165A00B78062 /* InterestSelectionView.swift */; };
+		B39CEB9D2AFAAC1300954C3A /* UpdateLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39CEB9C2AFAAC1300954C3A /* UpdateLocationView.swift */; };
 		F0194CC92ADE5E3900A2A5C0 /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */; };
 		F054F3C52AE3154A008597B6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = F054F3C42AE3154A008597B6 /* FirebaseAnalytics */; };
 		F054F3C72AE3154A008597B6 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = F054F3C62AE3154A008597B6 /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -127,6 +128,7 @@
 		8AB2E3292AD64C850066AB1A /* NewsTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsTabView.swift; sourceTree = "<group>"; };
 		8AC6118E2AFAA98800F88E52 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B340272D2ADE165A00B78062 /* InterestSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestSelectionView.swift; sourceTree = "<group>"; };
+		B39CEB9C2AFAAC1300954C3A /* UpdateLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLocationView.swift; sourceTree = "<group>"; };
 		F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
 		F093DCC42AFA0794009E8DCC /* ForgotPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordView.swift; sourceTree = "<group>"; };
 		F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				8A674DB32AD7876D00A63CC1 /* FullNewsView.swift */,
 				8A674DB72AD78C1C00A63CC1 /* RetryView.swift */,
 				F093DCC42AFA0794009E8DCC /* ForgotPasswordView.swift */,
+				B39CEB9C2AFAAC1300954C3A /* UpdateLocationView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -497,6 +500,7 @@
 				F0194CC92ADE5E3900A2A5C0 /* CreateAccountView.swift in Sources */,
 				2056F4EF2AF87F9C00EA4EE4 /* PasswordChangeView.swift in Sources */,
 				8A674DBA2AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift in Sources */,
+				B39CEB9D2AFAAC1300954C3A /* UpdateLocationView.swift in Sources */,
 				8AB2E2D72AD0DEEA0066AB1A /* ApolloApp.swift in Sources */,
 				8AB2E3172AD5BB9D0066AB1A /* Article.swift in Sources */,
 				8A674DBC2AD7B07D00A63CC1 /* BookmarkTabView.swift in Sources */,
@@ -673,6 +677,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Apollo/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to curate relevant local news";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -704,6 +709,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Apollo/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to curate relevant local news";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
