@@ -35,17 +35,6 @@ struct InterestSelectionView: View {
     var content: some View {
 
         VStack(spacing: 20) {
-            Button("Continue") {
-                if selectedOptions.count == 0 {
-                    errorMessage = "Please select at least one option"
-                } else {
-                    storeInterestSelections()
-                    errorMessage = ""
-                    updateOptions = true
-                }
-            }
-            Text(errorMessage)
-                .foregroundStyle(.red)
             
             Text("Which topics interest you?")
                 .font(.title)
@@ -75,6 +64,18 @@ struct InterestSelectionView: View {
                 }
             }
             .padding()
+            
+            Button("Continue") {
+                if selectedOptions.count == 0 {
+                    errorMessage = "Please select at least one option"
+                } else {
+                    storeInterestSelections()
+                    errorMessage = ""
+                    updateOptions = true
+                }
+            }
+            Text(errorMessage)
+                .foregroundStyle(.red)
 
             Spacer()
         }
