@@ -15,6 +15,26 @@ import GoogleSignInSwift
 
 public var notifAuthorization = false
 
+
+extension UIApplication {
+    
+    @MainActor
+    class func getTopViewController(base: UIViewController? = nil) -> UIViewController? {
+
+        let base = base ?? UIApplication.shared.keyWindow?.rootViewController
+        if let nav = base as? UINavigationController {
+            return getTopViewController(base: nav.visibleViewController)
+
+        } else if let tab = base as? UITabBarController, let selected = tab.selectedViewController {
+            return getTopViewController(base: selected)
+
+        } else if let presented = base?.presentedViewController {
+            return getTopViewController(base: presented)
+        }
+        return base
+    }
+}
+
 struct LoginView: View {
     @State private var username = ""
     @State private var password = ""
@@ -98,7 +118,13 @@ struct LoginView: View {
                     }
                     
                     GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)) {
-                   
+                        Task {
+                            do {
+                                try await googleSignIn()
+                            } catch {
+                                print(error)
+                            }
+                        }
                     }
                     
                     
@@ -111,11 +137,11 @@ struct LoginView: View {
             )
             .ignoresSafeArea()
             .onAppear {
-                do {
-                    try Auth.auth().signOut()
-                } catch {
-                    print("Sign out error")
-                }
+//                do {
+//                    try Auth.auth().signOut()
+//                } catch {
+//                    print("Sign out error")
+//                }
                 Auth.auth().addStateDidChangeListener {
                     auth, user in
                     if user != nil {
@@ -167,6 +193,44 @@ struct LoginView: View {
         } else {
             print("this shouldn't happen")
         }
+    }
+    
+    private func googleSignIn() async throws {
+        guard let topVC = await UIApplication.getTopViewController() else {
+            throw URLError(.cannotFindHost)
+        }
+        
+        let gidSignInResult = try await GIDSignIn.sharedInstance.signIn(withPresenting: topVC)
+        
+        guard let idToken = gidSignInResult.user.idToken?.tokenString else {
+            throw URLError(.badServerResponse)
+        }
+        
+        let accessToken = gidSignInResult.user.accessToken.tokenString
+        
+        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
+        
+        Auth.auth().signIn(with: credential) {
+            result, error in
+            if let error = error {
+                print(error)
+            }
+            
+            let user = result?.user
+            let email = user?.email
+            
+            let userData = ["email": email!, "interests": []] as [String : Any]
+            
+            Firestore.firestore().collection("users").document(email!).setData(userData) {
+                error in
+                if let error = error {
+                    errorMessage = "\(error)"
+                } else {
+                    errorMessage = ""
+                }
+            }
+        }
+        
     }
 }
 
