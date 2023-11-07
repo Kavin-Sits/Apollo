@@ -9,9 +9,11 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseCore
+import UserNotifications
+
+public var notifAuthorization = false
 
 struct LoginView: View {
-    
     @State private var username = ""
     @State private var password = ""
     @State private var userLoggedIn = false
@@ -24,6 +26,17 @@ struct LoginView: View {
         if userLoggedIn {
             if userInterests.count == 0 {
                 InterestSelectionView(email: (Auth.auth().currentUser?.email)!)
+                    .onAppear() {
+                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.sound]) {
+                            (granted,error) in
+                            if granted {
+                                notifAuthorization = true
+                            }
+                            else if let error = error {
+                                print(error.localizedDescription)
+                            }
+                        }
+                    }
             } else {
                 TestView()
             }
@@ -118,6 +131,7 @@ struct LoginView: View {
         }
         
     }
+    
     private func loginUser() {
         Auth.auth().signIn(withEmail: username, password: password) {
             (authResult,error) in
@@ -159,6 +173,6 @@ struct LoginView: View {
     }
 }
 
-#Preview {
-    LoginView()
-}
+//#Preview {
+//    LoginView(loggedIn:false)
+//}
