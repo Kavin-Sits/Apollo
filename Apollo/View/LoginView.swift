@@ -10,6 +10,8 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseCore
 import UserNotifications
+import GoogleSignIn
+import GoogleSignInSwift
 
 public var notifAuthorization = false
 
@@ -66,8 +68,8 @@ struct LoginView: View {
                         SecureField("password", text: $password)
                             .textFieldStyle(.roundedBorder)
                             .padding(.top, 10)
-                        Button("Forgot password") {
-                            print("forgot password")
+                        NavigationLink("Forgot password") {
+                            ForgotPasswordView()
                         }
                         .controlSize(.small)
                     }
@@ -94,15 +96,10 @@ struct LoginView: View {
                         .background(Color(red: 1, green: 1, blue: 1))
                         .clipShape(Capsule())
                     }
-                
                     
-                    // replace this with Google sign on button
-                    Button("Sign in with Google") {
-                        print("Google sign on")
+                    GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)) {
+                   
                     }
-                    .frame(width: 150, height: 50)
-                    .background(Color(red: 1, green: 1, blue: 1))
-                    .clipShape(Capsule())
                     
                     
                     Spacer()
@@ -114,11 +111,11 @@ struct LoginView: View {
             )
             .ignoresSafeArea()
             .onAppear {
-//                do {
-//                    try Auth.auth().signOut()
-//                } catch {
-//                    print("Sign out error")
-//                }
+                do {
+                    try Auth.auth().signOut()
+                } catch {
+                    print("Sign out error")
+                }
                 Auth.auth().addStateDidChangeListener {
                     auth, user in
                     if user != nil {
@@ -173,6 +170,6 @@ struct LoginView: View {
     }
 }
 
-//#Preview {
-//    LoginView(loggedIn:false)
-//}
+#Preview {
+    LoginView()
+}
