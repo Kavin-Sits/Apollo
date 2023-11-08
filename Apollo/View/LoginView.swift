@@ -60,7 +60,7 @@ struct LoginView: View {
                         }
                     }
             } else {
-                ContentView()
+//                ContentView()
             }
             
         } else {
@@ -70,11 +70,11 @@ struct LoginView: View {
     
     var content: some View {
         NavigationStack{
-            backgroundColor.overlay(
-                VStack(alignment: .center, spacing: 15) {
+            VStack{
+                VStack(alignment: .center, spacing: 25) {
                     Text("APOLLO")
                         .font(Font.custom("Bodoni 72 Smallcaps", size: 52))
-                        .padding(.bottom, 30)
+                    
                     Text(errorMessage)
                         .foregroundStyle(.red)
                     
@@ -117,7 +117,7 @@ struct LoginView: View {
                     GoogleSignInButton(
                         viewModel: GoogleSignInButtonViewModel(
                             scheme: .dark,
-                            style: .wide, 
+                            style: .wide,
                             state: .normal))
                     {
                         Task {
@@ -138,28 +138,22 @@ struct LoginView: View {
                     Spacer()
                     
                 }
-                    .padding(.top, 175.0)
-                    .frame(width: 300)
-                
-            )
-            .ignoresSafeArea()
-            .onAppear {
-//                do {
-//                    try Auth.auth().signOut()
-//                } catch {
-//                    print("Sign out error")
-//                }
-                Auth.auth().addStateDidChangeListener {
-                    auth, user in
-                    if user != nil {
-                        userLoggedIn.toggle()
-                        getUserInterestSelection()
+                .padding(.top, 50)
+                .frame(width: 300)
+                .onAppear {
+                    Auth.auth().addStateDidChangeListener {
+                        auth, user in
+                        if user != nil {
+                            userLoggedIn.toggle()
+                            getUserInterestSelection()
+                        }
+                        
                     }
-                    
                 }
             }
+            .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxWidth: .infinity)
+            .background(backgroundColor)
         }
-        
     }
     
     private func loginUser() {

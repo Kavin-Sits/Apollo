@@ -10,6 +10,10 @@
 		202117DF2ADC8BD70083BC0B /* MainSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */; };
 		2056F4EF2AF87F9C00EA4EE4 /* PasswordChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */; };
 		8A2B78F32AFB140E00765A4A /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */; };
+		8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F72AFB24FC00765A4A /* CardTransition.swift */; };
+		8A2B78FA2AFB254000765A4A /* SymbolModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F92AFB254000765A4A /* SymbolModifier.swift */; };
+		8A2B78FD2AFB258100765A4A /* swipe.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8A2B78FC2AFB258100765A4A /* swipe.wav */; };
+		8A2B78FF2AFB25FB00765A4A /* PlaySound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78FE2AFB25FB00765A4A /* PlaySound.swift */; };
 		8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */; };
 		8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB72AD78C1C00A63CC1 /* RetryView.swift */; };
 		8A674DBA2AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */; };
@@ -29,7 +33,7 @@
 		8AB2E3172AD5BB9D0066AB1A /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3162AD5BB9D0066AB1A /* Article.swift */; };
 		8AB2E3192AD5BDB30066AB1A /* NewsAPIResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3182AD5BDB30066AB1A /* NewsAPIResponse.swift */; };
 		8AB2E31C2AD63FA90066AB1A /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E31B2AD63FA90066AB1A /* SafariView.swift */; };
-		8AB2E3202AD641C00066AB1A /* OldCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E31F2AD641C00066AB1A /* OldCardView.swift */; };
+		8AB2E3202AD641C00066AB1A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E31F2AD641C00066AB1A /* CardView.swift */; };
 		8AB2E3232AD6466D0066AB1A /* NewsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3222AD6466D0066AB1A /* NewsAPI.swift */; };
 		8AB2E3252AD646EF0066AB1A /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3242AD646EF0066AB1A /* Category.swift */; };
 		8AB2E3282AD649240066AB1A /* ArticleNewsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E3272AD649240066AB1A /* ArticleNewsViewModel.swift */; };
@@ -92,6 +96,10 @@
 		202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsView.swift; sourceTree = "<group>"; };
 		2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordChangeView.swift; sourceTree = "<group>"; };
 		8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
+		8A2B78F72AFB24FC00765A4A /* CardTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTransition.swift; sourceTree = "<group>"; };
+		8A2B78F92AFB254000765A4A /* SymbolModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolModifier.swift; sourceTree = "<group>"; };
+		8A2B78FC2AFB258100765A4A /* swipe.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swipe.wav; sourceTree = "<group>"; };
+		8A2B78FE2AFB25FB00765A4A /* PlaySound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySound.swift; sourceTree = "<group>"; };
 		8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPlaceholderView.swift; sourceTree = "<group>"; };
 		8A674DB72AD78C1C00A63CC1 /* RetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryView.swift; sourceTree = "<group>"; };
 		8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBookmarkViewModel.swift; sourceTree = "<group>"; };
@@ -115,7 +123,7 @@
 		8AB2E3182AD5BDB30066AB1A /* NewsAPIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsAPIResponse.swift; sourceTree = "<group>"; };
 		8AB2E31A2AD5D1330066AB1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8AB2E31B2AD63FA90066AB1A /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
-		8AB2E31F2AD641C00066AB1A /* OldCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldCardView.swift; sourceTree = "<group>"; };
+		8AB2E31F2AD641C00066AB1A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		8AB2E3222AD6466D0066AB1A /* NewsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsAPI.swift; sourceTree = "<group>"; };
 		8AB2E3242AD646EF0066AB1A /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		8AB2E3272AD649240066AB1A /* ArticleNewsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleNewsViewModel.swift; sourceTree = "<group>"; };
@@ -193,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */,
+				8A2B78F92AFB254000765A4A /* SymbolModifier.swift */,
 			);
 			path = Modifier;
 			sourceTree = "<group>";
@@ -204,6 +213,23 @@
 				8AB2E31A2AD5D1330066AB1A /* Info.plist */,
 			);
 			path = Info;
+			sourceTree = "<group>";
+		};
+		8A2B78F62AFB24E200765A4A /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				8A2B78F72AFB24FC00765A4A /* CardTransition.swift */,
+				8A2B78FE2AFB25FB00765A4A /* PlaySound.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		8A2B78FB2AFB257400765A4A /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				8A2B78FC2AFB258100765A4A /* swipe.wav */,
+			);
+			path = Sound;
 			sourceTree = "<group>";
 		};
 		8AB2E2CA2AD0DEEA0066AB1A = {
@@ -230,13 +256,15 @@
 		8AB2E2D52AD0DEEA0066AB1A /* Apollo */ = {
 			isa = PBXGroup;
 			children = (
+				8A2B78FB2AFB257400765A4A /* Sound */,
+				8A2B78F62AFB24E200765A4A /* Extension */,
 				8A2B78F52AFB148A00765A4A /* Info */,
 				8A2B78F42AFB141400765A4A /* Modifier */,
 				8A2B78F12AFB13C100765A4A /* Component */,
 				8AB2E3262AD649090066AB1A /* ViewModel */,
 				8AB2E3212AD646560066AB1A /* API */,
-				8AB2E30A2AD0E7590066AB1A /* View */,
 				8AB2E3092AD0E70D0066AB1A /* Model */,
+				8AB2E30A2AD0E7590066AB1A /* View */,
 				8AB2E3052AD0E3180066AB1A /* Launch Screen.storyboard */,
 				8AB2E2D62AD0DEEA0066AB1A /* ApolloApp.swift */,
 				8AB2E2DF2AD0DEED0066AB1A /* Persistence.swift */,
@@ -289,7 +317,7 @@
 				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
 				8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */,
 				F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */,
-				8AB2E31F2AD641C00066AB1A /* OldCardView.swift */,
+				8AB2E31F2AD641C00066AB1A /* CardView.swift */,
 				8A674DBD2AD84F2700A63CC1 /* TestView.swift */,
 				B39CEB9E2AFAB45900954C3A /* ProfilePhotoView.swift */,
 				202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */,
@@ -472,6 +500,7 @@
 				8AB2E2DE2AD0DEED0066AB1A /* Preview Assets.xcassets in Resources */,
 				8AB2E3152AD5BB3C0066AB1A /* News.json in Resources */,
 				8AB2E2DB2AD0DEED0066AB1A /* Assets.xcassets in Resources */,
+				8A2B78FD2AFB258100765A4A /* swipe.wav in Resources */,
 				8AC6118F2AFAA98800F88E52 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -498,13 +527,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A674DBE2AD84F2700A63CC1 /* TestView.swift in Sources */,
+				8A2B78FF2AFB25FB00765A4A /* PlaySound.swift in Sources */,
 				8AB2E3282AD649240066AB1A /* ArticleNewsViewModel.swift in Sources */,
 				B39CEB9F2AFAB45900954C3A /* ProfilePhotoView.swift in Sources */,
+				8A2B78FA2AFB254000765A4A /* SymbolModifier.swift in Sources */,
 				8AB2E2E02AD0DEED0066AB1A /* Persistence.swift in Sources */,
 				8AB2E31C2AD63FA90066AB1A /* SafariView.swift in Sources */,
 				F0D733002ADCFE2F0088DDAB /* LoginView.swift in Sources */,
 				202117DF2ADC8BD70083BC0B /* MainSettingsView.swift in Sources */,
 				8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */,
+				8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */,
 				F093DCC52AFA0794009E8DCC /* ForgotPasswordView.swift in Sources */,
 				8AB2E2D92AD0DEEA0066AB1A /* ContentView.swift in Sources */,
 				8AB2E2E32AD0DEED0066AB1A /* Apollo.xcdatamodeld in Sources */,
@@ -516,7 +548,7 @@
 				B39CEB9D2AFAAC1300954C3A /* UpdateLocationView.swift in Sources */,
 				8AB2E2D72AD0DEEA0066AB1A /* ApolloApp.swift in Sources */,
 				8AB2E3172AD5BB9D0066AB1A /* Article.swift in Sources */,
-				8AB2E3202AD641C00066AB1A /* OldCardView.swift in Sources */,
+				8AB2E3202AD641C00066AB1A /* CardView.swift in Sources */,
 				8AB2E3252AD646EF0066AB1A /* Category.swift in Sources */,
 				B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */,
 				8AB2E30F2AD2F3850066AB1A /* HeaderView.swift in Sources */,

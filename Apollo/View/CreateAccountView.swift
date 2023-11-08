@@ -30,88 +30,80 @@ struct CreateAccountView: View {
     }
     
     var content: some View {
-        backgroundColor.overlay(
-            ZStack {
-                VStack(alignment: .center) {
-                    Spacer()
-                    
-
-                    Button("Create Account") {
-                        // TODO add code to segue from this screen to set pfp screen
-                        if fullName != "" && email != "" && password != "" && dateOfBirth != "" && location != "" && occupation != "" {
-                            createUser()
-                            if errorMessage == "" {
-                                storeUserData()
-                            }
-                        } else {
-                            errorMessage = "Please ensure that all fields are filled"
-                        }
-                        
-                    }
-                    .frame(height: 200)
-                    .cornerRadius(20)
-                    .buttonStyle(.borderedProminent)
-                }
                 
+        VStack(alignment: .center, spacing: 25) {
+            
+            VStack(alignment: .leading) {
                 
-                VStack(alignment: .center, spacing: 25) {
-                    
-                    VStack(alignment: .leading) {
-                        
-                        Text("Full Name")
-                        TextField("", text: $fullName)
-                            .textFieldStyle(.roundedBorder)
+                Text("Full Name")
+                TextField("", text: $fullName)
+                    .textFieldStyle(.roundedBorder)
 
-                        Text("Email")
-                            .padding(.top, 25)
-                        TextField("", text: $email)
-                            .textFieldStyle(.roundedBorder)
-                            .autocapitalization(.none)
-                        
-                        Text("Password")
-                            .padding(.top, 25)
-                        SecureField("", text: $password)
-                            .textFieldStyle(.roundedBorder)
-                        
-                        Text("Date of Birth")
-                            .padding(.top, 25)
-                        TextField("mm/dd/yyyy", text: $dateOfBirth)
-                            .textFieldStyle(.roundedBorder)
-                        
-                        Text("Location")
-                            .padding(.top, 25)
-                        
+                Text("Email")
+                    .padding(.top, 25)
+                TextField("", text: $email)
+                    .textFieldStyle(.roundedBorder)
+                    .autocapitalization(.none)
+                
+                Text("Password")
+                    .padding(.top, 25)
+                SecureField("", text: $password)
+                    .textFieldStyle(.roundedBorder)
+                
+                Text("Date of Birth")
+                    .padding(.top, 25)
+                TextField("mm/dd/yyyy", text: $dateOfBirth)
+                    .textFieldStyle(.roundedBorder)
+                
+                Text("Location")
+                    .padding(.top, 25)
+                
 //                        LocationButton(.currentLocation) {
 //
 //                        }
 //                        .tint(.white)
 //                        .labelStyle(.iconOnly)
-                        
-                        TextField("", text: $location)
-                            .textFieldStyle(.roundedBorder)
-                        
-                        Text("Occupation")
-                            .padding(.top, 25)
-                            
-                        OccupationListDropdownMenu() {
-                            option in
-                            self.occupation = option
-                        }
-                        .frame(width: 320)
-                        
-                        Text(errorMessage)
-                            .foregroundStyle(.red)
-                        
-                        Spacer()
-                    }
+                
+                TextField("", text: $location)
+                    .textFieldStyle(.roundedBorder)
+                
+                Text("Occupation")
+                    .padding(.top, 25)
+                    
+                OccupationListDropdownMenu() {
+                    option in
+                    self.occupation = option
                 }
-                .padding(.top, 100)
-                .padding(.bottom, 70)
                 .frame(width: 320)
+                
+                Text(errorMessage)
+                    .foregroundStyle(.red)
+                
+                Spacer()
             }
+            .frame(width: 320)
             
-        )
-        .ignoresSafeArea()
+            VStack {
+                Button("Create Account") {
+                    // TODO add code to segue from this screen to set pfp screen
+                    if fullName != "" && email != "" && password != "" && dateOfBirth != "" && location != "" && occupation != "" {
+                        createUser()
+                        if errorMessage == "" {
+                            storeUserData()
+                        }
+                    } else {
+                        errorMessage = "Please ensure that all fields are filled"
+                    }
+                    
+                }
+                .modifier(ButtonModifier())
+            }
+            .frame(width: 320)
+        }
+        .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxWidth: .infinity)
+        .padding(.top, 80)
+        .padding(.bottom, 70)
+        .background(backgroundColor)
     }
     
     private func createUser() {
