@@ -15,11 +15,12 @@
 		8A2B78FD2AFB258100765A4A /* swipe.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8A2B78FC2AFB258100765A4A /* swipe.wav */; };
 		8A2B78FF2AFB25FB00765A4A /* PlaySound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78FE2AFB25FB00765A4A /* PlaySound.swift */; };
 		8A2B79042AFB5B2600765A4A /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B79032AFB5B2600765A4A /* AuthViewModel.swift */; };
+		8A2B79062AFBDDE000765A4A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B79052AFBDDE000765A4A /* HomeView.swift */; };
 		8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */; };
 		8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB72AD78C1C00A63CC1 /* RetryView.swift */; };
 		8A674DBA2AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */; };
 		8AB2E2D72AD0DEEA0066AB1A /* ApolloApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2D62AD0DEEA0066AB1A /* ApolloApp.swift */; };
-		8AB2E2D92AD0DEEA0066AB1A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */; };
+		8AB2E2D92AD0DEEA0066AB1A /* SwipeableCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2D82AD0DEEA0066AB1A /* SwipeableCardView.swift */; };
 		8AB2E2DB2AD0DEED0066AB1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AB2E2DA2AD0DEED0066AB1A /* Assets.xcassets */; };
 		8AB2E2DE2AD0DEED0066AB1A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AB2E2DD2AD0DEED0066AB1A /* Preview Assets.xcassets */; };
 		8AB2E2E02AD0DEED0066AB1A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB2E2DF2AD0DEED0066AB1A /* Persistence.swift */; };
@@ -101,12 +102,13 @@
 		8A2B78FC2AFB258100765A4A /* swipe.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swipe.wav; sourceTree = "<group>"; };
 		8A2B78FE2AFB25FB00765A4A /* PlaySound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySound.swift; sourceTree = "<group>"; };
 		8A2B79032AFB5B2600765A4A /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		8A2B79052AFBDDE000765A4A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPlaceholderView.swift; sourceTree = "<group>"; };
 		8A674DB72AD78C1C00A63CC1 /* RetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryView.swift; sourceTree = "<group>"; };
 		8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBookmarkViewModel.swift; sourceTree = "<group>"; };
 		8AB2E2D32AD0DEEA0066AB1A /* Apollo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Apollo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AB2E2D62AD0DEEA0066AB1A /* ApolloApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApolloApp.swift; sourceTree = "<group>"; };
-		8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		8AB2E2D82AD0DEEA0066AB1A /* SwipeableCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeableCardView.swift; sourceTree = "<group>"; };
 		8AB2E2DA2AD0DEED0066AB1A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8AB2E2DD2AD0DEED0066AB1A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8AB2E2DF2AD0DEED0066AB1A /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -316,7 +318,7 @@
 			isa = PBXGroup;
 			children = (
 				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
-				8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */,
+				8AB2E2D82AD0DEEA0066AB1A /* SwipeableCardView.swift */,
 				F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */,
 				8AB2E31F2AD641C00066AB1A /* CardView.swift */,
 				B39CEB9E2AFAB45900954C3A /* ProfilePhotoView.swift */,
@@ -329,6 +331,7 @@
 				8A674DB72AD78C1C00A63CC1 /* RetryView.swift */,
 				F093DCC42AFA0794009E8DCC /* ForgotPasswordView.swift */,
 				B39CEB9C2AFAAC1300954C3A /* UpdateLocationView.swift */,
+				8A2B79052AFBDDE000765A4A /* HomeView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -537,7 +540,8 @@
 				8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */,
 				8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */,
 				F093DCC52AFA0794009E8DCC /* ForgotPasswordView.swift in Sources */,
-				8AB2E2D92AD0DEEA0066AB1A /* ContentView.swift in Sources */,
+				8AB2E2D92AD0DEEA0066AB1A /* SwipeableCardView.swift in Sources */,
+				8A2B79062AFBDDE000765A4A /* HomeView.swift in Sources */,
 				8AB2E2E32AD0DEED0066AB1A /* Apollo.xcdatamodeld in Sources */,
 				8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */,
 				8AB2E3192AD5BDB30066AB1A /* NewsAPIResponse.swift in Sources */,
