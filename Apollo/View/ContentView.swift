@@ -19,6 +19,7 @@ struct ContentView: View {
     @State var cardViews: [CardView] = []
     @State private var lastCardIndex: Int = 1
     @State var showSettings:Bool = false
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     init(articles: [Article]) {
             self.articles = articles

@@ -36,16 +36,14 @@ extension UIApplication {
 }
 
 struct LoginView: View {
-    @State private var username = ""
-    @State private var password = ""
-    @State private var userLoggedIn = false
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State private var errorMessage = ""
     @State private var userInterests: [String] = []
     
     let backgroundColor = Color(red: 148/255, green: 172/255, blue: 255/255)
     
     var body: some View {
-        if userLoggedIn {
+        if authViewModel.isLoggedIn {
             if userInterests.count == 0 {
                 InterestSelectionView(email: (Auth.auth().currentUser?.email)!)
                     .onAppear() {
@@ -69,6 +67,7 @@ struct LoginView: View {
     }
     
     var content: some View {
+        
         NavigationStack{
             VStack{
                 VStack(alignment: .center, spacing: 25) {
@@ -80,13 +79,13 @@ struct LoginView: View {
                     
                     VStack(alignment: .leading) {
                         Text("Username/Email")
-                        TextField("username", text: $username)
+                        TextField("username", text: $authViewModel.username)
                             .textFieldStyle(.roundedBorder)
                             .autocapitalization(.none)
                             .padding(.top, 10)
                         Text("Password")
                             .padding(.top, 10)
-                        SecureField("password", text: $password)
+                        SecureField("password", text: $authViewModel.password)
                             .textFieldStyle(.roundedBorder)
                             .padding(.top, 10)
                         NavigationLink("Forgot password") {
@@ -144,7 +143,7 @@ struct LoginView: View {
                     Auth.auth().addStateDidChangeListener {
                         auth, user in
                         if user != nil {
-                            userLoggedIn.toggle()
+                            authViewModel.logIn()
                             getUserInterestSelection()
                         }
                         
@@ -157,7 +156,7 @@ struct LoginView: View {
     }
     
     private func loginUser() {
-        Auth.auth().signIn(withEmail: username, password: password) {
+        Auth.auth().signIn(withEmail: authViewModel.username, password: authViewModel.password) {
             (authResult,error) in
                 if let error = error as NSError? {
                     errorMessage = "\(error.localizedDescription)"

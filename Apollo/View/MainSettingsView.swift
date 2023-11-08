@@ -20,6 +20,7 @@ struct MainSettingsView: View {
     @State private var selectedOccupationIndex = 0
     @State private var isPickerVisible = false
     @State private var showAlert = false
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     @Environment(\.dismiss) var presentationMode
 
@@ -107,22 +108,24 @@ struct MainSettingsView: View {
                             Text("View History")
                         }
                         
-                        NavigationLink(destination: LoginView()) {
+                        @EnvironmentObject var authViewModel: AuthViewModel
+                        
+                        Button(action: {
+                            do {
+                                try Auth.auth().signOut()
+                                self.presentationMode.callAsFunction()
+                                self.authViewModel.logOut()
+                                
+                            } catch let signOutError as NSError {
+                                print("Error signing out: \(signOutError)")
+                            }
+                            
+                        }, label:{
                             Text("Sign Out")
                                 .foregroundColor(.blue)
-                        }
-                        .background(
-                            Button(action: {
-                                do {
-                                    try Auth.auth().signOut()
-                                } catch let signOutError as NSError {
-                                    print("Error signing out: \(signOutError)")
-                                }
-                                
-                            }) {
-                                EmptyView()
-                            }
-                        )
+                            
+                        })
+                        
                         Button(action: {
                             showAlert = true
                         }) {

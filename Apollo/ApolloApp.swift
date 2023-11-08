@@ -22,10 +22,12 @@ struct ApolloApp: App {
     let persistenceController = PersistenceController.shared
 
     @StateObject var articleBookmarkVM = ArticleBookmarkViewModel()
+    @StateObject var authViewModel = AuthViewModel()
     
     var body: some Scene {
         WindowGroup {
             LoginView()
+                .environmentObject(authViewModel)
         }
     }
 }
