@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		202117DF2ADC8BD70083BC0B /* MainSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */; };
 		2056F4EF2AF87F9C00EA4EE4 /* PasswordChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */; };
+		8A2B78F32AFB140E00765A4A /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */; };
 		8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */; };
 		8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB72AD78C1C00A63CC1 /* RetryView.swift */; };
 		8A674DBA2AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */; };
@@ -90,6 +91,7 @@
 /* Begin PBXFileReference section */
 		202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsView.swift; sourceTree = "<group>"; };
 		2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordChangeView.swift; sourceTree = "<group>"; };
+		8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
 		8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPlaceholderView.swift; sourceTree = "<group>"; };
 		8A674DB72AD78C1C00A63CC1 /* RetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryView.swift; sourceTree = "<group>"; };
 		8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBookmarkViewModel.swift; sourceTree = "<group>"; };
@@ -111,7 +113,7 @@
 		8AB2E3142AD5BB3C0066AB1A /* News.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = News.json; sourceTree = "<group>"; };
 		8AB2E3162AD5BB9D0066AB1A /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		8AB2E3182AD5BDB30066AB1A /* NewsAPIResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsAPIResponse.swift; sourceTree = "<group>"; };
-		8AB2E31A2AD5D1330066AB1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8AB2E31A2AD5D1330066AB1A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8AB2E31B2AD63FA90066AB1A /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		8AB2E31F2AD641C00066AB1A /* OldCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldCardView.swift; sourceTree = "<group>"; };
 		8AB2E3222AD6466D0066AB1A /* NewsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsAPI.swift; sourceTree = "<group>"; };
@@ -180,6 +182,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8A2B78F12AFB13C100765A4A /* Component */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
+		8A2B78F42AFB141400765A4A /* Modifier */ = {
+			isa = PBXGroup;
+			children = (
+				8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */,
+			);
+			path = Modifier;
+			sourceTree = "<group>";
+		};
+		8A2B78F52AFB148A00765A4A /* Info */ = {
+			isa = PBXGroup;
+			children = (
+				8AC6118E2AFAA98800F88E52 /* GoogleService-Info.plist */,
+				8AB2E31A2AD5D1330066AB1A /* Info.plist */,
+			);
+			path = Info;
+			sourceTree = "<group>";
+		};
 		8AB2E2CA2AD0DEEA0066AB1A = {
 			isa = PBXGroup;
 			children = (
@@ -204,10 +230,11 @@
 		8AB2E2D52AD0DEEA0066AB1A /* Apollo */ = {
 			isa = PBXGroup;
 			children = (
-				8AC6118E2AFAA98800F88E52 /* GoogleService-Info.plist */,
+				8A2B78F52AFB148A00765A4A /* Info */,
+				8A2B78F42AFB141400765A4A /* Modifier */,
+				8A2B78F12AFB13C100765A4A /* Component */,
 				8AB2E3262AD649090066AB1A /* ViewModel */,
 				8AB2E3212AD646560066AB1A /* API */,
-				8AB2E31A2AD5D1330066AB1A /* Info.plist */,
 				8AB2E30A2AD0E7590066AB1A /* View */,
 				8AB2E3092AD0E70D0066AB1A /* Model */,
 				8AB2E3052AD0E3180066AB1A /* Launch Screen.storyboard */,
@@ -259,6 +286,7 @@
 		8AB2E30A2AD0E7590066AB1A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
 				8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */,
 				8AB2E31F2AD641C00066AB1A /* OldCardView.swift */,
 				8A674DBD2AD84F2700A63CC1 /* TestView.swift */,
@@ -267,7 +295,6 @@
 				202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */,
 				2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */,
 				B340272D2ADE165A00B78062 /* InterestSelectionView.swift */,
-				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
 				8AB2E30E2AD2F3850066AB1A /* HeaderView.swift */,
 				8AB2E31B2AD63FA90066AB1A /* SafariView.swift */,
 				8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */,
@@ -494,6 +521,7 @@
 				B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */,
 				8AB2E30F2AD2F3850066AB1A /* HeaderView.swift in Sources */,
 				8AB2E3232AD6466D0066AB1A /* NewsAPI.swift in Sources */,
+				8A2B78F32AFB140E00765A4A /* ButtonModifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -660,7 +688,7 @@
 				DEVELOPMENT_TEAM = N235R65SQF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Apollo/Info.plist;
+				INFOPLIST_FILE = Apollo/Info/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to curate relevant local news";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -693,7 +721,7 @@
 				DEVELOPMENT_TEAM = N235R65SQF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Apollo/Info.plist;
+				INFOPLIST_FILE = Apollo/Info/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to curate relevant local news";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

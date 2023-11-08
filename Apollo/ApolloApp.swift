@@ -26,10 +26,6 @@ struct ApolloApp: App {
     var body: some Scene {
         WindowGroup {
             LoginView()
-//            ContentView()
-//                .environment(\.managedObjectContext, persistenceController.container.viewContext)
-//            FullNewsView()
-//                .environmentObject(articleBookmarkVM)
         }
     }
 }

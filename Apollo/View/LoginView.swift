@@ -60,7 +60,7 @@ struct LoginView: View {
                         }
                     }
             } else {
-                TestView()
+                ContentView()
             }
             
         } else {
