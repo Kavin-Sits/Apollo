@@ -16,7 +16,7 @@ struct ButtonModifier: ViewModifier {
             .font(.headline)
             .padding()
             .frame(minWidth: 0, maxWidth: .infinity)
-            .background(Capsule().fill(Color.pink))
-            .foregroundStyle(Color.white)
+            .frame(height: 50)
+            .background(Capsule().fill(Color.white))
     }
 }

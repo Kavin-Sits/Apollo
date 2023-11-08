@@ -288,10 +288,10 @@
 			children = (
 				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
 				8AB2E2D82AD0DEEA0066AB1A /* ContentView.swift */,
+				F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */,
 				8AB2E31F2AD641C00066AB1A /* OldCardView.swift */,
 				8A674DBD2AD84F2700A63CC1 /* TestView.swift */,
 				B39CEB9E2AFAB45900954C3A /* ProfilePhotoView.swift */,
-				F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */,
 				202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */,
 				2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */,
 				B340272D2ADE165A00B78062 /* InterestSelectionView.swift */,
