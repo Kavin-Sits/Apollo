@@ -11,7 +11,6 @@ struct TestView: View {
     var body: some View {
         NavigationStack{
             VStack{
-                HeaderView()
             }
         }
     }

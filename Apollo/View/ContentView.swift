@@ -18,6 +18,7 @@ struct ContentView: View {
     @State var currentIndex = 0
     @State var cardViews: [CardView] = []
     @State private var lastCardIndex: Int = 1
+    @State var showSettings:Bool = false
     
     init(articles: [Article]) {
             self.articles = articles
@@ -69,7 +70,7 @@ struct ContentView: View {
     var body: some View {
         
         VStack {
-            HeaderView()
+            HeaderView(showSettingsView: $showSettings)
             
             Spacer()
             
@@ -132,9 +133,9 @@ struct ContentView: View {
                                 })
                         ).transition(self.cardRemovalTransition)
                 }
-//                .sheet(item: $selectedArticle, content: {
-//                    SafariView(url: $0.articleURL)
-//                })
+                .sheet(item: $selectedArticle, content: {
+                    SafariView(url: $0.articleURL)
+                })
             }
         }
     }

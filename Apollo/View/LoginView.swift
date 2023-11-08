@@ -60,7 +60,7 @@ struct LoginView: View {
                         }
                     }
             } else {
-//                ContentView()
+                ContentView(articles: Article.previewData)
             }
             
         } else {
