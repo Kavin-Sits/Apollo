@@ -27,7 +27,7 @@ struct InterestSelectionView: View {
     var body: some View {
         NavigationStack {
             content.navigationDestination(isPresented: $updateOptions) {
-                TestView().navigationBarBackButtonHidden(true)
+                ContentView(articles: Article.previewData).navigationBarBackButtonHidden(true)
             }
         }
     }
