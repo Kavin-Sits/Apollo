@@ -50,6 +50,7 @@ struct SwipeableCardView: View {
                 if !tappedArticles.contains(article.url) {
                     CardView(article: article)
                         .onTapGesture {
+                            print("tapped")
                             if article.url == topArticleURL {
                                 self.selectedArticle = article
                             }

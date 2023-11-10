@@ -9,12 +9,13 @@ import SwiftUI
 
 struct TestCardView: View {
     
-    let articles: [Article]
+    @StateObject var articleNewsVM = ArticleNewsViewModel()
     @State private var tappedArticles = Set<String>()
     @State private var topArticleURL: String?
     @GestureState private var dragState = DragState.inactive
     @State private var cardRemovalTransition = AnyTransition.trailingBottom
     var dragAreaThreshold: CGFloat = 65.0
+    @State private var selectedArticle: Article?
     
     
     enum DragState {
@@ -47,79 +48,64 @@ struct TestCardView: View {
             ForEach(articles) { article in
                 if !tappedArticles.contains(article.url) {
                     CardView(article: article)
-                        .zIndex(article.url == topArticleURL ? 1 : 0)
-                        .overlay(
-                            ZStack{
-                                Image(systemName: "x.circle")
-                                    .modifier(SymbolModifier())
-                                    .opacity(article.url == topArticleURL && self.dragState.translation.width < -self.dragAreaThreshold ? 1.0 : 0.0)
-                                
-                                Image(systemName: "heart.circle")
-                                    .modifier(SymbolModifier())
-                                    .opacity(article.url == topArticleURL && self.dragState.translation.width > self.dragAreaThreshold ? 1.0 : 0.0)
-                            })
-                        .offset(x: article.url == topArticleURL ? self.dragState.translation.width : 0, y: article.url == topArticleURL ? self.dragState.translation.height : 0)
-                        .scaleEffect(self.dragState.isDragging && article.url == topArticleURL ? 0.85 : 1.0)
-                        .rotationEffect(Angle(degrees: article.url == topArticleURL ? Double(self.dragState.translation.width / 12) : 0))
-                        .animation(.interpolatingSpring(stiffness: 120, damping: 120), value: dragState.isDragging)
-                        .gesture(LongPressGesture(minimumDuration: 0.01)
-                            .sequenced(before: DragGesture())
-                            .updating(self.$dragState, body: { (value, state, transaction) in
-                                if article.url == topArticleURL {
-                                    switch value {
-                                    case .first(true):
-                                        state = .pressing
-                                    case .second(true, let drag):
-                                        state = .dragging(translation: drag?.translation ?? .zero)
-                                    default:
-                                        break
-                                    }
-                                }
-                            })
-                            .onChanged({ (value) in
-                                if article.url == topArticleURL {
-                                    guard case .second(true, let drag?) = value else {
-                                        return
-                                    }
-                                    
-                                    if drag.translation.width < -self.dragAreaThreshold {
-                                        self.cardRemovalTransition = AnyTransition.leadingBottom
-                                    }
-                                    
-                                    if drag.translation.width > self.dragAreaThreshold {
-                                        self.cardRemovalTransition = AnyTransition.trailingBottom
-                                    }
-                                }
-                            })
-                            .onEnded({ (value) in
-                                if article.url == topArticleURL {
-                                    guard case .second(true, let drag?) = value else {
-                                        return
-                                    }
-                                    
-                                    if drag.translation.width < -self.dragAreaThreshold || drag.translation.width > self.dragAreaThreshold {
-                                        playSound(sound: "swipe", type: "wav")
-                                        tappedArticles.insert(article.url)
-                                        updateTopArticle()
-                                        
-                                    }
-                                }
-                            })
-                        ).transition(self.cardRemovalTransition)
+                        .onTapGesture {
+                            selectedArticle = article
+                        }
+//                        .zIndex(article.url == topArticleURL ? 1 : 0)
                 }
             }
         }
-        .onAppear{
-            updateTopArticle()
-        }
+        .sheet(item: $selectedArticle, content: {
+            SafariView(url: $0.articleURL)
+        })
+//        .onAppear{
+//            updateTopArticle()
+//            Task{
+//                await loadTask()
+//            }
+//        }
     }
     
     private func updateTopArticle() {
         topArticleURL = articles.first(
             where: { !tappedArticles.contains($0.url) })?.url
     }
+    
+    @ViewBuilder
+    private var overlayView: some View {
+        
+        switch articleNewsVM.phase {
+        case .empty:
+            ProgressView()
+        case .success(let articles) where articles.isEmpty:
+            EmptyPlaceholderView(text: "No Articles", image: nil)
+        case .failure(let error):
+            RetryView(text: error.localizedDescription, retryAction: refreshTask)
+        default: EmptyView()
+        }
+    }
+    
+    private var articles: [Article] {
+        if case let .success(articles) = articleNewsVM.phase {
+            return Array(articles.prefix(10))
+        } else {
+            return []
+        }
+    }
+    
+    @Sendable
+    private func loadTask() async {
+        await articleNewsVM.loadArticles()
+    }
+    
+    
+    private func refreshTask() {
+        DispatchQueue.main.async {
+            articleNewsVM.fetchTaskToken = FetchTaskToken(category: articleNewsVM.fetchTaskToken.category, token: Date())
+        }
+    }
 }
 
 #Preview {
-    TestCardView(articles: Array(Article.previewData.prefix(10)))
+    TestCardView()
 }
