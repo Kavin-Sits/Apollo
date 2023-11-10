@@ -13,6 +13,7 @@ struct SwipeableCardView: View {
     let articles: [Article]
     @State private var tappedArticles = Set<String>()
     @State private var topArticleURL: String?
+    @State private var selectedArticle: Article?
     @GestureState private var dragState = DragState.inactive
     @State private var cardRemovalTransition = AnyTransition.trailingBottom
     var dragAreaThreshold: CGFloat = 65.0
@@ -48,6 +49,11 @@ struct SwipeableCardView: View {
             ForEach(articles) { article in
                 if !tappedArticles.contains(article.url) {
                     CardView(article: article)
+                        .onTapGesture {
+                            if article.url == topArticleURL {
+                                self.selectedArticle = article
+                            }
+                        }
                         .zIndex(article.url == topArticleURL ? 1 : 0)
                         .overlay(
                             ZStack{
@@ -109,6 +115,9 @@ struct SwipeableCardView: View {
                         ).transition(self.cardRemovalTransition)
                 }
             }
+            .sheet(item: $selectedArticle, content: {
+                SafariView(url: $0.articleURL)
+            })
         }
         .onAppear{
             updateTopArticle()
