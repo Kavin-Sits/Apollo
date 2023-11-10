@@ -1,14 +1,13 @@
 //
-//  SwipeableCardView.swift
+//  TestCardView.swift
 //  Apollo
 //
-//  Created by Kavin Sitsabeshon on 10/6/23.
+//  Created by Kavin Sitsabeshon on 11/10/23.
 //
 
 import SwiftUI
-import CoreData
 
-struct SwipeableCardView: View {
+struct TestCardView: View {
     
     let articles: [Article]
     @State private var tappedArticles = Set<String>()
@@ -122,5 +121,5 @@ struct SwipeableCardView: View {
 }
 
 #Preview {
-    SwipeableCardView(articles: Array(Article.previewData.prefix(10)))
+    TestCardView(articles: Array(Article.previewData.prefix(10)))
 }
