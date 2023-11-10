@@ -52,6 +52,45 @@ struct TestCardView: View {
                             selectedArticle = article
                         }
 //                        .zIndex(article.url == topArticleURL ? 1 : 0)
+                        .offset(x: self.dragState.translation.width, y: self.dragState.translation.height)
+                        .gesture(LongPressGesture(minimumDuration: 0.01)
+                            .sequenced(before: DragGesture())
+                            .updating(self.$dragState, body: { (value, state, transaction) in
+                                switch value {
+                                case .first(true):
+                                    state = .pressing
+                                case .second(true, let drag):
+                                    state = .dragging(translation: drag?.translation ?? .zero)
+                                default:
+                                    break
+                                }
+                            })
+                            .onChanged({ (value) in
+                                guard case .second(true, let drag?) = value else {
+                                    return
+                                }
+                                
+                                if drag.translation.width < -self.dragAreaThreshold {
+                                    self.cardRemovalTransition = AnyTransition.leadingBottom
+                                }
+                                
+                                if drag.translation.width > self.dragAreaThreshold {
+                                    self.cardRemovalTransition = AnyTransition.trailingBottom
+                                }
+                            })
+                            .onEnded({ (value) in
+                                    guard case .second(true, let drag?) = value else {
+                                        return
+                                    }
+                                    
+                                if drag.translation.width < -self.dragAreaThreshold || drag.translation.width > self.dragAreaThreshold {
+                                    playSound(sound: "swipe", type: "wav")
+                                    tappedArticles.insert(article.url)
+                                    updateTopArticle()
+                                    
+                                }
+                            })
+                        ).transition(self.cardRemovalTransition)
                 }
             }
         }
