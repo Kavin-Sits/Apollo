@@ -39,12 +39,13 @@ struct LoginView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var errorMessage = ""
     @State private var userInterests: [String] = []
+    @State private var userSelectedInterests: Bool = true
     
     let backgroundColor = Color(red: 148/255, green: 172/255, blue: 255/255)
     
     var body: some View {
         if authViewModel.isLoggedIn {
-            if userInterests.count == 0 {
+            if !userSelectedInterests {
                 InterestSelectionView(email: (Auth.auth().currentUser?.email)!)
                     .onAppear() {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.sound]) {
@@ -105,7 +106,7 @@ struct LoginView: View {
                     Text("or")
                     
                     NavigationLink{
-                        CreateAccountView()
+                        CreateAccountView(userSelectedInterests: self.$userSelectedInterests)
                     } label: {
                         Text("Create account")
                             .modifier(ButtonModifier())
@@ -143,8 +144,15 @@ struct LoginView: View {
                     Auth.auth().addStateDidChangeListener {
                         auth, user in
                         if user != nil {
+                            Task {
+                                do {
+                                    try await getUserInterestSelection()
+                                } catch {
+                                    print(error)
+                                }
+                            }
                             authViewModel.logIn()
-                            getUserInterestSelection()
+                            
                         }
                         
                     }
@@ -166,12 +174,12 @@ struct LoginView: View {
         }
     }
     
-    private func getUserInterestSelection(){
+    private func getUserInterestSelection() async throws {
         let user = Auth.auth().currentUser
         if let user = user {
             let email = user.email!
             
-            Firestore.firestore().collection("users").getDocuments { snapshot, error in
+            await Firestore.firestore().collection("users").getDocuments { snapshot, error in
                 
                 if let error = error {
                     errorMessage = "\(error)"
@@ -183,13 +191,15 @@ struct LoginView: View {
                         if let docEmail = document["email"] as? String,
                            docEmail.caseInsensitiveCompare(email) == .orderedSame {
                             userInterests = document["interests"] as! [String]
-                            print("found user interests")
-                            print(userInterests)
+                            if userInterests.count == 0 {
+                                userSelectedInterests = false
+                            }
                             break
                         }
                     }
                 }
             }
+            
         } else {
             print("this shouldn't happen")
         }

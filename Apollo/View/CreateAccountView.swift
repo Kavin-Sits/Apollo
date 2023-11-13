@@ -23,6 +23,8 @@ struct CreateAccountView: View {
     @State private var errorMessage = ""
     @State private var selectedOptions: Set<String> = []
     
+    @Binding var userSelectedInterests: Bool
+    
     let backgroundColor = Color(red: 148/255, green: 172/255, blue: 255/255)
     
     var body: some View {
@@ -89,6 +91,7 @@ struct CreateAccountView: View {
                     if fullName != "" && email != "" && password != "" && dateOfBirth != "" && location != "" && occupation != "" {
                         createUser()
                         if errorMessage == "" {
+                            userSelectedInterests = false
                             storeUserData()
                         }
                     } else {
@@ -198,6 +201,6 @@ struct OccupationListDropdownMenuList: View {
     }
 }
 
-#Preview {
-    CreateAccountView()
-}
+//#Preview {
+//    CreateAccountView()
+//}
