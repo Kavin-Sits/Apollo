@@ -14,9 +14,10 @@ struct ButtonModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.headline)
+            .foregroundStyle(.white)
             .padding()
             .frame(minWidth: 0, maxWidth: .infinity)
             .frame(height: 50)
-            .background(Capsule().fill(Color(red: 224/255, green: 211/255, blue: 175/255)))
+            .background(Capsule().fill(.blue))
     }
 }

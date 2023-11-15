@@ -28,12 +28,15 @@ struct CardView: View, Identifiable {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 case .failure:
-                    HStack{
-                        Spacer()
-                        Image(systemName: "photo")
-                            .imageScale(.large)
-                        Spacer()
-                    }
+                    Rectangle()
+                        .background(Color.gray)
+                        .overlay(
+                            HStack{
+                                Spacer()
+                                Image(systemName: "photo")
+                                    .imageScale(.large)
+                                Spacer()
+                    })
                 @unknown default:
                     fatalError()
                 }
