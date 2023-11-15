@@ -79,6 +79,9 @@ struct InterestSelectionView: View {
 
             Spacer()
         }
+        .onAppear() {
+            loadUserPreferences()
+        }
         .background(Color(red: 224/255, green: 211/255, blue: 175/255))
     }
 
@@ -93,6 +96,19 @@ struct InterestSelectionView: View {
     private func storeInterestSelections() {
         Firestore.firestore().collection("users").document(userEmail).setData(["interests": Array(selectedOptions)], merge: true)
     }
+    
+    private func loadUserPreferences() {
+            Firestore.firestore().collection("users").document(userEmail).getDocument { document, error in
+                if let document = document, document.exists {
+                    if let data = document.data(), let interests = data["interests"] as? [String] {
+                        selectedOptions = Set(interests)
+                        print("here")
+                    }
+                } else {
+                    print("Document does not exist")
+                }
+            }
+        }
 }
 
 struct RadioButton: View {
