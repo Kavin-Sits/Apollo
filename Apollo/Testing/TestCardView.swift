@@ -51,8 +51,21 @@ struct TestCardView: View {
                         .onTapGesture {
                             selectedArticle = article
                         }
-//                        .zIndex(article.url == topArticleURL ? 1 : 0)
-                        .offset(x: self.dragState.translation.width, y: self.dragState.translation.height)
+                        .zIndex(article.url == topArticleURL ? 1 : 0)
+                        .overlay(
+                            ZStack{
+                                Image(systemName: "x.circle")
+                                    .modifier(SymbolModifier())
+                                    .opacity(article.url == topArticleURL && self.dragState.translation.width < -self.dragAreaThreshold ? 1.0 : 0.0)
+                                
+                                Image(systemName: "heart.circle")
+                                    .modifier(SymbolModifier())
+                                    .opacity(article.url == topArticleURL && self.dragState.translation.width > self.dragAreaThreshold ? 1.0 : 0.0)
+                            })
+                        .offset(x: article.url == topArticleURL ? self.dragState.translation.width : 0, y: article.url == topArticleURL ? self.dragState.translation.height : 0)
+                        .scaleEffect(self.dragState.isDragging && article.url == topArticleURL ? 0.85 : 1.0)
+                        .rotationEffect(Angle(degrees: article.url == topArticleURL ? Double(self.dragState.translation.width / 12) : 0))
+                        .animation(.interpolatingSpring(stiffness: 120, damping: 120), value: dragState.isDragging)
                         .gesture(LongPressGesture(minimumDuration: 0.01)
                             .sequenced(before: DragGesture())
                             .updating(self.$dragState, body: { (value, state, transaction) in
@@ -83,7 +96,12 @@ struct TestCardView: View {
                                         return
                                     }
                                     
-                                if drag.translation.width < -self.dragAreaThreshold || drag.translation.width > self.dragAreaThreshold {
+                                if drag.translation.width < -self.dragAreaThreshold {
+                                    playSound(sound: "swipe", type: "wav")
+                                    tappedArticles.insert(article.url)
+                                    updateTopArticle()
+                                    
+                                } else if drag.translation.width > self.dragAreaThreshold {
                                     playSound(sound: "swipe", type: "wav")
                                     tappedArticles.insert(article.url)
                                     updateTopArticle()
@@ -97,17 +115,23 @@ struct TestCardView: View {
         .sheet(item: $selectedArticle, content: {
             SafariView(url: $0.articleURL)
         })
-//        .onAppear{
-//            updateTopArticle()
-//            Task{
-//                await loadTask()
-//            }
-//        }
+        .onAppear{
+            updateTopArticle()
+            Task{
+                await loadTask()
+            }
+        }
     }
     
     private func updateTopArticle() {
-        topArticleURL = articles.first(
-            where: { !tappedArticles.contains($0.url) })?.url
+        if let currentTopIndex = articles.firstIndex(where: { $0.url == topArticleURL }) {
+                // Find the next article in the list that hasn't been tapped
+                let nextArticle = articles[(currentTopIndex + 1)...].first { !tappedArticles.contains($0.url) }
+                topArticleURL = nextArticle?.url
+            } else {
+                // If no current top article, pick the first one in the list
+                topArticleURL = articles.first(where: { !tappedArticles.contains($0.url) })?.url
+            }
     }
     
     @ViewBuilder

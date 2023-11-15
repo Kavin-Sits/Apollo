@@ -39,7 +39,7 @@ struct CardView: View, Identifiable {
                 }
             }
                 .scaledToFill()
-                .frame(width:350, height: 650)
+                .frame(width:350, height: 550)
                 .clipped()
                 .cornerRadius(24)
                 .overlay(

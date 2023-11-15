@@ -41,7 +41,7 @@ struct LoginView: View {
     @State private var userInterests: [String] = []
     @State private var userSelectedInterests: Bool = true
     
-    let backgroundColor = Color(red: 148/255, green: 172/255, blue: 255/255)
+    let backgroundColor = Color(red: 224/255, green: 211/255, blue: 175/255)
     
     var body: some View {
         if authViewModel.isLoggedIn {
@@ -244,6 +244,6 @@ struct LoginView: View {
     }
 }
 
-#Preview {
-    LoginView()
-}
+//#Preview {
+//    LoginView()
+//}

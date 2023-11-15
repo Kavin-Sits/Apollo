@@ -79,7 +79,7 @@ struct InterestSelectionView: View {
 
             Spacer()
         }
-        .background(Color(red: 0.58135551552097409, green: 0.67444031521406167, blue: 1))
+        .background(Color(red: 224/255, green: 211/255, blue: 175/255))
     }
 
     func toggleOption(_ option: String) {

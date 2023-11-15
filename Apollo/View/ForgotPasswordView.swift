@@ -11,7 +11,7 @@ import FirebaseAuth
 
 struct ForgotPasswordView: View {
     
-    let backgroundColor = Color(red: 148/255, green: 172/255, blue: 255/255)
+    let backgroundColor = Color(red: 224/255, green: 211/255, blue: 175/255)
     
     @State private var email = ""
     @State private var statusMessage = ""

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HeaderView: View {
     
+    @State private var weekdayProgress: Float = 0
     @Binding var showSettingsView:Bool
     let haptics = UINotificationFeedbackGenerator()
     
@@ -16,16 +17,20 @@ struct HeaderView: View {
         VStack(spacing: 0){
             HStack{
                 VStack{
-                    HStack{
+                    HStack(spacing: 15){
+                        Text("Sun")
                         Text("Mon")
                         Text("Tues")
                         Text("Wed")
                         Text("Thurs")
                         Text("Fri")
                         Text("Sat")
-                        Text("Sun")
                     }
-                    ProgressView(value: 0.25)
+                    ProgressView(value: weekdayProgress, total: 1)
+                        .progressViewStyle(LinearProgressViewStyle())
+                        .onAppear{
+                            updateWeekdayProgress()
+                        }
                 }
                 
                 Spacer()
@@ -48,6 +53,14 @@ struct HeaderView: View {
                 .multilineTextAlignment(.center)
                 .bold()
         }
+    }
+    
+    func updateWeekdayProgress() {
+        let currentDate = Date()
+        let calendar = Calendar.current
+        let weekday = calendar.component(.weekday, from: currentDate)
+
+        weekdayProgress = Float(weekday) / 7.0
     }
 }
 
