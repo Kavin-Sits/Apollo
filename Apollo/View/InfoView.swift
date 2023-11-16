@@ -10,6 +10,7 @@ import SwiftUI
 struct InfoView: View {
     
     @Environment(\.dismiss) var presentationMode
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         ScrollView(.vertical, showsIndicators: false){
@@ -39,6 +40,7 @@ struct InfoView: View {
             .padding(.bottom, 25)
             .padding(.horizontal, 25)
         }
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
         .background(Color(red: 224/255, green: 211/255, blue: 175/255))
     }
 }

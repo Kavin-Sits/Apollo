@@ -11,6 +11,7 @@ struct RetryView: View {
     
     let text: String
     let retryAction: () -> ()
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         VStack(spacing: 8){
@@ -22,6 +23,7 @@ struct RetryView: View {
                 Text("Try again")
             })
         }
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
     }
 }
 

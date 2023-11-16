@@ -13,6 +13,8 @@ struct CardView: View, Identifiable {
     
     let article: Article
     
+    @EnvironmentObject var nightModeManager: NightModeManager
+    
     var body: some View {
         VStack{
             AsyncImage(url: article.imageURL){ phase in

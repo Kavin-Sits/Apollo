@@ -12,6 +12,7 @@ struct FooterView: View {
     @Binding var showBookingAlert: Bool
     @Binding var showGuideView:Bool
     @Binding var showInfoView:Bool
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     let haptics = UINotificationFeedbackGenerator()
     
@@ -27,6 +28,7 @@ struct FooterView: View {
             .tint(Color.primary)
             .sheet(isPresented: $showInfoView, content: {
                 InfoView()
+                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             })
             
             Spacer()
@@ -59,8 +61,10 @@ struct FooterView: View {
             .tint(Color.primary)
             .sheet(isPresented: $showGuideView, content: {
                 GuideView()
+                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             })
         }
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
         .padding()
     }
 }

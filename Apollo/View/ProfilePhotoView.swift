@@ -17,6 +17,7 @@ struct ProfilePhotoView: View {
     @State private var imageURL: String = ""
     @State private var cancellable: AnyCancellable? = nil
     @State private var newImagePicked = false
+    @EnvironmentObject var nightModeManager: NightModeManager
 
     init(email: String) {
         userEmail = email
@@ -54,6 +55,7 @@ struct ProfilePhotoView: View {
 
             Spacer()
         }
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
         .frame(width: 400)
         .background(Color(red: 224/255, green: 211/255, blue: 175/255))
         .onAppear {

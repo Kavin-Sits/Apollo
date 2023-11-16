@@ -10,7 +10,7 @@ import FirebaseAuth
 import UIKit
 
 struct MainSettingsView: View {
-    @State private var isNightModeOn = false
+    //@State private var isNightModeOn = false
     @State private var isSoundEffectsOn = false
     @State private var notifAlert = false
     @State private var newPassword = ""
@@ -21,23 +21,13 @@ struct MainSettingsView: View {
     @State private var isPickerVisible = false
     @State private var showAlert = false
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     @Environment(\.dismiss) var presentationMode
 
     var body: some View {
         NavigationView {
             VStack{
-                Button(action: {
-                    self.presentationMode.callAsFunction()
-                }, label: {
-                    Text("Return".uppercased())
-                })
-                .font(.headline)
-                .padding()
-                .frame(width:300, height: 50)
-                .background(Rectangle()
-                    .fill(Color.white)
-                ).padding(.top, 10)
                 
                 Form {
                     Section(header: Text("Account")) {
@@ -47,7 +37,7 @@ struct MainSettingsView: View {
                             Text("Update Password")
                         }
                         
-                        NavigationLink(destination: InterestSelectionView(email: Auth.auth().currentUser?.email ?? "")) {
+                        NavigationLink(destination: InterestUpdateView(email: Auth.auth().currentUser?.email ?? "")) {
                             Text("Update Preferences")
                         }
                         NavigationLink(destination: UpdateLocationView()) {
@@ -91,7 +81,7 @@ struct MainSettingsView: View {
                     }
                     
                     Section(header: Text("Display")) {
-                        Toggle(isOn: $isNightModeOn) {
+                        Toggle(isOn: $nightModeManager.isNightMode) {
                             Text("Night Mode")
                         }
                     }
@@ -152,13 +142,26 @@ struct MainSettingsView: View {
                             LoginView()
                         }
                     }
+                    Button(action: {
+                        self.presentationMode.callAsFunction()
+                    }, label: {
+                        Text("Return".uppercased())
+                    })
+                    .font(.headline)
+                    .padding()
+                    .frame(width:300, height: 50)
+    //                .background(Rectangle()
+    //                    .fill(Color.white)
+    //                ).padding(.top, 10)
                 }
                 .background(Color(red: 224/255, green: 211/255, blue: 175/255))
                 .scrollContentBackground(.hidden)
-                .environment(\.colorScheme, isNightModeOn ? .dark : .light)
+                .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
                 .navigationBarTitle("Settings")
             }
+            
             .background(Color(red: 224/255, green: 211/255, blue: 175/255))
+            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
         }
     }
 }

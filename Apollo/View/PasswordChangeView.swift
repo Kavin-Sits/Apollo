@@ -13,6 +13,7 @@ struct PasswordChangeView: View {
     @Binding var currentPassword: String
     @Binding var newPassword: String
     @Binding var isModalPresented: Bool
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         VStack {
@@ -43,5 +44,6 @@ struct PasswordChangeView: View {
             }
         }
         .padding()
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
     }
 }

@@ -37,6 +37,7 @@ extension UIApplication {
 
 struct LoginView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var nightModeManager: NightModeManager
     @State private var errorMessage = ""
     @State private var userInterests: [String] = []
     @State private var userSelectedInterests: Bool = true
@@ -58,8 +59,10 @@ struct LoginView: View {
                             }
                         }
                     }
+                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             } else {
                 HomeView()
+                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             }
             
         } else {
@@ -91,6 +94,10 @@ struct LoginView: View {
                             .padding(.top, 10)
                         NavigationLink("Forgot password") {
                             ForgotPasswordView()
+                                .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+//                                .onAppear {
+//                                    nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
+//                                }
                         }
                         .controlSize(.small)
                     }
@@ -107,6 +114,10 @@ struct LoginView: View {
                     
                     NavigationLink{
                         CreateAccountView(userSelectedInterests: self.$userSelectedInterests)
+                            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+//                            .onAppear {
+//                                nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
+//                            }
                     } label: {
                         Text("Create account")
                             .modifier(ButtonModifier())

@@ -23,11 +23,17 @@ struct ApolloApp: App {
 
     @StateObject var articleBookmarkVM = ArticleBookmarkViewModel()
     @StateObject var authViewModel = AuthViewModel()
+    @StateObject var nightModeManager = NightModeManager()
     
     var body: some Scene {
         WindowGroup {
             LoginView()
                 .environmentObject(authViewModel)
+                .environmentObject(nightModeManager) // Inject nightModeManager as an environment object
+                .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+                .onAppear {
+                    nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
+                }
         }
     }
 }

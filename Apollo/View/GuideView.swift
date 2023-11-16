@@ -10,6 +10,7 @@ import SwiftUI
 struct GuideView: View {
     
     @Environment(\.dismiss) var presentationMode
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         ScrollView(content: {
@@ -51,6 +52,7 @@ struct GuideView: View {
             .padding(.horizontal, 20)
         })
         .background(Color(red: 224/255, green: 211/255, blue: 175/255))
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
     }
 }
 

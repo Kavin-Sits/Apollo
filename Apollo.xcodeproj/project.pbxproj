@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		202117DF2ADC8BD70083BC0B /* MainSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */; };
 		2056F4EF2AF87F9C00EA4EE4 /* PasswordChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */; };
+		209A710C2B05A904007F4F5D /* NightModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209A710B2B05A904007F4F5D /* NightModeManager.swift */; };
+		209A710E2B05C3F3007F4F5D /* InterestUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209A710D2B05C3F3007F4F5D /* InterestUpdateView.swift */; };
 		8A2B78F32AFB140E00765A4A /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */; };
 		8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F72AFB24FC00765A4A /* CardTransition.swift */; };
 		8A2B78FA2AFB254000765A4A /* SymbolModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F92AFB254000765A4A /* SymbolModifier.swift */; };
@@ -104,6 +106,8 @@
 /* Begin PBXFileReference section */
 		202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsView.swift; sourceTree = "<group>"; };
 		2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordChangeView.swift; sourceTree = "<group>"; };
+		209A710B2B05A904007F4F5D /* NightModeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightModeManager.swift; sourceTree = "<group>"; };
+		209A710D2B05C3F3007F4F5D /* InterestUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestUpdateView.swift; sourceTree = "<group>"; };
 		8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
 		8A2B78F72AFB24FC00765A4A /* CardTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTransition.swift; sourceTree = "<group>"; };
 		8A2B78F92AFB254000765A4A /* SymbolModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolModifier.swift; sourceTree = "<group>"; };
@@ -338,6 +342,7 @@
 			isa = PBXGroup;
 			children = (
 				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
+				209A710B2B05A904007F4F5D /* NightModeManager.swift */,
 				8AB2E2D82AD0DEEA0066AB1A /* SwipeableCardView.swift */,
 				F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */,
 				8AB2E31F2AD641C00066AB1A /* CardView.swift */,
@@ -345,6 +350,7 @@
 				202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */,
 				2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */,
 				B340272D2ADE165A00B78062 /* InterestSelectionView.swift */,
+				209A710D2B05C3F3007F4F5D /* InterestUpdateView.swift */,
 				8AB2E30E2AD2F3850066AB1A /* HeaderView.swift */,
 				8AB2E31B2AD63FA90066AB1A /* SafariView.swift */,
 				8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */,
@@ -574,6 +580,7 @@
 				8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */,
 				F093DCC52AFA0794009E8DCC /* ForgotPasswordView.swift in Sources */,
 				8AB2E2D92AD0DEEA0066AB1A /* SwipeableCardView.swift in Sources */,
+				209A710E2B05C3F3007F4F5D /* InterestUpdateView.swift in Sources */,
 				8A2B79062AFBDDE000765A4A /* HomeView.swift in Sources */,
 				8ACC1EC02AFEDC1E009BE432 /* TestHomeView.swift in Sources */,
 				8AB2E2E32AD0DEED0066AB1A /* Apollo.xcdatamodeld in Sources */,
@@ -598,6 +605,7 @@
 				8AB2E30F2AD2F3850066AB1A /* HeaderView.swift in Sources */,
 				8AB2E3232AD6466D0066AB1A /* NewsAPI.swift in Sources */,
 				8A2B78F32AFB140E00765A4A /* ButtonModifier.swift in Sources */,
+				209A710C2B05A904007F4F5D /* NightModeManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

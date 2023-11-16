@@ -10,6 +10,7 @@ import SwiftUI
 struct EmptyPlaceholderView: View {
     let text: String
     let image: Image?
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         VStack(spacing: 0){
@@ -22,6 +23,7 @@ struct EmptyPlaceholderView: View {
             Text(text)
             Spacer()
         }
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
     }
 }
 

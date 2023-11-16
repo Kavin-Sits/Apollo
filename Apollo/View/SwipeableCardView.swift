@@ -11,6 +11,7 @@ import CoreData
 struct SwipeableCardView: View {
     
     let articles: [Article]
+    @EnvironmentObject var nightModeManager: NightModeManager
     @State private var tappedArticles = Set<String>()
     @State private var topArticleURL: String?
     @State private var selectedArticle: Article?
@@ -55,6 +56,10 @@ struct SwipeableCardView: View {
                                 self.selectedArticle = article
                             }
                         }
+                        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+//                        .onAppear {
+//                            nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
+//                        }
                         .zIndex(article.url == topArticleURL ? 1 : 0)
                         .overlay(
                             ZStack{
@@ -116,8 +121,10 @@ struct SwipeableCardView: View {
                         ).transition(self.cardRemovalTransition)
                 }
             }
+            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             .sheet(item: $selectedArticle, content: {
                 SafariView(url: $0.articleURL)
+                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             })
         }
         .onAppear{

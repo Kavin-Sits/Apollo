@@ -13,6 +13,7 @@ import FirebaseFirestore
 
 struct UpdateLocationView: View {
     @StateObject private var locationPermission: LocationPermission = LocationPermission()
+    @EnvironmentObject var nightModeManager: NightModeManager
 
     var body: some View {
         ZStack {
@@ -44,6 +45,7 @@ struct UpdateLocationView: View {
             }
             .buttonStyle(.bordered)
         }
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
     }
 }
 

@@ -1,18 +1,21 @@
 //
-//  InterestSelectionView.swift
+//  InterestUpdateView.swift
 //  Apollo
 //
-//  Created by Srihari Manoj on 10/16/23.
+//  Created by Nandini Bhardwaj on 11/15/23.
 //
+
 
 import SwiftUI
 import FirebaseFirestore
 
-struct InterestSelectionView: View {
+struct InterestUpdateView: View {
     var userEmail: String
     @State private var selectedOptions: Set<String> = []
     @State private var errorMessage: String = ""
     @State private var updateOptions: Bool = false
+    @EnvironmentObject var nightModeManager: NightModeManager
+    @Environment(\.presentationMode) var presentationMode
 
     init(email: String) {
         userEmail = email
@@ -24,30 +27,25 @@ struct InterestSelectionView: View {
         "Entertainment", "International Affairs"
     ]
 
-    var body: some View {
-        NavigationStack {
-            content.navigationDestination(isPresented: $updateOptions) {
-                HomeView().navigationBarBackButtonHidden(true)
-            }
-        }
-    }
+//    var body: some View {
+//        NavigationStack {
+//            content.navigationDestination(isPresented: $updateOptions) {
+//                MainSettingsView().navigationBarBackButtonHidden(true)
+//            }
+//        }
+//    }
     
-    var content: some View {
+    var body: some View {
 
         VStack(spacing: 20) {
-            Spacer()
-            
-            Text("Which topics interest you?")
-                .font(.title)
-                .foregroundColor(.white)
 
-            Text("We'll try to curate your selection based on your preferences.")
-                .font(.headline)
+            Text("Update your topic preferences here.")
+                .font(.system(size: 20))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
 
             ScrollView {
-                VStack(spacing: 15) {
+                VStack(spacing: 8) {
                     ForEach(optionNames, id: \.self) { option in
                         RadioButton(
                             text: option,
@@ -73,6 +71,7 @@ struct InterestSelectionView: View {
                     storeInterestSelections()
                     errorMessage = ""
                     updateOptions = true
+                    presentationMode.wrappedValue.dismiss()
                 }
             }
             Text(errorMessage)
@@ -80,10 +79,12 @@ struct InterestSelectionView: View {
 
             Spacer()
         }
-        .onAppear() {
+        .background(Color(red: 224/255, green: 211/255, blue: 175/255))
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+        .onAppear {
+//            nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
             loadUserPreferences()
         }
-        .background(Color(red: 224/255, green: 211/255, blue: 175/255))
     }
 
     func toggleOption(_ option: String) {
@@ -112,28 +113,7 @@ struct InterestSelectionView: View {
         }
 }
 
-struct RadioButton: View {
-    var text: String
-    var isSelected: Bool
-    var onTap: () -> Void
-    var body: some View {
-        HStack {
-            Text(text)
-                .font(.headline)
-                .foregroundColor(Color.primary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.5)
-            Spacer()
-            Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                .resizable()
-                .frame(width: 25, height: 25)
-                .onTapGesture {
-                    onTap()
-                }
-        }
-    }
-}
-
 #Preview {
     InterestSelectionView(email: "test2@gmail.com")
 }
+

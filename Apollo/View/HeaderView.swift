@@ -17,6 +17,7 @@ struct HeaderView: View {
     let haptics = UINotificationFeedbackGenerator()
     @State private var image: UIImage? = nil
     @State private var cancellable: AnyCancellable? = nil
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         VStack(spacing: 0){
@@ -63,6 +64,7 @@ struct HeaderView: View {
                 .accentColor(Color.primary)
                 .sheet(isPresented: $showSettingsView, content: {
                     MainSettingsView()
+                        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
                 })
             }
             .padding(10)
@@ -74,6 +76,7 @@ struct HeaderView: View {
         .onAppear() {
             loadProfilePhoto()
         }
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
     }
     
     func updateWeekdayProgress() {

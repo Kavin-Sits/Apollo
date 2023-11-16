@@ -23,6 +23,7 @@ struct CreateAccountView: View {
     @State private var errorMessage = ""
     @State private var selectedOptions: Set<String> = []
     @Binding var userSelectedInterests: Bool
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     
     let backgroundColor = Color(red: 224/255, green: 211/255, blue: 175/255)

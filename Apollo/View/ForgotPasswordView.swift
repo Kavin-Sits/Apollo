@@ -15,6 +15,7 @@ struct ForgotPasswordView: View {
     
     @State private var email = ""
     @State private var statusMessage = ""
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         backgroundColor.overlay(
@@ -47,6 +48,7 @@ struct ForgotPasswordView: View {
                 
             }
             .frame(width: 300)
+            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
         )
         .ignoresSafeArea()
         
