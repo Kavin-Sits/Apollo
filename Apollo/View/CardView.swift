@@ -29,7 +29,7 @@ struct CardView: View, Identifiable {
                         .aspectRatio(contentMode: .fill)
                 case .failure:
                     Rectangle()
-                        .background(Color.gray)
+                        .fill(Color.gray)
                         .overlay(
                             HStack{
                                 Spacer()

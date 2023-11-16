@@ -22,8 +22,8 @@ struct CreateAccountView: View {
     @State private var location = ""
     @State private var errorMessage = ""
     @State private var selectedOptions: Set<String> = []
-    
     @Binding var userSelectedInterests: Bool
+    
     
     let backgroundColor = Color(red: 148/255, green: 172/255, blue: 255/255)
     

@@ -21,7 +21,7 @@ struct HomeView: View {
             
             Spacer()
             
-            SwipeableCardView(articles: Article.previewData)
+            TestCardView()
             
             Spacer()
             
