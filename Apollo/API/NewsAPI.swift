@@ -50,6 +50,7 @@ struct NewsAPI {
         var url = "https://newsapi.org/v2/top-headlines?"
         url += "apiKey=\(apiKey)"
         url += "&language=en"
+        url += "&country=us"
         url += "&category=\(category.rawValue)"
         return URL(string: url)!
     }
