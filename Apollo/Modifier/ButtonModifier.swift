@@ -18,6 +18,6 @@ struct ButtonModifier: ViewModifier {
             .padding()
             .frame(minWidth: 0, maxWidth: .infinity)
             .frame(height: 50)
-            .background(Capsule().fill(.blue))
+            .background(Capsule().fill(Color(red: 83/255, green: 131/255, blue: 236/255)))
     }
 }
