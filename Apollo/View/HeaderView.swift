@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
+import Combine
 
 struct HeaderView: View {
     
     @State private var weekdayProgress: Float = 0
     @Binding var showSettingsView:Bool
     let haptics = UINotificationFeedbackGenerator()
+    @State private var image: UIImage? = nil
+    @State private var cancellable: AnyCancellable? = nil
     
     var body: some View {
         VStack(spacing: 0){
@@ -39,8 +44,21 @@ struct HeaderView: View {
                     self.showSettingsView.toggle()
                     self.haptics.notificationOccurred(.success)
                 }, label: {
-                    Image(systemName: "gearshape")
-                        .font(.system(size: 25, weight: .regular))
+                    if let image = image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.white, lineWidth: 1))
+                            .shadow(radius: 5)
+                    } else {
+                        Circle()
+                            .fill(Color.gray)
+                            .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                            .overlay(Circle().stroke(Color.white, lineWidth: 1))
+                            .shadow(radius: 5)
+                    }
                 })
                 .accentColor(Color.primary)
                 .sheet(isPresented: $showSettingsView, content: {
@@ -53,6 +71,9 @@ struct HeaderView: View {
                 .multilineTextAlignment(.center)
                 .bold()
         }
+        .onAppear() {
+            loadProfilePhoto()
+        }
     }
     
     func updateWeekdayProgress() {
@@ -61,6 +82,24 @@ struct HeaderView: View {
         let weekday = calendar.component(.weekday, from: currentDate)
 
         weekdayProgress = Float(weekday) / 7.0
+    }
+    
+    func loadProfilePhoto() {
+        Firestore.firestore().collection("users").document(Auth.auth().currentUser?.email ?? "").getDocument { (document, error) in
+            if let document = document, document.exists {
+                if let urlString = document.data()?["profilePhotoURL"] as? String, let url = URL(string: urlString) {
+                    self.cancellable = URLSession.shared.dataTaskPublisher(for: url)
+                        .map { UIImage(data: $0.data) }
+                        .replaceError(with: nil)
+                        .receive(on: DispatchQueue.main)
+                        .sink { downloadedImage in
+                            self.image = downloadedImage
+                        }
+                }
+            } else {
+                print("Document does not exist")
+            }
+        }
     }
 }
 
