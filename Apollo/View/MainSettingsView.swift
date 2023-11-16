@@ -146,13 +146,12 @@ struct MainSettingsView: View {
                         self.presentationMode.callAsFunction()
                     }, label: {
                         Text("Return".uppercased())
+                            .frame(maxWidth: .infinity)
+                            .padding()
                     })
                     .font(.headline)
+                    .frame(width:300, height: 40)
                     .padding()
-                    .frame(width:300, height: 50)
-    //                .background(Rectangle()
-    //                    .fill(Color.white)
-    //                ).padding(.top, 10)
                 }
                 .background(Color(red: 224/255, green: 211/255, blue: 175/255))
                 .scrollContentBackground(.hidden)

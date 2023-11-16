@@ -25,45 +25,49 @@ struct ProfilePhotoView: View {
 
     var body: some View {
         VStack {
-            Spacer()
-            
-            if let image = image {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: UIScreen.main.bounds.width / 1.4, height: UIScreen.main.bounds.width / 1.4)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.white, lineWidth: 4))
-                    .shadow(radius: 20)
-            } else {
-                Circle()
-                    .fill(Color.gray)
-                    .frame(width: UIScreen.main.bounds.width / 1.4, height: UIScreen.main.bounds.width / 1.4)
-                    .overlay(Circle().stroke(Color.white, lineWidth: 4))
-                    .shadow(radius: 20)
-            }
-            
-            Spacer() 
+            VStack {
+                Spacer()
+                
+                if let image = image {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: UIScreen.main.bounds.width / 1.4, height: UIScreen.main.bounds.width / 1.4)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                        .shadow(radius: 20)
+                } else {
+                    Circle()
+                        .fill(Color.gray)
+                        .frame(width: UIScreen.main.bounds.width / 1.4, height: UIScreen.main.bounds.width / 1.4)
+                        .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                        .shadow(radius: 20)
+                }
+                
+                Spacer() 
 
-            Button("Choose Profile Photo") {
-                self.showImagePicker = true
-            }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(Color.white)
-            .clipShape(Capsule())
+                Button("Choose Profile Photo") {
+                    self.showImagePicker = true
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(Color.white)
+                .clipShape(Capsule())
 
-            Spacer()
+                Spacer()
+            }
+            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+            .frame(width: 400)
+            .background(Color(red: 224/255, green: 211/255, blue: 175/255))
+            .onAppear {
+                self.loadProfilePhoto()
+            }
+            .sheet(isPresented: $showImagePicker, onDismiss: uploadImage) {
+                ImagePicker(image: self.$image, newImagePicked: self.$newImagePicked)
+            }
         }
-        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-        .frame(width: 400)
+        .frame(maxWidth: .infinity)
         .background(Color(red: 224/255, green: 211/255, blue: 175/255))
-        .onAppear {
-            self.loadProfilePhoto()
-        }
-        .sheet(isPresented: $showImagePicker, onDismiss: uploadImage) {
-            ImagePicker(image: self.$image, newImagePicked: self.$newImagePicked)
-        }
     }
 
     func loadProfilePhoto() {
