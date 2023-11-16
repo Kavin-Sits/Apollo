@@ -72,7 +72,7 @@ struct CreateAccountView: View {
                 Text("Occupation")
                     .padding(.top, 25)
                     
-                OccupationListDropdownMenu() {
+                OccupationListDropdownMenu(selectedOption: $occupation) {
                     option in
                     self.occupation = option
                 }
@@ -137,7 +137,7 @@ struct CreateAccountView: View {
 struct OccupationListDropdownMenu: View {
     
     @State var presentOptions: Bool = false
-    @State var selectedOption = ""
+    @Binding var selectedOption: String
     
     let setOccupationVar: (_ option: String) -> Void
     let placeholder: String = ""
