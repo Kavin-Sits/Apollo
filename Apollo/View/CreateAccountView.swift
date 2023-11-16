@@ -25,7 +25,7 @@ struct CreateAccountView: View {
     @Binding var userSelectedInterests: Bool
     
     
-    let backgroundColor = Color(red: 148/255, green: 172/255, blue: 255/255)
+    let backgroundColor = Color(red: 224/255, green: 211/255, blue: 175/255)
     
     var body: some View {
         content
@@ -140,7 +140,7 @@ struct OccupationListDropdownMenu: View {
     @State var selectedOption = ""
     
     let setOccupationVar: (_ option: String) -> Void
-    let placeholder: String = "Select your occupation"
+    let placeholder: String = ""
     
     var body: some View {
         Button(action: {
