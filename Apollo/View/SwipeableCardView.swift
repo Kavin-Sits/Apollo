@@ -10,15 +10,13 @@ import CoreData
 
 struct SwipeableCardView: View {
     
-    let articles: [Article]
-    @EnvironmentObject var nightModeManager: NightModeManager
-    @State private var tappedArticles = Set<String>()
-    @State private var topArticleURL: String?
-    @State private var selectedArticle: Article?
+    @StateObject var articleNewsVM = ArticleNewsViewModel()
     @GestureState private var dragState = DragState.inactive
     @State private var cardRemovalTransition = AnyTransition.trailingBottom
+    @State private var activeCardIndex: Int? = nil
+    @State private var displayedArticles: [Article] = []
+    @State private var selectedArticle: Article?
     var dragAreaThreshold: CGFloat = 65.0
-    
     
     enum DragState {
         case inactive
@@ -47,97 +45,117 @@ struct SwipeableCardView: View {
         
     var body: some View {
         ZStack {
-            ForEach(articles) { article in
-                if !tappedArticles.contains(article.url) {
-                    CardView(article: article)
-                        .onTapGesture {
-                            print("tapped")
-                            if article.url == topArticleURL {
-                                self.selectedArticle = article
+            ForEach(displayedArticles.indices, id: \.self){ index in
+                CardView(article: displayedArticles[index])
+                    .onTapGesture {
+                        selectedArticle = displayedArticles[index]
+                    }
+                    .overlay(
+                        ZStack{
+                            Image(systemName: "x.circle")
+                                .modifier(SymbolModifier())
+                                .opacity(activeCardIndex == index && self.dragState.translation.width < -self.dragAreaThreshold ? 1.0 : 0.0)
+                            
+                            Image(systemName: "heart.circle")
+                                .modifier(SymbolModifier())
+                                .opacity(activeCardIndex == index && self.dragState.translation.width > self.dragAreaThreshold ? 1.0 : 0.0)
+                        })
+                    .offset(x: activeCardIndex == index ? self.dragState.translation.width : 0,
+                            y: activeCardIndex == index ? self.dragState.translation.height : 0)
+                    .scaleEffect(self.dragState.isDragging && activeCardIndex == index ? 0.85 : 1.0)
+                    .rotationEffect(Angle(degrees: activeCardIndex == index ? Double(self.dragState.translation.width / 12) : 0))
+                    .animation(.interpolatingSpring(stiffness: 120, damping: 120), value: dragState.isDragging)
+                    .gesture(LongPressGesture(minimumDuration: 0.01)
+                        .sequenced(before: DragGesture())
+                        .updating(self.$dragState, body: { (value, state, transaction) in
+                            switch value {
+                            case .first(true):
+                                state = .pressing
+                            case .second(true, let drag):
+                                if activeCardIndex == index {
+                                    state = .dragging(translation: drag?.translation ?? .zero)
+                                }
+                            default:
+                                break
+                            }
+                        })
+                        .onChanged { _ in
+                            if activeCardIndex == nil {
+                                activeCardIndex = index
                             }
                         }
-                        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-//                        .onAppear {
-//                            nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
-//                        }
-                        .zIndex(article.url == topArticleURL ? 1 : 0)
-                        .overlay(
-                            ZStack{
-                                Image(systemName: "x.circle")
-                                    .modifier(SymbolModifier())
-                                    .opacity(article.url == topArticleURL && self.dragState.translation.width < -self.dragAreaThreshold ? 1.0 : 0.0)
+                        .onEnded({ (value) in
+                            guard case .second(true, let drag?) = value else {
+                                return
+                            }
                                 
-                                Image(systemName: "heart.circle")
-                                    .modifier(SymbolModifier())
-                                    .opacity(article.url == topArticleURL && self.dragState.translation.width > self.dragAreaThreshold ? 1.0 : 0.0)
-                            })
-                        .offset(x: article.url == topArticleURL ? self.dragState.translation.width : 0, y: article.url == topArticleURL ? self.dragState.translation.height : 0)
-                        .scaleEffect(self.dragState.isDragging && article.url == topArticleURL ? 0.85 : 1.0)
-                        .rotationEffect(Angle(degrees: article.url == topArticleURL ? Double(self.dragState.translation.width / 12) : 0))
-                        .animation(.interpolatingSpring(stiffness: 120, damping: 120), value: dragState.isDragging)
-                        .gesture(LongPressGesture(minimumDuration: 0.01)
-                            .sequenced(before: DragGesture())
-                            .updating(self.$dragState, body: { (value, state, transaction) in
-                                if article.url == topArticleURL {
-                                    switch value {
-                                    case .first(true):
-                                        state = .pressing
-                                    case .second(true, let drag):
-                                        state = .dragging(translation: drag?.translation ?? .zero)
-                                    default:
-                                        break
-                                    }
-                                }
-                            })
-                            .onChanged({ (value) in
-                                if article.url == topArticleURL {
-                                    guard case .second(true, let drag?) = value else {
-                                        return
-                                    }
-                                    
-                                    if drag.translation.width < -self.dragAreaThreshold {
-                                        self.cardRemovalTransition = AnyTransition.leadingBottom
-                                    }
-                                    
-                                    if drag.translation.width > self.dragAreaThreshold {
-                                        self.cardRemovalTransition = AnyTransition.trailingBottom
-                                    }
-                                }
-                            })
-                            .onEnded({ (value) in
-                                if article.url == topArticleURL {
-                                    guard case .second(true, let drag?) = value else {
-                                        return
-                                    }
-                                    
-                                    if drag.translation.width < -self.dragAreaThreshold || drag.translation.width > self.dragAreaThreshold {
-                                        playSound(sound: "swipe", type: "wav")
-                                        tappedArticles.insert(article.url)
-                                        updateTopArticle()
-                                        
-                                    }
-                                }
-                            })
-                        ).transition(self.cardRemovalTransition)
+                            if drag.translation.width < -self.dragAreaThreshold {
+                                playSound(sound: "swipe", type: "wav")
+                                removeCard(at: index)
+                                activeCardIndex = nil
+                                
+                            } else if drag.translation.width > self.dragAreaThreshold {
+                                playSound(sound: "swipe", type: "wav")
+                                removeCard(at: index)
+                                activeCardIndex = nil
+                            }
+                        })
+                    ).transition(self.cardRemovalTransition)
+            }
+        }
+        .sheet(item: $selectedArticle, content: {
+            SafariView(url: $0.articleURL)
+        })
+        .onAppear{
+            Task{
+                await loadTask()
+                if case let .success(articles) = articleNewsVM.phase {
+                    displayedArticles = Array(articles.prefix(10))
                 }
             }
-            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-            .sheet(item: $selectedArticle, content: {
-                SafariView(url: $0.articleURL)
-                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-            })
-        }
-        .onAppear{
-            updateTopArticle()
         }
     }
     
-    private func updateTopArticle() {
-        topArticleURL = articles.first(
-            where: { !tappedArticles.contains($0.url) })?.url
+    private func removeCard(at index: Int) {
+        guard index < displayedArticles.count else { return }
+        displayedArticles.remove(at: index)
+    }
+    
+    @ViewBuilder
+    private var overlayView: some View {
+        
+        switch articleNewsVM.phase {
+        case .empty:
+            ProgressView()
+        case .success(let articles) where articles.isEmpty:
+            EmptyPlaceholderView(text: "No Articles", image: nil)
+        case .failure(let error):
+            RetryView(text: error.localizedDescription, retryAction: refreshTask)
+        default: EmptyView()
+        }
+    }
+    
+    private var articles: [Article] {
+        if case let .success(articles) = articleNewsVM.phase {
+            return Array(articles.prefix(10))
+        } else {
+            return []
+        }
+    }
+    
+    @Sendable
+    private func loadTask() async {
+        await articleNewsVM.loadArticles()
+    }
+    
+    
+    private func refreshTask() {
+        DispatchQueue.main.async {
+            articleNewsVM.fetchTaskToken = FetchTaskToken(category: articleNewsVM.fetchTaskToken.category, token: Date())
+        }
     }
 }
 
 #Preview {
-    SwipeableCardView(articles: Array(Article.previewData.prefix(10)))
+    SwipeableCardView()
 }
