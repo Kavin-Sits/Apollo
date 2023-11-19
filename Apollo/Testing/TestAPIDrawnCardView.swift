@@ -2,12 +2,12 @@
 //  TestCardView.swift
 //  Apollo
 //
-//  Created by Kavin Sitsabeshon on 11/19/23.
+//  Created by Kavin Sitsabeshon on 11/10/23.
 //
 
 import SwiftUI
 
-struct TestCardView: View {
+struct TestAPIDrawnCardView: View {
     
     @StateObject var articleNewsVM = ArticleNewsViewModel()
     @State private var tappedArticles = Set<String>()
@@ -170,5 +170,5 @@ struct TestCardView: View {
 }
 
 #Preview {
-    TestCardView()
+    TestAPIDrawnCardView()
 }

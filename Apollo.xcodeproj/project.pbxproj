@@ -18,6 +18,7 @@
 		8A2B78FF2AFB25FB00765A4A /* PlaySound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78FE2AFB25FB00765A4A /* PlaySound.swift */; };
 		8A2B79042AFB5B2600765A4A /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B79032AFB5B2600765A4A /* AuthViewModel.swift */; };
 		8A2B79062AFBDDE000765A4A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B79052AFBDDE000765A4A /* HomeView.swift */; };
+		8A48BF5F2B0A594E0086EF26 /* TestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A48BF5E2B0A594E0086EF26 /* TestCardView.swift */; };
 		8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */; };
 		8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB72AD78C1C00A63CC1 /* RetryView.swift */; };
 		8A674DBA2AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */; };
@@ -47,7 +48,7 @@
 		8AB7D0E02B05748E00D1851C /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB7D0DF2B05748E00D1851C /* GuideView.swift */; };
 		8AB7D0E22B0574B400D1851C /* GuideComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB7D0E12B0574B400D1851C /* GuideComponent.swift */; };
 		8AC6118F2AFAA98800F88E52 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6118E2AFAA98800F88E52 /* GoogleService-Info.plist */; };
-		8ACC1EBD2AFED07B009BE432 /* TestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACC1EBC2AFED07B009BE432 /* TestCardView.swift */; };
+		8ACC1EBD2AFED07B009BE432 /* TestAPIDrawnCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACC1EBC2AFED07B009BE432 /* TestAPIDrawnCardView.swift */; };
 		8ACC1EC02AFEDC1E009BE432 /* TestHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACC1EBF2AFEDC1E009BE432 /* TestHomeView.swift */; };
 		B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B340272D2ADE165A00B78062 /* InterestSelectionView.swift */; };
 		B39CEB9D2AFAAC1300954C3A /* UpdateLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B39CEB9C2AFAAC1300954C3A /* UpdateLocationView.swift */; };
@@ -115,6 +116,7 @@
 		8A2B78FE2AFB25FB00765A4A /* PlaySound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySound.swift; sourceTree = "<group>"; };
 		8A2B79032AFB5B2600765A4A /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		8A2B79052AFBDDE000765A4A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		8A48BF5E2B0A594E0086EF26 /* TestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCardView.swift; sourceTree = "<group>"; };
 		8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPlaceholderView.swift; sourceTree = "<group>"; };
 		8A674DB72AD78C1C00A63CC1 /* RetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryView.swift; sourceTree = "<group>"; };
 		8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBookmarkViewModel.swift; sourceTree = "<group>"; };
@@ -148,7 +150,7 @@
 		8AB7D0DF2B05748E00D1851C /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
 		8AB7D0E12B0574B400D1851C /* GuideComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideComponent.swift; sourceTree = "<group>"; };
 		8AC6118E2AFAA98800F88E52 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		8ACC1EBC2AFED07B009BE432 /* TestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCardView.swift; sourceTree = "<group>"; };
+		8ACC1EBC2AFED07B009BE432 /* TestAPIDrawnCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAPIDrawnCardView.swift; sourceTree = "<group>"; };
 		8ACC1EBF2AFEDC1E009BE432 /* TestHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHomeView.swift; sourceTree = "<group>"; };
 		B340272D2ADE165A00B78062 /* InterestSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestSelectionView.swift; sourceTree = "<group>"; };
 		B39CEB9C2AFAAC1300954C3A /* UpdateLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLocationView.swift; sourceTree = "<group>"; };
@@ -385,7 +387,8 @@
 		8ACC1EBE2AFED082009BE432 /* Testing */ = {
 			isa = PBXGroup;
 			children = (
-				8ACC1EBC2AFED07B009BE432 /* TestCardView.swift */,
+				8ACC1EBC2AFED07B009BE432 /* TestAPIDrawnCardView.swift */,
+				8A48BF5E2B0A594E0086EF26 /* TestCardView.swift */,
 				8ACC1EBF2AFEDC1E009BE432 /* TestHomeView.swift */,
 			);
 			path = Testing;
@@ -584,7 +587,7 @@
 				8A2B79062AFBDDE000765A4A /* HomeView.swift in Sources */,
 				8ACC1EC02AFEDC1E009BE432 /* TestHomeView.swift in Sources */,
 				8AB2E2E32AD0DEED0066AB1A /* Apollo.xcdatamodeld in Sources */,
-				8ACC1EBD2AFED07B009BE432 /* TestCardView.swift in Sources */,
+				8ACC1EBD2AFED07B009BE432 /* TestAPIDrawnCardView.swift in Sources */,
 				8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */,
 				8AB2E3192AD5BDB30066AB1A /* NewsAPIResponse.swift in Sources */,
 				F0194CC92ADE5E3900A2A5C0 /* CreateAccountView.swift in Sources */,
@@ -601,6 +604,7 @@
 				8AB7D0DE2B05741000D1851C /* TitleModifier.swift in Sources */,
 				8AB2E3252AD646EF0066AB1A /* Category.swift in Sources */,
 				B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */,
+				8A48BF5F2B0A594E0086EF26 /* TestCardView.swift in Sources */,
 				8A2B79042AFB5B2600765A4A /* AuthViewModel.swift in Sources */,
 				8AB2E30F2AD2F3850066AB1A /* HeaderView.swift in Sources */,
 				8AB2E3232AD6466D0066AB1A /* NewsAPI.swift in Sources */,

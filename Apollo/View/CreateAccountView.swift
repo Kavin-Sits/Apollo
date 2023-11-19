@@ -73,11 +73,14 @@ struct CreateAccountView: View {
                 Text("Occupation")
                     .padding(.top, 25)
                     
-                OccupationListDropdownMenu(selectedOption: $occupation) {
-                    option in
-                    self.occupation = option
-                }
-                .frame(width: 320)
+//                OccupationListDropdownMenu(selectedOption: $occupation) {
+//                    option in
+//                    self.occupation = option
+//                }
+//                .frame(width: 320)
+                
+                TextField("", text: $occupation)
+                    .textFieldStyle(.roundedBorder)
                 
                 Text(errorMessage)
                     .foregroundStyle(.red)
