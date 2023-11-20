@@ -21,7 +21,6 @@ struct ApolloApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     let persistenceController = PersistenceController.shared
 
-    @StateObject var articleBookmarkVM = ArticleBookmarkViewModel()
     @StateObject var authViewModel = AuthViewModel()
     @StateObject var nightModeManager = NightModeManager()
     
