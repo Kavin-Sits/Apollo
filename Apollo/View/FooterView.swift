@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 struct FooterView: View {
     
@@ -13,6 +15,7 @@ struct FooterView: View {
     @Binding var showGuideView:Bool
     @Binding var showInfoView:Bool
     @EnvironmentObject var nightModeManager: NightModeManager
+    @EnvironmentObject var activeArticleVM: ActiveArticleViewModel
     
     let haptics = UINotificationFeedbackGenerator()
     
@@ -34,9 +37,9 @@ struct FooterView: View {
             Spacer()
             
             Button(action: {
-                playSound(sound: "sound-click", type: "mp3")
                 self.haptics.notificationOccurred(.success)
                 self.showBookingAlert.toggle()
+                saveArticle()
             }, label: {
                 Text("Save News Article".uppercased())
                     .font(.system(.subheadline, design: .rounded))
@@ -66,5 +69,30 @@ struct FooterView: View {
         }
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
         .padding()
+    }
+    
+    private func saveArticle() {
+        guard let article = activeArticleVM.activeArticle else { return }
+        
+        guard let userId = Auth.auth().currentUser?.email else { return }
+        
+        let articleRef = Firestore.firestore().collection("articles").document()
+        articleRef.setData([
+            "id": articleRef.documentID,
+            "author": article.authorText,
+            "description": article.descriptionText,
+            "publishedAt": article.publishedAt,
+            "source": article.source.name,
+            "title": article.title,
+            "url": article.url,
+            "urlToImage": article.urlToImage ?? ""
+        ]) { error in
+            if let error = error {
+                print("Error saving article: \(error)")
+            } else {
+                let userDocRef = Firestore.firestore().collection("users").document(userId)
+                userDocRef.updateData(["savedArticles": FieldValue.arrayUnion([articleRef.documentID])])
+            }
+        }
     }
 }

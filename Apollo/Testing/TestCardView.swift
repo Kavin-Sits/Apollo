@@ -12,6 +12,7 @@ import FirebaseFirestore
 struct TestCardView: View {
     
     @StateObject var articleNewsVM = ArticleNewsViewModel()
+    @EnvironmentObject var activeArticleVM: ActiveArticleViewModel
     @GestureState private var dragState = DragState.inactive
     @State private var cardRemovalTransition = AnyTransition.trailingBottom
     @State private var activeCardIndex: Int? = nil
@@ -50,6 +51,7 @@ struct TestCardView: View {
                 CardView(article: displayedArticles[index])
                     .onTapGesture {
                         selectedArticle = displayedArticles[index]
+                        activeArticleVM.activeArticle = displayedArticles[index]
                     }
                     .overlay(
                         ZStack{
@@ -111,7 +113,10 @@ struct TestCardView: View {
             Task{
                 await loadTask()
                 if case let .success(articles) = articleNewsVM.phase {
-                    displayedArticles = Array(articles.prefix(10))
+                    
+                    let filteredArticles = articles.filter { $0.url != "https://removed.com"}
+                    
+                    displayedArticles = Array(filteredArticles.prefix(10))
                     
                     guard let userId = Auth.auth().currentUser?.email else { return }
                     
@@ -123,6 +128,10 @@ struct TestCardView: View {
                         let seenArticles = userData?["seenArticles"] as? [String] ?? []
                         
                         displayedArticles = displayedArticles.filter { !seenArticles.contains($0.id)}
+                        
+                        if displayedArticles.indices.contains(0) {
+                            activeArticleVM.activeArticle = displayedArticles.last
+                        }
                     } else {
                         print("user does not exist")
                     }
@@ -139,6 +148,10 @@ struct TestCardView: View {
         addSwipedArticleToUser(swipedArticleId: swipedArticle.url)
         
         displayedArticles.remove(at: index)
+        
+        if displayedArticles.indices.contains(0) {
+            activeArticleVM.activeArticle = displayedArticles.last
+        }
     }
     
     private func addSwipedArticleToUser(swipedArticleId: String) {

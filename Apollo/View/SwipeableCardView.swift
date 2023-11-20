@@ -7,10 +7,13 @@
 
 import SwiftUI
 import CoreData
+import FirebaseAuth
+import FirebaseFirestore
 
 struct SwipeableCardView: View {
     
     @StateObject var articleNewsVM = ArticleNewsViewModel()
+    @EnvironmentObject var activeArticleVM: ActiveArticleViewModel
     @GestureState private var dragState = DragState.inactive
     @State private var cardRemovalTransition = AnyTransition.trailingBottom
     @State private var activeCardIndex: Int? = nil
@@ -49,6 +52,7 @@ struct SwipeableCardView: View {
                 CardView(article: displayedArticles[index])
                     .onTapGesture {
                         selectedArticle = displayedArticles[index]
+                        activeArticleVM.activeArticle = displayedArticles[index]
                     }
                     .overlay(
                         ZStack{
@@ -111,8 +115,28 @@ struct SwipeableCardView: View {
                 await loadTask()
                 if case let .success(articles) = articleNewsVM.phase {
                     
+                    let filteredArticles = articles.filter { $0.url != "https://removed.com"}
                     
-                    displayedArticles = Array(articles.prefix(10))
+                    displayedArticles = Array(filteredArticles.prefix(10))
+                    
+                    guard let userId = Auth.auth().currentUser?.email else { return }
+                    
+                    let userDocRef = Firestore.firestore().collection("users").document(userId)
+                    let userDocument = try? await userDocRef.getDocument()
+                    
+                    if let userDocument = userDocument, userDocument.exists {
+                        let userData = userDocument.data()
+                        let seenArticles = userData?["seenArticles"] as? [String] ?? []
+                        
+                        displayedArticles = displayedArticles.filter { !seenArticles.contains($0.id)}
+                        
+                        if displayedArticles.indices.contains(0) {
+                            activeArticleVM.activeArticle = displayedArticles.last
+                        }
+                    } else {
+                        print("user does not exist")
+                    }
+                    
                 }
             }
         }
@@ -121,7 +145,31 @@ struct SwipeableCardView: View {
     private func removeCard(at index: Int) {
         guard index < displayedArticles.count else { return }
         
+        let swipedArticle = displayedArticles[index]
+        addSwipedArticleToUser(swipedArticleId: swipedArticle.url)
+        
         displayedArticles.remove(at: index)
+        
+        if displayedArticles.indices.contains(0) {
+            activeArticleVM.activeArticle = displayedArticles.last
+        }
+    }
+    
+    private func addSwipedArticleToUser(swipedArticleId: String) {
+        guard let userId = Auth.auth().currentUser?.email else { return }
+        
+        Firestore.firestore().collection("users").document(userId).updateData(["seenArticles": FieldValue.arrayUnion([swipedArticleId])]) { error in
+            if let error = error {
+                print("Error adding article: \(error)")
+            } else {
+                print("Article successfully added!")
+            }
+        }
+                                                           
+        let userDocRef = Firestore.firestore().collection("users").document(userId)
+        userDocRef.updateData([
+            "seenArticles": FieldValue.arrayUnion([swipedArticleId])
+        ])
     }
     
     @ViewBuilder

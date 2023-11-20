@@ -19,6 +19,11 @@
 		8A2B79042AFB5B2600765A4A /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B79032AFB5B2600765A4A /* AuthViewModel.swift */; };
 		8A2B79062AFBDDE000765A4A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B79052AFBDDE000765A4A /* HomeView.swift */; };
 		8A48BF5F2B0A594E0086EF26 /* TestCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A48BF5E2B0A594E0086EF26 /* TestCardView.swift */; };
+		8A48BF612B0BCADA0086EF26 /* ActiveArticleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A48BF602B0BCADA0086EF26 /* ActiveArticleViewModel.swift */; };
+		8A48BF632B0BE7DC0086EF26 /* SavedArticlesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A48BF622B0BE7DC0086EF26 /* SavedArticlesView.swift */; };
+		8A48BF652B0BE8E50086EF26 /* SavedArticlesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A48BF642B0BE8E50086EF26 /* SavedArticlesViewModel.swift */; };
+		8A48BF672B0BED090086EF26 /* SavedArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A48BF662B0BED090086EF26 /* SavedArticle.swift */; };
+		8A48BF692B0BF06D0086EF26 /* SavedArticleTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A48BF682B0BF06D0086EF26 /* SavedArticleTabView.swift */; };
 		8A674DB62AD78B8F00A63CC1 /* EmptyPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */; };
 		8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB72AD78C1C00A63CC1 /* RetryView.swift */; };
 		8A674DBA2AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */; };
@@ -116,6 +121,11 @@
 		8A2B79032AFB5B2600765A4A /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		8A2B79052AFBDDE000765A4A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		8A48BF5E2B0A594E0086EF26 /* TestCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCardView.swift; sourceTree = "<group>"; };
+		8A48BF602B0BCADA0086EF26 /* ActiveArticleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveArticleViewModel.swift; sourceTree = "<group>"; };
+		8A48BF622B0BE7DC0086EF26 /* SavedArticlesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedArticlesView.swift; sourceTree = "<group>"; };
+		8A48BF642B0BE8E50086EF26 /* SavedArticlesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedArticlesViewModel.swift; sourceTree = "<group>"; };
+		8A48BF662B0BED090086EF26 /* SavedArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedArticle.swift; sourceTree = "<group>"; };
+		8A48BF682B0BF06D0086EF26 /* SavedArticleTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedArticleTabView.swift; sourceTree = "<group>"; };
 		8A674DB52AD78B8F00A63CC1 /* EmptyPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPlaceholderView.swift; sourceTree = "<group>"; };
 		8A674DB72AD78C1C00A63CC1 /* RetryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryView.swift; sourceTree = "<group>"; };
 		8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleBookmarkViewModel.swift; sourceTree = "<group>"; };
@@ -243,9 +253,11 @@
 		8A2B78F62AFB24E200765A4A /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				209A710B2B05A904007F4F5D /* NightModeManager.swift */,
 				8A2B78F72AFB24FC00765A4A /* CardTransition.swift */,
 				8A2B78FE2AFB25FB00765A4A /* PlaySound.swift */,
 				8A2B79032AFB5B2600765A4A /* AuthViewModel.swift */,
+				8A48BF602B0BCADA0086EF26 /* ActiveArticleViewModel.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -334,6 +346,7 @@
 				8AB2E3162AD5BB9D0066AB1A /* Article.swift */,
 				8AB2E3182AD5BDB30066AB1A /* NewsAPIResponse.swift */,
 				8AB2E3242AD646EF0066AB1A /* Category.swift */,
+				8A48BF662B0BED090086EF26 /* SavedArticle.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -342,7 +355,6 @@
 			isa = PBXGroup;
 			children = (
 				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
-				209A710B2B05A904007F4F5D /* NightModeManager.swift */,
 				8AB2E2D82AD0DEEA0066AB1A /* SwipeableCardView.swift */,
 				F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */,
 				8AB2E31F2AD641C00066AB1A /* CardView.swift */,
@@ -361,6 +373,8 @@
 				8AB7D0D72B05728800D1851C /* FooterView.swift */,
 				8AB7D0D92B0573B800D1851C /* InfoView.swift */,
 				8AB7D0DF2B05748E00D1851C /* GuideView.swift */,
+				8A48BF622B0BE7DC0086EF26 /* SavedArticlesView.swift */,
+				8A48BF682B0BF06D0086EF26 /* SavedArticleTabView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -378,6 +392,7 @@
 			children = (
 				8A674DB92AD7969D00A63CC1 /* ArticleBookmarkViewModel.swift */,
 				8AB2E3272AD649240066AB1A /* ArticleNewsViewModel.swift */,
+				8A48BF642B0BE8E50086EF26 /* SavedArticlesViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -570,7 +585,9 @@
 				8A2B78FF2AFB25FB00765A4A /* PlaySound.swift in Sources */,
 				8AB7D0DA2B0573B800D1851C /* InfoView.swift in Sources */,
 				8AB2E3282AD649240066AB1A /* ArticleNewsViewModel.swift in Sources */,
+				8A48BF612B0BCADA0086EF26 /* ActiveArticleViewModel.swift in Sources */,
 				B39CEB9F2AFAB45900954C3A /* ProfilePhotoView.swift in Sources */,
+				8A48BF692B0BF06D0086EF26 /* SavedArticleTabView.swift in Sources */,
 				8A2B78FA2AFB254000765A4A /* SymbolModifier.swift in Sources */,
 				8AB2E2E02AD0DEED0066AB1A /* Persistence.swift in Sources */,
 				8AB2E31C2AD63FA90066AB1A /* SafariView.swift in Sources */,
@@ -579,7 +596,9 @@
 				8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */,
 				8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */,
 				F093DCC52AFA0794009E8DCC /* ForgotPasswordView.swift in Sources */,
+				8A48BF652B0BE8E50086EF26 /* SavedArticlesViewModel.swift in Sources */,
 				8AB2E2D92AD0DEEA0066AB1A /* SwipeableCardView.swift in Sources */,
+				8A48BF672B0BED090086EF26 /* SavedArticle.swift in Sources */,
 				209A710E2B05C3F3007F4F5D /* InterestUpdateView.swift in Sources */,
 				8A2B79062AFBDDE000765A4A /* HomeView.swift in Sources */,
 				8ACC1EC02AFEDC1E009BE432 /* TestHomeView.swift in Sources */,
@@ -598,6 +617,7 @@
 				8AB7D0E02B05748E00D1851C /* GuideView.swift in Sources */,
 				8AB2E3202AD641C00066AB1A /* CardView.swift in Sources */,
 				8AB7D0DE2B05741000D1851C /* TitleModifier.swift in Sources */,
+				8A48BF632B0BE7DC0086EF26 /* SavedArticlesView.swift in Sources */,
 				8AB2E3252AD646EF0066AB1A /* Category.swift in Sources */,
 				B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */,
 				8A48BF5F2B0A594E0086EF26 /* TestCardView.swift in Sources */,

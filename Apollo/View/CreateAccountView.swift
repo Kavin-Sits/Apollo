@@ -132,7 +132,8 @@ struct CreateAccountView: View {
             "location": location,
             "occupation": occupation,
             "interests": Array(selectedOptions),
-            "seenArticles": []
+            "seenArticles": [],
+            "savedArticles": []
         ] as [String : Any]
         
         Firestore.firestore().collection("users").document(email).setData(userData) {

@@ -93,9 +93,8 @@ struct MainSettingsView: View {
                     }
                     
                     Section {
-                        Button(action: {
-                        }) {
-                            Text("View History")
+                        NavigationLink(destination: SavedArticlesView()) {
+                            Text("View Saved Articles")
                         }
                         
                         @EnvironmentObject var authViewModel: AuthViewModel
