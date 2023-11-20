@@ -112,6 +112,30 @@ struct SwipeableCardView: View {
         })
         .onAppear{
             Task{
+                if let userId = Auth.auth().currentUser?.email {
+                    let userDocRef = Firestore.firestore().collection("users").document(userId)
+                    let userDocument = try? await userDocRef.getDocument()
+                    
+                    if let userDocument = userDocument, userDocument.exists {
+                        let userData = userDocument.data()
+                        let interests = userData?["interests"] as? [String] ?? []
+                        
+                        switch(interests[0]){
+                        case "Sports":
+                            articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.sports, token: Date())
+                        case "Business":
+                            articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.business, token: Date())
+                        case "Technology":
+                            articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.technology, token: Date())
+                        case "Health and Medicine":
+                            articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.health, token: Date())
+                        case "Entertainment":
+                            articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.entertainment, token: Date())
+                        default:
+                            articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.general, token: Date())
+                        }
+                    }
+                }
                 await loadTask()
                 if case let .success(articles) = articleNewsVM.phase {
                     
