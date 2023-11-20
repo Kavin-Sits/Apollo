@@ -23,7 +23,7 @@ struct HomeView: View {
             
             Spacer()
             
-            SwipeableCardView()
+            TestCardView()
                 .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             
             Spacer()

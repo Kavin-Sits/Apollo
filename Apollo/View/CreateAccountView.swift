@@ -125,7 +125,15 @@ struct CreateAccountView: View {
     }
     
     private func storeUserData() {
-        let userData = ["email": email, "fullName": fullName, "dateOfBirth": dateOfBirth, "location": location, "occupation": occupation, "interests": Array(selectedOptions)] as [String : Any]
+        let userData = [
+            "email": email,
+            "fullName": fullName,
+            "dateOfBirth": dateOfBirth,
+            "location": location,
+            "occupation": occupation,
+            "interests": Array(selectedOptions),
+            "seenArticles": []
+        ] as [String : Any]
         
         Firestore.firestore().collection("users").document(email).setData(userData) {
             error in

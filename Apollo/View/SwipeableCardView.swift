@@ -110,6 +110,8 @@ struct SwipeableCardView: View {
             Task{
                 await loadTask()
                 if case let .success(articles) = articleNewsVM.phase {
+                    
+                    
                     displayedArticles = Array(articles.prefix(10))
                 }
             }
@@ -118,6 +120,7 @@ struct SwipeableCardView: View {
     
     private func removeCard(at index: Int) {
         guard index < displayedArticles.count else { return }
+        
         displayedArticles.remove(at: index)
     }
     

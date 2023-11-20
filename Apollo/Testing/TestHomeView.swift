@@ -9,61 +9,28 @@ import SwiftUI
 
 struct TestHomeView: View {
     
-    @StateObject var articleNewsVM = ArticleNewsViewModel()
     @EnvironmentObject var authViewModel: AuthViewModel
     @State var showSettings:Bool = false
+    @State var showAlert:Bool = false
+    @State var showGuide:Bool = false
+    @State var showInfo:Bool = false
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         VStack {
 //            HeaderView(showSettingsView: $showSettings)
             
-//            Spacer()
+            Spacer()
             
-//            SwipeableCardView(articles: Array(/*Article.previewData.prefix(10)*/articles.prefix(10)))
-//                .task(id: articleNewsVM.fetchTaskToken, loadTask)
+            SwipeableCardView()
             
+            Spacer()
             
+//            FooterView(showBookingAlert: $showAlert, showGuideView: $showGuide , showInfoView: $showInfo)
         }
-//        .onAppear{
-//            Task{
-//                await loadTask()
-//            }
-//        }
+        .background(Color(red: 224/255, green: 211/255, blue: 175/255))
     }
     
-    @ViewBuilder
-    private var overlayView: some View {
-        
-        switch articleNewsVM.phase {
-        case .empty:
-            ProgressView()
-        case .success(let articles) where articles.isEmpty:
-            EmptyPlaceholderView(text: "No Articles", image: nil)
-        case .failure(let error):
-            RetryView(text: error.localizedDescription, retryAction: refreshTask)
-        default: EmptyView()
-        }
-    }
-    
-    private var articles: [Article] {
-        if case let .success(articles) = articleNewsVM.phase {
-            return articles
-        } else {
-            return []
-        }
-    }
-    
-    @Sendable
-    private func loadTask() async {
-        await articleNewsVM.loadArticles()
-    }
-    
-    
-    private func refreshTask() {
-        DispatchQueue.main.async {
-            articleNewsVM.fetchTaskToken = FetchTaskToken(category: articleNewsVM.fetchTaskToken.category, token: Date())
-        }
-    }
 }
 
 #Preview {

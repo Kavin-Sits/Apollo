@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 struct TestCardView: View {
     
@@ -110,6 +112,21 @@ struct TestCardView: View {
                 await loadTask()
                 if case let .success(articles) = articleNewsVM.phase {
                     displayedArticles = Array(articles.prefix(10))
+                    
+                    guard let userId = Auth.auth().currentUser?.email else { return }
+                    
+                    let userDocRef = Firestore.firestore().collection("users").document(userId)
+                    let userDocument = try? await userDocRef.getDocument()
+                    
+                    if let userDocument = userDocument, userDocument.exists {
+                        let userData = userDocument.data()
+                        let seenArticles = userData?["seenArticles"] as? [String] ?? []
+                        
+                        displayedArticles = displayedArticles.filter { !seenArticles.contains($0.id)}
+                    } else {
+                        print("user does not exist")
+                    }
+                    
                 }
             }
         }
@@ -117,7 +134,28 @@ struct TestCardView: View {
     
     private func removeCard(at index: Int) {
         guard index < displayedArticles.count else { return }
+        
+        let swipedArticle = displayedArticles[index]
+        addSwipedArticleToUser(swipedArticleId: swipedArticle.url)
+        
         displayedArticles.remove(at: index)
+    }
+    
+    private func addSwipedArticleToUser(swipedArticleId: String) {
+        guard let userId = Auth.auth().currentUser?.email else { return }
+        
+        Firestore.firestore().collection("users").document(userId).updateData(["seenArticles": FieldValue.arrayUnion([swipedArticleId])]) { error in
+            if let error = error {
+                print("Error adding article: \(error)")
+            } else {
+                print("Article successfully added!")
+            }
+        }
+                                                           
+        let userDocRef = Firestore.firestore().collection("users").document(userId)
+        userDocRef.updateData([
+            "seenArticles": FieldValue.arrayUnion([swipedArticleId])
+        ])
     }
     
     @ViewBuilder
