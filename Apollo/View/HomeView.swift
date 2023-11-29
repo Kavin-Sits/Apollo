@@ -40,7 +40,8 @@ struct HomeView: View {
                   dismissButton: .default(Text("Happy Reading!")))
         })
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-        .background(Color(red: 224/255, green: 211/255, blue: 175/255))
+        .background(Theme.appColors)
+        .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
     }
 }
 

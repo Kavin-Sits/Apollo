@@ -58,7 +58,6 @@ struct ProfilePhotoView: View {
             }
             .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             .frame(width: 400)
-            .background(Color(red: 224/255, green: 211/255, blue: 175/255))
             .onAppear {
                 self.loadProfilePhoto()
             }
@@ -67,7 +66,8 @@ struct ProfilePhotoView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .background(Color(red: 224/255, green: 211/255, blue: 175/255))
+        .background(Theme.appColors)
+        .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
     }
 
     func loadProfilePhoto() {

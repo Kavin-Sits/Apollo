@@ -17,7 +17,7 @@ struct UpdateLocationView: View {
 
     var body: some View {
         ZStack {
-            Color(red: 224/255, green: 211/255, blue: 175/255)
+            Theme.appColors
                 .ignoresSafeArea()
             VStack {
                 switch locationPermission.authorizationStatus {
@@ -46,6 +46,8 @@ struct UpdateLocationView: View {
             .buttonStyle(.bordered)
         }
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+        .background(Theme.appColors)
+        .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
     }
 }
 

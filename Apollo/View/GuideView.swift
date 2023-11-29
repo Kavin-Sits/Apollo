@@ -51,7 +51,8 @@ struct GuideView: View {
             .padding(.bottom, 25)
             .padding(.horizontal, 20)
         })
-        .background(Color(red: 224/255, green: 211/255, blue: 175/255))
+        .background(Theme.appColors)
+        .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
     }
 }

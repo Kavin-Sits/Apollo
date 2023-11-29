@@ -68,6 +68,8 @@ struct FooterView: View {
             })
         }
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+        .background(Theme.appColors)
+        .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
         .padding()
     }
     

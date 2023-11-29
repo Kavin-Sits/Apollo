@@ -9,6 +9,12 @@ import SwiftUI
 import FirebaseAuth
 import UIKit
 
+enum Theme {
+    static var appColors: Color {
+        Color("AppColors")
+    }
+}
+
 struct MainSettingsView: View {
     //@State private var isNightModeOn = false
     @State private var isSoundEffectsOn = false
@@ -28,7 +34,6 @@ struct MainSettingsView: View {
     var body: some View {
         NavigationView {
             VStack{
-                
                 Form {
                     Section(header: Text("Account")) {
                         Button(action: {
@@ -152,14 +157,13 @@ struct MainSettingsView: View {
                     .frame(width:300, height: 40)
                     .padding()
                 }
-                .background(Color(red: 224/255, green: 211/255, blue: 175/255))
+                
                 .scrollContentBackground(.hidden)
-                .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
+                
                 .navigationBarTitle("Settings")
             }
-            
-            .background(Color(red: 224/255, green: 211/255, blue: 175/255))
-            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+            .background(Theme.appColors)
+            .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
         }
     }
 }

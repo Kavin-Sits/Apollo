@@ -170,7 +170,8 @@ struct LoginView: View {
                 }
             }
             .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxWidth: .infinity)
-            .background(backgroundColor)
+            .background(Theme.appColors)
+            .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
         }
     }
     
