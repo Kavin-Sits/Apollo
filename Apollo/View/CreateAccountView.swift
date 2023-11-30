@@ -110,7 +110,9 @@ struct CreateAccountView: View {
         .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxWidth: .infinity)
         .padding(.top, 80)
         .padding(.bottom, 70)
-        .background(backgroundColor)
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+        .background(Theme.appColors)
+        .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
     }
     
     private func createUser() {
