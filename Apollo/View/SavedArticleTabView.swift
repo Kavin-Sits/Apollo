@@ -12,6 +12,7 @@ struct SavedArticleTabView: View {
     let imageURL: URL?
     let title: String
     let description: String
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16, content: {
@@ -54,6 +55,9 @@ struct SavedArticleTabView: View {
             .padding([.horizontal, .bottom])
                 
             })
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+        .background(Theme.appColors)
+        .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
     }
 }
 

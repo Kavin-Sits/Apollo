@@ -98,7 +98,8 @@ struct MainSettingsView: View {
                     }
                     
                     Section {
-                        NavigationLink(destination: SavedArticlesView()) {
+                        NavigationLink(destination: SavedArticlesView()
+                            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)) {
                             Text("View Saved Articles")
                         }
                         

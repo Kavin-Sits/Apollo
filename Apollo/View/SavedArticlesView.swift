@@ -12,6 +12,7 @@ import FirebaseFirestore
 struct SavedArticlesView: View {
     @StateObject private var viewModel = SavedArticlesViewModel()
     @State private var selectedArticle: SavedArticle?
+    @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         VStack{
@@ -21,6 +22,7 @@ struct SavedArticlesView: View {
                         .onTapGesture {
                             selectedArticle = article
                         }
+                        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
                 }
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .listRowSeparator(.hidden)
@@ -34,6 +36,9 @@ struct SavedArticlesView: View {
                     viewModel.fetchSavedArticles(userId: userID)
                 }
             }
+            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+            .background(Theme.appColors)
+            .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
         }
     }
 }
