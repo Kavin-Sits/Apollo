@@ -135,6 +135,8 @@ struct MainSettingsView: View {
                                     Auth.auth().currentUser?.delete()
                                     do {
                                         try Auth.auth().signOut()
+                                        self.presentationMode.callAsFunction()
+                                        self.authViewModel.logOut()
                                     } catch let signOutError as NSError {
                                         print("Error signing out: \(signOutError)")
                                     }
