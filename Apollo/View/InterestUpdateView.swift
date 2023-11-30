@@ -41,7 +41,6 @@ struct InterestUpdateView: View {
 
             Text("Update your topic preferences here.")
                 .font(.system(size: 20))
-                .foregroundColor(.white)
                 .multilineTextAlignment(.center)
 
             ScrollView {

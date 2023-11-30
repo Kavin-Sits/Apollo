@@ -13,6 +13,7 @@ struct InterestSelectionView: View {
     @State private var selectedOptions: Set<String> = []
     @State private var errorMessage: String = ""
     @State private var updateOptions: Bool = false
+    @EnvironmentObject var nightModeManager: NightModeManager
 
     init(email: String) {
         userEmail = email
@@ -39,11 +40,9 @@ struct InterestSelectionView: View {
             
             Text("Which topics interest you?")
                 .font(.title)
-                .foregroundColor(.white)
 
             Text("We'll try to curate your selection based on your preferences.")
                 .font(.headline)
-                .foregroundColor(.white)
                 .multilineTextAlignment(.center)
 
             ScrollView {
@@ -59,7 +58,6 @@ struct InterestSelectionView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 8)
-//                        .background(Color.white)
                         .cornerRadius(10)
                     }
                 }
@@ -83,7 +81,9 @@ struct InterestSelectionView: View {
         .onAppear() {
             loadUserPreferences()
         }
-        .background(Color(red: 224/255, green: 211/255, blue: 175/255))
+        .background(Theme.appColors)
+        .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
+        .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
     }
 
     func toggleOption(_ option: String) {
