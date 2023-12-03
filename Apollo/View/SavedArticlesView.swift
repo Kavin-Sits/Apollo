@@ -2,7 +2,7 @@
 //  SavedArticlesView.swift
 //  Apollo
 //
-//  Created by Kavin Sitsabeshon on 11/20/23.
+//  Created by Srihari Manoj on 11/20/23.
 //
 
 import SwiftUI
