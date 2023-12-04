@@ -54,9 +54,11 @@ struct HeaderView: View {
                             .overlay(Circle().stroke(Color.white, lineWidth: 1))
                             .shadow(radius: 5)
                     } else {
-                        Circle()
-                            .fill(Color.gray)
+                        Image(systemName: "person.circle")
+                            .resizable()
+                            .scaledToFill()
                             .frame(width: UIScreen.main.bounds.width / 10, height: UIScreen.main.bounds.width / 10)
+                            .clipShape(Circle())
                             .overlay(Circle().stroke(Color.white, lineWidth: 1))
                             .shadow(radius: 5)
                     }

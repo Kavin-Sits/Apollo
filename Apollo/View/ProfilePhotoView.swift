@@ -37,9 +37,11 @@ struct ProfilePhotoView: View {
                         .overlay(Circle().stroke(Color.white, lineWidth: 4))
                         .shadow(radius: 20)
                 } else {
-                    Circle()
-                        .fill(Color.gray)
+                    Image(systemName: "person.circle")
+                        .resizable()
+                        .scaledToFill()
                         .frame(width: UIScreen.main.bounds.width / 1.4, height: UIScreen.main.bounds.width / 1.4)
+                        .clipShape(Circle())
                         .overlay(Circle().stroke(Color.white, lineWidth: 4))
                         .shadow(radius: 20)
                 }
