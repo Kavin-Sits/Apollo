@@ -70,9 +70,8 @@ struct HeaderView: View {
                 })
             }
             .padding(10)
-            Text("What interests you today, \(fullNameReuse)?")
+            Text("What news would you like to view today?")
                 .font(.title3)
-                .minimumScaleFactor(0.4)
                 .multilineTextAlignment(.center)
                 .bold()
         }
