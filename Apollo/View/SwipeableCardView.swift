@@ -130,6 +130,10 @@ struct SwipeableCardView: View {
                         let userData = userDocument.data()
                         let interests = userData?["interests"] as? [String] ?? []
         
+                        
+                        
+                        let quantityToAdd:Int = Int(10/interests.count)
+                        
                         for interest in interests {
                             switch(interest){
                             case "Sports":
@@ -150,7 +154,7 @@ struct SwipeableCardView: View {
                                 
                                 let filteredArticles = articles.filter { $0.url != "https://removed.com" }
                                 
-                                var categoryArticles = Array(filteredArticles.prefix(10))
+                                var categoryArticles = Array(filteredArticles.prefix(quantityToAdd))
                                 
                                 guard let userId = Auth.auth().currentUser?.email else { return }
                                 
@@ -162,8 +166,6 @@ struct SwipeableCardView: View {
                                     let seenArticles = userData?["seenArticles"] as? [String] ?? []
                                     
                                     categoryArticles = categoryArticles.filter { !seenArticles.contains($0.id)}
-                                    
-                                    var quantityToAdd:Int = Int(10/interests.count)
                                     
                                     displayedArticles.append(contentsOf: Array(categoryArticles.prefix(quantityToAdd)))
                                     
