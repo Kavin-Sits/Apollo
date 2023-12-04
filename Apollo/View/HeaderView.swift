@@ -90,7 +90,11 @@ struct HeaderView: View {
     }
     
     func loadProfilePhoto() {
-        Firestore.firestore().collection("users").document(Auth.auth().currentUser?.email ?? "").getDocument { (document, error) in
+        guard let currentUserEmail = Auth.auth().currentUser?.email else {
+            return
+        }
+        let doc = Firestore.firestore().collection("users").document(currentUserEmail)
+        doc.addSnapshotListener { (document, error) in
             if let document = document, document.exists {
                 if let urlString = document.data()?["profilePhotoURL"] as? String, let url = URL(string: urlString) {
                     self.cancellable = URLSession.shared.dataTaskPublisher(for: url)
