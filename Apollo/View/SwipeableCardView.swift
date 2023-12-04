@@ -148,7 +148,7 @@ struct SwipeableCardView: View {
                             await loadTask()
                             if case let .success(articles) = articleNewsVM.phase {
                                 
-                                let filteredArticles = articles.filter { $0.url != "https://removed.com"}
+                                let filteredArticles = articles.filter { $0.url != "https://removed.com" }
                                 
                                 displayedArticles = Array(filteredArticles.prefix(10))
                                 
