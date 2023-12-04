@@ -148,9 +148,9 @@ struct SwipeableCardView: View {
                             await loadTask()
                             if case let .success(articles) = articleNewsVM.phase {
                                 
-                                let filteredArticles = articles.filter { $0.url != "https://removed.com"}
+                                let filteredArticles = articles.filter { $0.url != "https://removed.com" }
                                 
-                                displayedArticles = Array(filteredArticles.prefix(10))
+                                var categoryArticles = Array(filteredArticles.prefix(10))
                                 
                                 guard let userId = Auth.auth().currentUser?.email else { return }
                                 
@@ -161,7 +161,13 @@ struct SwipeableCardView: View {
                                     let userData = userDocument.data()
                                     let seenArticles = userData?["seenArticles"] as? [String] ?? []
                                     
-                                    displayedArticles = displayedArticles.filter { !seenArticles.contains($0.id)}
+                                    categoryArticles = categoryArticles.filter { !seenArticles.contains($0.id)}
+                                    
+                                    var quantityToAdd:Int = Int(10/interests.count)
+                                    
+                                    displayedArticles.append(contentsOf: Array(categoryArticles.prefix(quantityToAdd)))
+                                    
+                                    displayedArticles.shuffle()
                                     
                                     if displayedArticles.indices.contains(0) {
                                         activeArticleVM.activeArticle = displayedArticles.last

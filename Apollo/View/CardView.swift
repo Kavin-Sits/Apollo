@@ -20,11 +20,14 @@ struct CardView: View, Identifiable {
             AsyncImage(url: article.imageURL){ phase in
                 switch phase {
                 case .empty:
-                    HStack{
-                        Spacer()
-                        ProgressView()
-                        Spacer()
-                    }
+                    Rectangle()
+                        .fill(Color.gray)
+                        .overlay(
+                            HStack{
+                                Spacer()
+                                ProgressView()
+                                Spacer()
+                            })
                 case .success(let image):
                     image
                         .resizable()
