@@ -157,7 +157,9 @@ struct SwipeableCardView: View {
                                     
                                     let filteredArticles = articles.filter { $0.url != "https://removed.com" }
                                     
-                                    var categoryArticles = Array(filteredArticles.prefix(quantityToAdd))
+                                    let noRepeatArticles = filteredArticles.filter { article in !displayedArticles.contains {$0.url == article.url}
+                                    }
+                                    var categoryArticles = Array(noRepeatArticles.prefix(quantityToAdd))
                                     
                                     guard let userId = Auth.auth().currentUser?.email else { return }
                                     
