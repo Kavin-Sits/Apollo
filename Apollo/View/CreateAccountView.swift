@@ -11,6 +11,7 @@ import FirebaseAuth
 import FirebaseFirestore
 
 let occupationsList = ["accountant", "actor/actress", "artist", "astronaut", "astronomer", "athelete", "banker", "barber", "biologist", "blacksmith", "butler", "cardiologist", "carpenter", "cashier", "chef", "chemist", "contractor", "dentist", "dermatologist", "designer", "doctor", "ecologist", "economist", "engineer", "entrepreneur", "geologist", "geographer", "hairdresser", "intern", "judge", "journalist", "landscaper", "lawyer", "manager", "marketer", "mechanic", "model", "nurse", "optometrist", "paralegal", "pediatrician", "photographer", "physician", "politician", "producer", "professor", "psychologist", "retailer", "salesperson", "scientist", "sheriff", "student", "statistician", "surgeon", "teacher", "technician", "trader", "usher", "veterinarian", "watier/waitress", "writer"]
+var fullNameReuse: String  = ""
 
 struct CreateAccountView: View {
     
@@ -175,6 +176,7 @@ struct DobLocationOccupationView: View {
                     if fullName != "" && email != "" && password != "" && dateOfBirth != "" && location != "" && occupation != "" {
                         createUser()
                         if errorMessage == "" {
+                            fullNameReuse = fullName
                             userSelectedInterests = false
                             storeUserData()
                         }
