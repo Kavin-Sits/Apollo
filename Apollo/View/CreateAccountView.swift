@@ -24,7 +24,7 @@ struct CreateAccountView: View {
     @State private var selectedOptions: Set<String> = []
     @Binding var userSelectedInterests: Bool
     @EnvironmentObject var nightModeManager: NightModeManager
-    
+    let haptics = UINotificationFeedbackGenerator()
     
     let backgroundColor = Color(red: 224/255, green: 211/255, blue: 175/255)
     
@@ -100,6 +100,7 @@ struct CreateAccountView: View {
                         }
                     } else {
                         errorMessage = "Please ensure that all fields are filled"
+                        self.haptics.notificationOccurred(.warning)
                     }
                     
                 }

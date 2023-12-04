@@ -14,6 +14,7 @@ struct InterestSelectionView: View {
     @State private var errorMessage: String = ""
     @State private var updateOptions: Bool = false
     @EnvironmentObject var nightModeManager: NightModeManager
+    let haptics = UINotificationFeedbackGenerator()
 
     init(email: String) {
         userEmail = email
@@ -67,6 +68,7 @@ struct InterestSelectionView: View {
             Button("Continue") {
                 if selectedOptions.count == 0 {
                     errorMessage = "Please select at least one option"
+                    self.haptics.notificationOccurred(.warning)
                 } else {
                     storeInterestSelections()
                     errorMessage = ""

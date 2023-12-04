@@ -28,6 +28,7 @@ struct MainSettingsView: View {
     @State private var showAlert = false
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var nightModeManager: NightModeManager
+    @ObservedObject private var soundEffectManager = SoundEffectManager()
     
     @Environment(\.dismiss) var presentationMode
 
@@ -92,8 +93,11 @@ struct MainSettingsView: View {
                     }
                     
                     Section(header: Text("Sound")) {
-                        Toggle(isOn: $isSoundEffectsOn) {
+                        Toggle(isOn: $soundEffectManager.soundEnabled) {
                             Text("Sound Effects")
+                        }
+                        .onReceive(soundEffectManager.$soundEnabled) { newValue in
+                            print("soundEnabled changed to \(newValue)")
                         }
                     }
                     

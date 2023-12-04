@@ -19,6 +19,8 @@ struct SwipeableCardView: View {
     @State private var activeCardIndex: Int? = nil
     @State private var displayedArticles: [Article] = []
     @State private var selectedArticle: Article?
+    let haptics = UINotificationFeedbackGenerator()
+    @ObservedObject private var soundEffectManager = SoundEffectManager()
     var dragAreaThreshold: CGFloat = 65.0
     
     enum DragState {
@@ -94,13 +96,21 @@ struct SwipeableCardView: View {
                             }
                                 
                             if drag.translation.width < -self.dragAreaThreshold {
-                                playSound(sound: "swipe", type: "wav")
+                                print("soundEnabled: \(soundEffectManager.soundEnabled)")
+                                if(soundEffectManager.soundEnabled) {
+                                    playSound(sound: "swipe", type: "wav")
+                                }
                                 removeCard(at: index)
+                                self.haptics.notificationOccurred(.success)
                                 activeCardIndex = nil
                                 
                             } else if drag.translation.width > self.dragAreaThreshold {
-                                playSound(sound: "swipe", type: "wav")
+                                print("soundEnabled: \(soundEffectManager.soundEnabled)")
+                                if(soundEffectManager.soundEnabled) {
+                                    playSound(sound: "swipe", type: "wav")
+                                }
                                 removeCard(at: index)
+                                self.haptics.notificationOccurred(.success)
                                 activeCardIndex = nil
                             }
                         })

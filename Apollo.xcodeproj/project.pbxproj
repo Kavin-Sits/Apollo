@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		202117DF2ADC8BD70083BC0B /* MainSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */; };
 		2056F4EF2AF87F9C00EA4EE4 /* PasswordChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */; };
+		205DE1F32B1D4D74001D91E1 /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205DE1F22B1D4D74001D91E1 /* SoundEffectManager.swift */; };
 		209A710C2B05A904007F4F5D /* NightModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209A710B2B05A904007F4F5D /* NightModeManager.swift */; };
 		209A710E2B05C3F3007F4F5D /* InterestUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209A710D2B05C3F3007F4F5D /* InterestUpdateView.swift */; };
 		8A2B78F32AFB140E00765A4A /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */; };
@@ -111,6 +112,7 @@
 /* Begin PBXFileReference section */
 		202117DE2ADC8BD60083BC0B /* MainSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsView.swift; sourceTree = "<group>"; };
 		2056F4EE2AF87F9C00EA4EE4 /* PasswordChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordChangeView.swift; sourceTree = "<group>"; };
+		205DE1F22B1D4D74001D91E1 /* SoundEffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
 		209A710B2B05A904007F4F5D /* NightModeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightModeManager.swift; sourceTree = "<group>"; };
 		209A710D2B05C3F3007F4F5D /* InterestUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestUpdateView.swift; sourceTree = "<group>"; };
 		8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
@@ -355,6 +357,7 @@
 			isa = PBXGroup;
 			children = (
 				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
+				205DE1F22B1D4D74001D91E1 /* SoundEffectManager.swift */,
 				8AB2E2D82AD0DEEA0066AB1A /* SwipeableCardView.swift */,
 				F0194CC82ADE5E3900A2A5C0 /* CreateAccountView.swift */,
 				8AB2E31F2AD641C00066AB1A /* CardView.swift */,
@@ -619,6 +622,7 @@
 				8AB7D0DE2B05741000D1851C /* TitleModifier.swift in Sources */,
 				8A48BF632B0BE7DC0086EF26 /* SavedArticlesView.swift in Sources */,
 				8AB2E3252AD646EF0066AB1A /* Category.swift in Sources */,
+				205DE1F32B1D4D74001D91E1 /* SoundEffectManager.swift in Sources */,
 				B340272E2ADE165A00B78062 /* InterestSelectionView.swift in Sources */,
 				8A48BF5F2B0A594E0086EF26 /* TestCardView.swift in Sources */,
 				8A2B79042AFB5B2600765A4A /* AuthViewModel.swift in Sources */,
