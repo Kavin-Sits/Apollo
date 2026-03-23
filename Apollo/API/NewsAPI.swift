@@ -30,9 +30,9 @@ struct NewsAPI {
             return fallbackArticles(for: category)
         }
 
-        let url = generateNewsURL(from: category)
+        let request = generateNewsRequest(from: category)
         do {
-            let (data, response) = try await session.data(from: url)
+            let (data, response) = try await session.data(for: request)
         
             guard let response = response as? HTTPURLResponse else{
                 throw generateError(description: "Bad Response")
@@ -59,13 +59,18 @@ struct NewsAPI {
         NSError(domain: "NewsAPI", code: code, userInfo: [NSLocalizedDescriptionKey: description])
     }
     
-    private func generateNewsURL(from category: Category) -> URL {
-        var url = "https://newsapi.org/v2/top-headlines?"
-        url += "apiKey=\(apiKey)"
-        url += "&language=en"
-        url += "&country=us"
-        url += "&category=\(category.rawValue)"
-        return URL(string: url)!
+    private func generateNewsRequest(from category: Category) -> URLRequest {
+        var components = URLComponents(string: "https://newsapi.org/v2/top-headlines")!
+        components.queryItems = [
+            URLQueryItem(name: "language", value: "en"),
+            URLQueryItem(name: "country", value: "us"),
+            URLQueryItem(name: "category", value: category.rawValue),
+            URLQueryItem(name: "pageSize", value: "20")
+        ]
+
+        var request = URLRequest(url: components.url!)
+        request.setValue(apiKey, forHTTPHeaderField: "X-Api-Key")
+        return request
     }
 
     private func fallbackArticles(for category: Category) -> [Article] {
