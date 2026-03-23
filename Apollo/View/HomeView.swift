@@ -18,21 +18,24 @@ struct HomeView: View {
     @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
-        VStack {
-            HeaderView(showSettingsView: $showSettings)
-                .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-            
-            Spacer()
-            
-            SwipeableCardView()
-                .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-                .environmentObject(activeArticleVM)
-            
-            Spacer()
-            
-            FooterView(showBookingAlert: $showAlert, showGuideView: $showGuide , showInfoView: $showInfo)
-                .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-                .environmentObject(activeArticleVM)
+        ZStack {
+            AppBackground()
+
+            VStack(spacing: 22) {
+                HeaderView(showSettingsView: $showSettings)
+                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+
+                SwipeableCardView()
+                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+                    .environmentObject(activeArticleVM)
+
+                FooterView(showBookingAlert: $showAlert, showGuideView: $showGuide , showInfoView: $showInfo)
+                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+                    .environmentObject(activeArticleVM)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 14)
+            .padding(.bottom, 24)
         }
         .alert(isPresented: $showAlert, content: {
             Alert(title: Text("SUCCESS"),
@@ -40,7 +43,6 @@ struct HomeView: View {
                   dismissButton: .default(Text("Happy Reading!")))
         })
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-        .background(Theme.appColors)
         .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
     }
 }

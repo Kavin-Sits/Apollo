@@ -7,11 +7,11 @@
 
 import SwiftUI
 import UserNotifications
+
 public var notifAuthorization = false
 
-
 extension UIApplication {
-    
+
     @MainActor
     class func getTopViewController(base: UIViewController? = nil) -> UIViewController? {
 
@@ -35,20 +35,16 @@ struct LoginView: View {
     @State private var alertMessage = ""
     @State private var showAlert = false
     @State private var shouldShowInterestSelection = false
-    
-    let backgroundColor = Color(red: 224/255, green: 211/255, blue: 175/255)
-    
+
     var body: some View {
         if authViewModel.isLoggedIn {
             if shouldShowInterestSelection {
                 InterestSelectionView(email: AppSession.currentUserID ?? AppSession.guestUserID)
-                    .onAppear() {
-                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.sound]) {
-                            (granted,error) in
+                    .onAppear {
+                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
                             if granted {
                                 notifAuthorization = true
-                            }
-                            else if let error = error {
+                            } else if let error {
                                 print(error.localizedDescription)
                             }
                         }
@@ -58,91 +54,117 @@ struct LoginView: View {
                 HomeView()
                     .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             }
-            
         } else {
             content
         }
     }
-    
+
     var content: some View {
-        
-        NavigationStack{
-            VStack{
-                VStack(alignment: .center, spacing: 25) {
-                    Text("APOLLO")
-                        .font(Font.custom("Bodoni 72 Smallcaps", size: 52))
-                    
-                    VStack(alignment: .leading) {
-                        Text("Username/Email")
-                        TextField("username", text: $authViewModel.username)
-                            .textFieldStyle(.roundedBorder)
-                            .autocapitalization(.none)
-                            .padding(.top, 10)
-                        Text("Password")
-                            .padding(.top, 10)
-                        SecureField("password", text: $authViewModel.password)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.top, 10)
-                        NavigationLink("Forgot password") {
-                            ForgotPasswordView()
-                                .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-//                                .onAppear {
-//                                    nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
-//                                }
+        NavigationStack {
+            ZStack {
+                AppBackground()
+
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 24) {
+                        VStack(alignment: .leading, spacing: 16) {
+                            SectionEyebrow(text: "Swipeable News")
+
+                            Text("APOLLO")
+                                .font(Font.custom("Bodoni 72 Smallcaps", size: 54))
+                                .foregroundStyle(AppStyle.surfaceTextPrimary)
+
+                            Text("A cleaner daily briefing experience with swipeable stories that adapts to what you actually read.")
+                                .font(.system(.title3, design: .rounded).weight(.medium))
+                                .foregroundStyle(AppStyle.surfaceTextSecondary)
+
+                            HStack(spacing: 12) {
+                                landingStat(title: "Swipe", subtitle: "Save or skip in seconds")
+                                landingStat(title: "Learn", subtitle: "Interests sharpen over time")
+                            }
                         }
-                        .controlSize(.small)
-                    }
-                    
-                    Button {
-                        Task {
-                            await loginUser()
+
+                        VStack(alignment: .leading, spacing: 18) {
+                            Text("Welcome back")
+                                .font(.system(size: 24, weight: .bold, design: .rounded))
+                                .foregroundStyle(AppStyle.surfaceTextPrimary)
+
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Username or email")
+                                    .font(.system(.footnote, design: .rounded).weight(.semibold))
+                                    .foregroundStyle(AppStyle.surfaceTextSecondary)
+
+                                TextField("name@example.com", text: $authViewModel.username)
+                                    .textInputAutocapitalization(.never)
+                                    .autocorrectionDisabled()
+                                    .padding(.horizontal, 16)
+                                    .frame(height: 54)
+                                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Color.white.opacity(0.94)))
+                            }
+
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Password")
+                                    .font(.system(.footnote, design: .rounded).weight(.semibold))
+                                    .foregroundStyle(AppStyle.surfaceTextSecondary)
+
+                                SecureField("Enter password", text: $authViewModel.password)
+                                    .padding(.horizontal, 16)
+                                    .frame(height: 54)
+                                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Color.white.opacity(0.94)))
+                            }
+
+                            NavigationLink("Forgot password?") {
+                                ForgotPasswordView()
+                                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+                            }
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(AppStyle.surfaceTextSecondary)
+
+                            Button {
+                                Task {
+                                    await loginUser()
+                                }
+                            } label: {
+                                Text("Log In")
+                            }
+                            .buttonStyle(FilledActionButtonStyle())
+
+                            NavigationLink {
+                                CreateAccountView(userSelectedInterests: self.$shouldShowInterestSelection)
+                                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+                            } label: {
+                                Text("Create account")
+                            }
+                            .buttonStyle(OutlineActionButtonStyle())
+
+                            Button {
+                                AppSession.startGuestSession()
+                                authViewModel.logIn()
+                                shouldShowInterestSelection = false
+                            } label: {
+                                Text("Continue as Guest")
+                            }
+                            .buttonStyle(OutlineActionButtonStyle())
                         }
-                    } label: {
-                        Text("Login")
-                            .modifier(ButtonModifier())
+                        .padding(24)
+                        .glassPanel()
                     }
-                    
-                    Text("or")
-                    
-                    NavigationLink{
-                        CreateAccountView(userSelectedInterests: self.$shouldShowInterestSelection)
-                            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-                    } label: {
-                        Text("Create account")
-                            .modifier(ButtonModifier())
-                    }
-
-                    Text("or")
-
-                    Button {
-                        AppSession.startGuestSession()
-                        authViewModel.logIn()
-                        shouldShowInterestSelection = false
-                    } label: {
-                        Text("Continue as Guest")
-                            .modifier(ButtonModifier())
-                    }
-
-                    Spacer()
-                    
-                }
-                .padding(.top, 50)
-                .frame(width: 300)
-                .onAppear {
-                    if AppSession.isGuestModeEnabled {
-                        authViewModel.logIn()
-                        shouldShowInterestSelection = false
-                    }
-
-                    if AppSession.hasAuthenticatedUser {
-                        AppSession.endGuestSession()
-                        shouldShowInterestSelection = false
-                        authViewModel.logIn()
-                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 30)
+                    .padding(.bottom, 24)
                 }
             }
-            .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxWidth: .infinity)
-            .background(Theme.appColors)
+            .onAppear {
+                if AppSession.isGuestModeEnabled {
+                    authViewModel.logIn()
+                    shouldShowInterestSelection = false
+                }
+
+                if AppSession.hasAuthenticatedUser {
+                    AppSession.endGuestSession()
+                    shouldShowInterestSelection = false
+                    authViewModel.logIn()
+                }
+            }
             .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
             .alert("Unable to Sign In", isPresented: $showAlert) {
                 Button("OK", role: .cancel) {}
@@ -151,7 +173,23 @@ struct LoginView: View {
             }
         }
     }
-    
+
+    private func landingStat(title: String, subtitle: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.system(.headline, design: .rounded).weight(.bold))
+                .foregroundStyle(AppStyle.surfaceTextPrimary)
+
+            Text(subtitle)
+                .font(.system(.footnote, design: .rounded))
+                .foregroundStyle(AppStyle.surfaceTextSecondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassPanel()
+    }
+
     private func loginUser() async {
         do {
             try await AppSession.signIn(email: authViewModel.username, password: authViewModel.password)

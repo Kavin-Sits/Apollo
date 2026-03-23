@@ -15,27 +15,58 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="&quot;News is only the first rough draft of history&quot;" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dis-zC-bKH">
-                                <rect key="frame" x="24" y="682" width="344" height="45"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="ApolloLogoTransparent" translatesAutoresizingMaskIntoConstraints="NO" id="5hp-kZ-Yai">
-                                <rect key="frame" x="-272" y="135" width="936" height="518"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="- Journalist Alan Barth" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B4p-jx-sLk">
-                                <rect key="frame" x="111" y="720" width="170" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dK8-eR-y4P">
+                                <rect key="frame" x="36" y="179" width="321" height="494"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" image="ApolloLogoTransparent" id="5hp-kZ-Yai">
+                                        <rect key="frame" x="24" y="48" width="273" height="200"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="APOLLO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tz9-z9-RJ1">
+                                        <rect key="frame" x="24" y="272" width="273" height="45"/>
+                                        <fontDescription key="fontDescription" name="BodoniOrnamentsITCTT" family="Bodoni Ornaments" pointSize="36"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Swipe through the stories that matter today." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dis-zC-bKH">
+                                        <rect key="frame" x="28" y="341" width="265" height="42"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Personalized news, one clean swipe at a time." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B4p-jx-sLk">
+                                        <rect key="frame" x="28" y="395" width="265" height="38"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="0.75" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.082352941176470587" green="0.11372549019607843" blue="0.17254901960784313" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="5hp-kZ-Yai" firstAttribute="centerX" secondItem="dK8-eR-y4P" secondAttribute="centerX" id="4pV-Jk-hyG"/>
+                                    <constraint firstItem="Tz9-z9-RJ1" firstAttribute="top" secondItem="5hp-kZ-Yai" secondAttribute="bottom" constant="24" id="CY5-aT-7Ki"/>
+                                    <constraint firstItem="dis-zC-bKH" firstAttribute="centerX" secondItem="dK8-eR-y4P" secondAttribute="centerX" id="DHW-Yp-tnG"/>
+                                    <constraint firstItem="B4p-jx-sLk" firstAttribute="top" secondItem="dis-zC-bKH" secondAttribute="bottom" constant="12" id="JdV-9W-fHv"/>
+                                    <constraint firstItem="5hp-kZ-Yai" firstAttribute="top" secondItem="dK8-eR-y4P" secondAttribute="top" constant="48" id="Lau-6B-C1V"/>
+                                    <constraint firstItem="dis-zC-bKH" firstAttribute="top" secondItem="Tz9-z9-RJ1" secondAttribute="bottom" constant="24" id="MkS-g5-N4p"/>
+                                    <constraint firstItem="B4p-jx-sLk" firstAttribute="leading" secondItem="dK8-eR-y4P" secondAttribute="leading" constant="28" id="SpW-DG-FL9"/>
+                                    <constraint firstAttribute="trailing" secondItem="B4p-jx-sLk" secondAttribute="trailing" constant="28" id="Tff-Lr-JG6"/>
+                                    <constraint firstItem="Tz9-z9-RJ1" firstAttribute="leading" secondItem="dK8-eR-y4P" secondAttribute="leading" constant="24" id="X9d-rb-2Pa"/>
+                                    <constraint firstAttribute="trailing" secondItem="Tz9-z9-RJ1" secondAttribute="trailing" constant="24" id="XmE-wg-zGC"/>
+                                    <constraint firstItem="dis-zC-bKH" firstAttribute="leading" secondItem="dK8-eR-y4P" secondAttribute="leading" constant="28" id="a6T-Ln-YVn"/>
+                                    <constraint firstAttribute="trailing" secondItem="dis-zC-bKH" secondAttribute="trailing" constant="28" id="kJj-njy-L0q"/>
+                                    <constraint firstItem="5hp-kZ-Yai" firstAttribute="leading" secondItem="dK8-eR-y4P" secondAttribute="leading" constant="24" id="vEw-FC-5ZH"/>
+                                    <constraint firstAttribute="trailing" secondItem="5hp-kZ-Yai" secondAttribute="trailing" constant="24" id="yjp-TB-I6V"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" red="0.8784313725490196" green="0.82745098039215681" blue="0.68627450980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.90196078431372551" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="dK8-eR-y4P" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="0Ia-FB-D1S"/>
+                            <constraint firstItem="dK8-eR-y4P" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="36" id="6YT-LE-70g"/>
+                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="dK8-eR-y4P" secondAttribute="bottom" constant="145" id="BJM-ki-2xQ"/>
+                            <constraint firstAttribute="trailing" secondItem="dK8-eR-y4P" secondAttribute="trailing" constant="36" id="KEl-EH-Ymb"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>

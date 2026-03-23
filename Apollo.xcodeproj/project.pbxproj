@@ -13,6 +13,7 @@
 		209A710C2B05A904007F4F5D /* NightModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209A710B2B05A904007F4F5D /* NightModeManager.swift */; };
 		209A710E2B05C3F3007F4F5D /* InterestUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209A710D2B05C3F3007F4F5D /* InterestUpdateView.swift */; };
 		20C102302BFEA10000A0AA01 /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C1022F2BFEA10000A0AA01 /* AppSession.swift */; };
+		20C102332BFF110000A0AA01 /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C102322BFF110000A0AA01 /* AppStyle.swift */; };
 		20E102332C00000000A0AA01 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E102322C00000000A0AA01 /* SupabaseService.swift */; };
 		8A2B78F32AFB140E00765A4A /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */; };
 		8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F72AFB24FC00765A4A /* CardTransition.swift */; };
@@ -119,6 +120,7 @@
 		209A710D2B05C3F3007F4F5D /* InterestUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestUpdateView.swift; sourceTree = "<group>"; };
 		20D102312BFF000000A0AA01 /* AppConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppConfig.xcconfig; sourceTree = "<group>"; };
 		20C1022F2BFEA10000A0AA01 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
+		20C102322BFF110000A0AA01 /* AppStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
 		20E102322C00000000A0AA01 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
 		8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
 		8A2B78F72AFB24FC00765A4A /* CardTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTransition.swift; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 		8AB2E30A2AD0E7590066AB1A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				20C102322BFF110000A0AA01 /* AppStyle.swift */,
 				F0D732FF2ADCFE2F0088DDAB /* LoginView.swift */,
 				205DE1F22B1D4D74001D91E1 /* SoundEffectManager.swift */,
 				8AB2E2D82AD0DEEA0066AB1A /* SwipeableCardView.swift */,
@@ -563,6 +566,7 @@
 				8AB2E31C2AD63FA90066AB1A /* SafariView.swift in Sources */,
 				F0D733002ADCFE2F0088DDAB /* LoginView.swift in Sources */,
 				20C102302BFEA10000A0AA01 /* AppSession.swift in Sources */,
+				20C102332BFF110000A0AA01 /* AppStyle.swift in Sources */,
 				20E102332C00000000A0AA01 /* SupabaseService.swift in Sources */,
 				202117DF2ADC8BD70083BC0B /* MainSettingsView.swift in Sources */,
 				8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */,

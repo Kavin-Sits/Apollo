@@ -8,12 +8,6 @@
 import SwiftUI
 import UIKit
 
-enum Theme {
-    static var appColors: Color {
-        Color("AppColors")
-    }
-}
-
 struct MainSettingsView: View {
     //@State private var isNightModeOn = false
     @State private var isSoundEffectsOn = false
@@ -120,7 +114,6 @@ struct MainSettingsView: View {
                                 self.presentationMode.callAsFunction()
                                 self.authViewModel.logOut()
                             }
-                            
                         }, label:{
                             Text(isGuestMode ? "Exit Guest Mode" : "Sign Out")
                                 .foregroundColor(.blue)
