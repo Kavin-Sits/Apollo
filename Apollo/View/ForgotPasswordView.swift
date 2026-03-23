@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseAuth
 
 struct ForgotPasswordView: View {
     
@@ -27,12 +26,12 @@ struct ForgotPasswordView: View {
                     .padding(.top, 10)
                 
                 Button {
-                    Auth.auth().sendPasswordReset(withEmail: email) {
-                        error in
-                        if let error = error {
-                            print(error)
-                        } else {
+                    Task {
+                        do {
+                            try await AppSession.resetPassword(email: email)
                             statusMessage = "Sent reset password link to \(email)"
+                        } catch {
+                            statusMessage = error.localizedDescription
                         }
                     }
                 } label: {

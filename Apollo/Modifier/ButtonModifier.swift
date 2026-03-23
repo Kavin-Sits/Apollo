@@ -13,11 +13,21 @@ import SwiftUI
 struct ButtonModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.headline)
+            .font(.system(.headline, design: .rounded).weight(.bold))
             .foregroundStyle(.white)
-            .padding()
-            .frame(minWidth: 0, maxWidth: .infinity)
-            .frame(height: 50)
-            .background(Capsule().fill(Color(red: 83/255, green: 131/255, blue: 236/255)))
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity)
+            .frame(height: 56)
+            .background(
+                Capsule()
+                    .fill(
+                        LinearGradient(
+                            colors: [AppStyle.accent, AppStyle.accentSecondary],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+            )
+            .shadow(color: AppStyle.accent.opacity(0.35), radius: 18, x: 0, y: 12)
     }
 }

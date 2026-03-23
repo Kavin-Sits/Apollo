@@ -4,14 +4,16 @@
 //
 
 import Foundation
-import FirebaseAuth
 import UIKit
+
+extension Notification.Name {
+    static let profilePhotoDidChange = Notification.Name("apollo.profilePhotoDidChange")
+}
 
 enum AppSession {
     static let guestUserID = "guest@apollo.local"
 
     private static let guestModeKey = "apollo.guestMode"
-    private static let localUserIDKey = "apollo.localUserID"
     private static let guestInterestsKey = "apollo.guestInterests"
     private static let guestSeenArticlesKey = "apollo.guestSeenArticles"
     private static let guestLikedArticlesKey = "apollo.guestLikedArticles"
@@ -25,77 +27,184 @@ enum AppSession {
     }
 
     static var currentUserID: String? {
-        Auth.auth().currentUser?.email ??
-        UserDefaults.standard.string(forKey: localUserIDKey) ??
-        (isGuestModeEnabled ? guestUserID : nil)
+        SupabaseService.shared.currentUserEmail ?? (isGuestModeEnabled ? guestUserID : nil)
     }
 
     static var hasAuthenticatedUser: Bool {
-        Auth.auth().currentUser != nil
+        SupabaseService.shared.isAuthenticated
     }
 
     static func startGuestSession() {
         isGuestModeEnabled = true
-        UserDefaults.standard.removeObject(forKey: localUserIDKey)
     }
 
     static func endGuestSession() {
         isGuestModeEnabled = false
     }
 
-    static func startLocalSession(email: String) {
+    static func signUp(
+        email: String,
+        password: String,
+        fullName: String,
+        dateOfBirth: String,
+        location: String,
+        occupation: String,
+        interests: [String]
+    ) async throws {
+        _ = try await SupabaseService.shared.signUp(email: email, password: password)
+        _ = try await SupabaseService.shared.signIn(email: email, password: password)
+        try await SupabaseService.shared.upsertProfile(
+            fullName: fullName,
+            dateOfBirth: dateOfBirth,
+            location: location,
+            occupation: occupation
+        )
+        try await SupabaseService.shared.replaceInterests(interests)
+    }
+
+    static func signIn(email: String, password: String) async throws {
+        _ = try await SupabaseService.shared.signIn(email: email, password: password)
         isGuestModeEnabled = false
-        UserDefaults.standard.set(email, forKey: localUserIDKey)
+        try await ensureProfileExists()
+    }
+
+    static func signOut() async {
+        await SupabaseService.shared.signOut()
+        isGuestModeEnabled = false
+    }
+
+    static func resetPassword(email: String) async throws {
+        try await SupabaseService.shared.resetPassword(email: email)
+    }
+
+    static func updatePassword(_ password: String) async throws {
+        try await SupabaseService.shared.updatePassword(password)
+    }
+
+    static func deleteAccount() async throws {
+        throw SupabaseServiceError.unsupported("Supabase account deletion needs a secure server-side function. We should add that as a follow-up.")
     }
 
     static func loadInterests() async -> [String] {
-        UserDefaults.standard.stringArray(forKey: interestsKey(for: currentUserID)) ?? []
+        if hasAuthenticatedUser {
+            do {
+                return try await SupabaseService.shared.fetchInterests()
+            } catch {
+                return UserDefaults.standard.stringArray(forKey: guestInterestsKey) ?? []
+            }
+        }
+
+        return UserDefaults.standard.stringArray(forKey: guestInterestsKey) ?? []
     }
 
-    static func saveInterests(_ interests: [String], for userID: String? = nil) {
+    static func saveInterests(_ interests: [String], for userID: String? = nil) async throws {
         let normalized = Array(Set(interests)).sorted()
-        UserDefaults.standard.set(normalized, forKey: interestsKey(for: userID ?? currentUserID))
+
+        if hasAuthenticatedUser {
+            try await SupabaseService.shared.replaceInterests(normalized)
+        } else {
+            UserDefaults.standard.set(normalized, forKey: guestInterestsKey)
+        }
     }
 
     static func loadSeenArticleIDs() async -> Set<String> {
-        Set(UserDefaults.standard.stringArray(forKey: seenArticlesKey(for: currentUserID)) ?? [])
+        let localSeen = Set(UserDefaults.standard.stringArray(forKey: guestSeenArticlesKey) ?? [])
+
+        guard hasAuthenticatedUser else {
+            return localSeen
+        }
+
+        do {
+            let remoteSeen = try await SupabaseService.shared.fetchArticleFeedbackURLs(for: [.seen, .opened, .liked, .disliked, .saved])
+            return localSeen.union(remoteSeen)
+        } catch {
+            return localSeen
+        }
     }
 
-    static func markSeen(articleID: String) {
-        updateLocalStringArray(forKey: seenArticlesKey(for: currentUserID), appending: articleID)
+    static func markDismissed(article: Article) {
+        recordFeedback(for: article, actions: [.disliked, .seen])
+        updateLocalStringArray(forKey: guestSeenArticlesKey, appending: article.id)
     }
 
-    static func markLiked(articleID: String) {
-        updateLocalStringArray(forKey: likedArticlesKey(for: currentUserID), appending: articleID)
+    static func markLiked(article: Article) {
+        recordFeedback(for: article, actions: [.liked, .seen])
+        updateLocalStringArray(forKey: guestLikedArticlesKey, appending: article.id)
+        updateLocalStringArray(forKey: guestSeenArticlesKey, appending: article.id)
+    }
+
+    static func markOpened(article: Article) {
+        recordFeedback(for: article, actions: [.opened])
+        updateLocalStringArray(forKey: guestSeenArticlesKey, appending: article.id)
     }
 
     static func saveArticle(_ article: Article, completion: @escaping (Bool) -> Void = { _ in }) {
-        let savedArticle = SavedArticle(
-            title: article.title,
-            url: article.url,
-            description: article.description,
-            urlToImage: article.urlToImage
+        if hasAuthenticatedUser {
+            Task {
+                do {
+                    try await SupabaseService.shared.saveArticle(article)
+                    try? await SupabaseService.shared.recordArticleFeedback(articleURL: article.url, action: .saved)
+                    completion(true)
+                } catch {
+                    saveGuestArticle(
+                        SavedArticle(
+                            title: article.title,
+                            url: article.url,
+                            description: article.description,
+                            urlToImage: article.urlToImage
+                        )
+                    )
+                    completion(false)
+                }
+            }
+            return
+        }
+
+        saveGuestArticle(
+            SavedArticle(
+                title: article.title,
+                url: article.url,
+                description: article.description,
+                urlToImage: article.urlToImage
+            )
         )
-        saveGuestArticle(savedArticle)
         completion(true)
     }
 
     static func loadSavedArticles() async -> [SavedArticle] {
-        loadGuestSavedArticles()
+        if hasAuthenticatedUser {
+            do {
+                return try await SupabaseService.shared.fetchSavedArticles()
+            } catch {
+                return loadGuestSavedArticles()
+            }
+        }
+
+        return loadGuestSavedArticles()
     }
 
     static func saveLocation(_ location: String) {
         guard let userID = currentUserID else { return }
-        UserDefaults.standard.set(location, forKey: locationKeyPrefix + userID)
+
+        if hasAuthenticatedUser {
+            Task {
+                try? await SupabaseService.shared.upsertProfile(location: location)
+            }
+        } else {
+            UserDefaults.standard.set(location, forKey: locationKeyPrefix + userID)
+        }
     }
 
-    static func saveProfilePhoto(_ image: UIImage) {
+    @discardableResult
+    static func saveProfilePhoto(_ image: UIImage) -> Bool {
         guard let userID = currentUserID,
               let data = image.jpegData(compressionQuality: 0.8) else {
-            return
+            return false
         }
 
         UserDefaults.standard.set(data, forKey: profilePhotoKeyPrefix + userID)
+        NotificationCenter.default.post(name: .profilePhotoDidChange, object: nil)
+        return true
     }
 
     static func loadProfilePhoto() -> UIImage? {
@@ -105,6 +214,21 @@ enum AppSession {
         }
 
         return UIImage(data: data)
+    }
+
+    static func loadProfilePhotoURL() async -> String? {
+        guard hasAuthenticatedUser else {
+            return nil
+        }
+
+        return try? await SupabaseService.shared.fetchProfile()?.profilePhotoURL
+    }
+
+    static func saveProfilePhotoURL(_ url: String) {
+        guard hasAuthenticatedUser else { return }
+        Task {
+            try? await SupabaseService.shared.upsertProfile(profilePhotoURL: url)
+        }
     }
 
     private static func saveGuestArticle(_ article: SavedArticle) {
@@ -136,15 +260,29 @@ enum AppSession {
         UserDefaults.standard.set(values, forKey: key)
     }
 
-    private static func interestsKey(for userID: String?) -> String {
-        userID == nil ? guestInterestsKey : "apollo.interests.\(userID!)"
+    private static func ensureProfileExists() async throws {
+        guard hasAuthenticatedUser else {
+            return
+        }
+
+        if try await SupabaseService.shared.fetchProfile() == nil {
+            try await SupabaseService.shared.upsertProfile()
+        }
     }
 
-    private static func seenArticlesKey(for userID: String?) -> String {
-        userID == nil ? guestSeenArticlesKey : "apollo.seen.\(userID!)"
-    }
+    private static func recordFeedback(for article: Article, actions: [ArticleFeedbackAction]) {
+        guard hasAuthenticatedUser else {
+            return
+        }
 
-    private static func likedArticlesKey(for userID: String?) -> String {
-        userID == nil ? guestLikedArticlesKey : "apollo.liked.\(userID!)"
+        Task {
+            for action in actions {
+                do {
+                    try await SupabaseService.shared.recordArticleFeedback(articleURL: article.url, action: action)
+                } catch {
+                    print("Failed to record article feedback (\(action.rawValue)): \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }

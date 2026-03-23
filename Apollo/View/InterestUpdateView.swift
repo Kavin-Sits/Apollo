@@ -11,8 +11,9 @@ import SwiftUI
 struct InterestUpdateView: View {
     var userEmail: String
     @State private var selectedOptions: Set<String> = []
-    @State private var errorMessage: String = ""
     @State private var updateOptions: Bool = false
+    @State private var alertMessage: String = ""
+    @State private var showAlert = false
     @EnvironmentObject var nightModeManager: NightModeManager
     @Environment(\.presentationMode) var presentationMode
 
@@ -63,23 +64,35 @@ struct InterestUpdateView: View {
             .padding()
             
             Button("Continue") {
-                if selectedOptions.count == 0 {
-                    errorMessage = "Please select at least one option"
+                if selectedOptions.isEmpty {
+                    presentAlert("Please select at least one option.")
                 } else {
-                    storeInterestSelections()
-                    errorMessage = ""
-                    updateOptions = true
-                    presentationMode.wrappedValue.dismiss()
+                    Task {
+                        do {
+                            try await storeInterestSelections()
+                            await MainActor.run {
+                                updateOptions = true
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                        } catch {
+                            await MainActor.run {
+                                presentAlert(error.localizedDescription)
+                            }
+                        }
+                    }
                 }
             }
-            Text(errorMessage)
-                .foregroundStyle(.red)
 
             Spacer()
         }
         .background(Theme.appColors)
         .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+        .alert("Unable to Update Interests", isPresented: $showAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(alertMessage)
+        }
         .onAppear {
 //            nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
             loadUserPreferences()
@@ -94,8 +107,8 @@ struct InterestUpdateView: View {
         }
     }
     
-    private func storeInterestSelections() {
-        AppSession.saveInterests(Array(selectedOptions), for: userEmail)
+    private func storeInterestSelections() async throws {
+        try await AppSession.saveInterests(Array(selectedOptions), for: userEmail)
     }
     
     private func loadUserPreferences() {
@@ -105,7 +118,12 @@ struct InterestUpdateView: View {
                     selectedOptions = Set(interests)
                 }
             }
-        }
+    }
+
+    private func presentAlert(_ message: String) {
+        alertMessage = message
+        showAlert = true
+    }
 }
 
 #Preview {

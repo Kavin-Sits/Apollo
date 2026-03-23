@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import FirebaseAuth
 
 struct PasswordChangeView: View {
     @Binding var currentPassword: String
@@ -26,16 +25,11 @@ struct PasswordChangeView: View {
                 .padding()
             
             Button(action: {
-                if let user = Auth.auth().currentUser {
-                    let credential = EmailAuthProvider.credential(withEmail: user.email!, password: currentPassword)
-                        user.reauthenticate(with: credential) { (result, error) in
-                        if let error = error {
-                            print("CURRENT USER: \(Auth.auth().currentUser?.email ?? "NONE")")
-                            print("\(error.localizedDescription)")
-                        } else {
-                            print("success CURRENT USER: \(Auth.auth().currentUser?.email ?? "NONE")")
-                            Auth.auth().currentUser?.updatePassword(to: newPassword)
-                        }
+                Task {
+                    do {
+                        try await AppSession.updatePassword(newPassword)
+                    } catch {
+                        print(error.localizedDescription)
                     }
                 }
                 isModalPresented = false

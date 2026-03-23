@@ -50,6 +50,7 @@ struct TestCardView: View {
                     .onTapGesture {
                         selectedArticle = displayedArticles[index]
                         activeArticleVM.activeArticle = displayedArticles[index]
+                        AppSession.markOpened(article: displayedArticles[index])
                     }
                     .overlay(
                         ZStack{
@@ -131,7 +132,7 @@ struct TestCardView: View {
         guard index < displayedArticles.count else { return }
         
         let swipedArticle = displayedArticles[index]
-        addSwipedArticleToUser(swipedArticleId: swipedArticle.url)
+        addSwipedArticleToUser(swipedArticle)
         
         displayedArticles.remove(at: index)
         
@@ -140,8 +141,8 @@ struct TestCardView: View {
         }
     }
     
-    private func addSwipedArticleToUser(swipedArticleId: String) {
-        AppSession.markSeen(articleID: swipedArticleId)
+    private func addSwipedArticleToUser(_ swipedArticle: Article) {
+        AppSession.markDismissed(article: swipedArticle)
     }
     
     @ViewBuilder

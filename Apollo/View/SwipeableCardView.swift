@@ -6,233 +6,180 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct SwipeableCardView: View {
-    
+
     @StateObject var articleNewsVM = ArticleNewsViewModel()
     @EnvironmentObject var activeArticleVM: ActiveArticleViewModel
-    @GestureState private var dragState = DragState.inactive
-    @State private var cardRemovalTransition = AnyTransition.trailingBottom
-    @State private var activeCardIndex: Int? = nil
+    @EnvironmentObject var nightModeManager: NightModeManager
+
     @State private var displayedArticles: [Article] = []
     @State private var selectedArticle: Article?
+    @State private var dragOffset: CGSize = .zero
+
     let haptics = UINotificationFeedbackGenerator()
     @ObservedObject private var soundEffectManager = SoundEffectManager()
-    var dragAreaThreshold: CGFloat = 65.0
-    
-    enum DragState {
-        case inactive
-        case pressing
-        case dragging(translation: CGSize)
-        
-        var translation: CGSize {
-            switch self {
-            case .inactive, .pressing:
-                return .zero
-            case .dragging(let translation):
-                return translation
-            }
-        }
-        
-        var isDragging: Bool {
-            switch self {
-            case .dragging:
-                return true
-            case .pressing, .inactive:
-                return false
-            }
-        }
-        
-    }
-        
+
+    private let swipeThreshold: CGFloat = 110
+    private let maxVisibleCards = 3
+
     var body: some View {
-        ZStack {
+        GeometryReader { geometry in
             ZStack {
-                ForEach(displayedArticles.indices, id: \.self){ index in
-                    CardView(article: displayedArticles[index])
-                        .onTapGesture {
-                            selectedArticle = displayedArticles[index]
-                            activeArticleVM.activeArticle = displayedArticles[index]
+                if displayedArticles.isEmpty {
+                    emptyState(height: geometry.size.height)
+                } else {
+                    ZStack {
+                        ForEach(Array(displayedArticles.prefix(maxVisibleCards).enumerated()), id: \.element.id) { offset, article in
+                            let isTopCard = offset == 0
+
+                            CardView(article: article)
+                                .environmentObject(nightModeManager)
+                                .frame(height: geometry.size.height)
+                                .scaleEffect(cardScale(for: offset))
+                                .offset(
+                                    x: isTopCard ? dragOffset.width : 0,
+                                    y: isTopCard ? dragOffset.height : CGFloat(offset * 14)
+                                )
+                                .rotationEffect(.degrees(isTopCard ? Double(dragOffset.width / 18) : 0))
+                                .overlay(alignment: .top) {
+                                    swipeFeedback(for: article)
+                                        .opacity(isTopCard ? feedbackOpacity : 0)
+                                        .padding(.top, 24)
+                                }
+                                .zIndex(Double(maxVisibleCards - offset))
+                                .allowsHitTesting(isTopCard)
+                                .onTapGesture {
+                                    selectedArticle = article
+                                    activeArticleVM.activeArticle = article
+                                    AppSession.markOpened(article: article)
+                                }
+                                .gesture(dragGesture, including: isTopCard ? .all : .subviews)
+                                .animation(.spring(response: 0.32, dampingFraction: 0.82), value: dragOffset)
+                                .animation(.spring(response: 0.32, dampingFraction: 0.82), value: displayedArticles)
                         }
-                        .overlay(
-                            ZStack{
-                                Image(systemName: "x.circle")
-                                    .modifier(SymbolModifier())
-                                    .opacity(activeCardIndex == index && self.dragState.translation.width < -self.dragAreaThreshold ? 1.0 : 0.0)
-                                
-                                Image(systemName: "heart.circle")
-                                    .modifier(SymbolModifier())
-                                    .opacity(activeCardIndex == index && self.dragState.translation.width > self.dragAreaThreshold ? 1.0 : 0.0)
-                            })
-                        .offset(x: activeCardIndex == index ? self.dragState.translation.width : 0,
-                                y: activeCardIndex == index ? self.dragState.translation.height : 0)
-                        .scaleEffect(self.dragState.isDragging && activeCardIndex == index ? 0.85 : 1.0)
-                        .rotationEffect(Angle(degrees: activeCardIndex == index ? Double(self.dragState.translation.width / 12) : 0))
-                        .animation(.interpolatingSpring(stiffness: 120, damping: 120), value: dragState.isDragging)
-                        .gesture(LongPressGesture(minimumDuration: 0.01)
-                            .sequenced(before: DragGesture())
-                            .updating(self.$dragState, body: { (value, state, transaction) in
-                                switch value {
-                                case .first(true):
-                                    state = .pressing
-                                case .second(true, let drag):
-                                    if activeCardIndex == index {
-                                        state = .dragging(translation: drag?.translation ?? .zero)
-                                    }
-                                default:
-                                    break
-                                }
-                            })
-                            .onChanged { _ in
-                                if activeCardIndex == nil {
-                                    activeCardIndex = index
-                                }
-                            }
-                            .onEnded({ (value) in
-                                guard case .second(true, let drag?) = value else {
-                                    return
-                                }
-                                    
-                                if drag.translation.width < -self.dragAreaThreshold {
-                                    print("soundEnabled: \(soundEffectManager.soundEnabled)")
-                                    if(soundEffectManager.soundEnabled) {
-                                        playSound(sound: "swipe", type: "wav")
-                                    }
-                                    removeCard(at: index)
-                                    self.haptics.notificationOccurred(.success)
-                                    activeCardIndex = nil
-                                    
-                                } else if drag.translation.width > self.dragAreaThreshold {
-                                    print("soundEnabled: \(soundEffectManager.soundEnabled)")
-                                    if(soundEffectManager.soundEnabled) {
-                                        playSound(sound: "swipe", type: "wav")
-                                    }
-                                    addLikedArticleToUser(swipedArticleId: displayedArticles[index].url)
-                                    removeCard(at: index)
-                                    self.haptics.notificationOccurred(.success)
-                                    activeCardIndex = nil
-                                }
-                            })
-                        ).transition(self.cardRemovalTransition)
-                }
-                
-            }
-            .sheet(item: $selectedArticle, content: {
-                SafariView(url: $0.articleURL)
-            })
-            .onAppear{
-                Task{
-                    await loadDisplayedArticles()
+                    }
                 }
             }
-            .zIndex(1)
-            
-            HStack {
-                Spacer()
-                Rectangle()
-                    .fill(Color.yellow)
-                    .scaledToFill()
-                    .frame(width:350, height: 550)
-                    .clipped()
-                    .cornerRadius(24)
-                    .overlay(
-                        VStack(alignment: .center, spacing: 12){
-                            Spacer()
-                            Text("You've viewed all available articles for today, check back later for more!")
-                                .foregroundStyle(.black)
-                                .font(.headline)
-                                .fontWeight(.bold)
-                                .shadow(radius: 1)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 4)
-                                .background(
-                                    Rectangle().fill(Color.white)
-                                        .opacity(0.7)
-                                )
-                                .overlay(
-                                    Rectangle()
-                                        .fill(Color.white)
-                                        .frame(height:1),
-                                    alignment:.bottom
-                                )
-                            Text("Thank you for your usage of our app!")
-                                .foregroundStyle(.black)
-                                .font(.caption)
-                                .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
-                                .fontWeight(.bold)
-                                .frame(minWidth: 85)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 5)
-                                .background(
-                                    Rectangle().fill(Color.white)
-                                        .opacity(0.7)
-                                )
-                            Spacer()
-                        }
-                            .frame(minWidth: 280)
-                            .padding(.bottom, 50),
-                        alignment: .bottom
-                    )
-                Spacer()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .sheet(item: $selectedArticle) {
+            SafariView(url: $0.articleURL)
+        }
+        .task {
+            await loadDisplayedArticles()
+        }
+    }
+
+    private var dragGesture: some Gesture {
+        DragGesture()
+            .onChanged { value in
+                dragOffset = value.translation
             }
-            .zIndex(0)
-        }
+            .onEnded { value in
+                let horizontalMovement = value.translation.width
+                let predictedMovement = value.predictedEndTranslation.width
+
+                if horizontalMovement < -swipeThreshold || predictedMovement < -swipeThreshold {
+                    completeSwipe(liked: false)
+                } else if horizontalMovement > swipeThreshold || predictedMovement > swipeThreshold {
+                    completeSwipe(liked: true)
+                } else {
+                    dragOffset = .zero
+                }
+            }
     }
-    
-    private func removeCard(at index: Int) {
-        guard index < displayedArticles.count else { return }
-        
-        let swipedArticle = displayedArticles[index]
-        addSwipedArticleToUser(swipedArticleId: swipedArticle.url)
-        
-        displayedArticles.remove(at: index)
-        
-        if displayedArticles.indices.contains(0) {
-            activeArticleVM.activeArticle = displayedArticles.last
-        }
+
+    private var feedbackOpacity: Double {
+        min(abs(dragOffset.width) / swipeThreshold, 1)
     }
-    
-    private func addSwipedArticleToUser(swipedArticleId: String) {
-        AppSession.markSeen(articleID: swipedArticleId)
-    }
-    
-    private func addLikedArticleToUser(swipedArticleId: String) {
-        AppSession.markLiked(articleID: swipedArticleId)
-    }
-    
+
     @ViewBuilder
-    private var overlayView: some View {
-        
-        switch articleNewsVM.phase {
-        case .empty:
-            ProgressView()
-        case .success(let articles) where articles.isEmpty:
-            EmptyPlaceholderView(text: "No Articles", image: nil)
-        case .failure(let error):
-            RetryView(text: error.localizedDescription, retryAction: refreshTask)
-        default: EmptyView()
-        }
-    }
-    
-    private var articles: [Article] {
-        if case let .success(articles) = articleNewsVM.phase {
-            return Array(articles.prefix(10))
+    private func swipeFeedback(for article: Article) -> some View {
+        if dragOffset.width > 0 {
+            swipeBadge(text: "Save", systemName: "heart.fill", fill: Color.green.opacity(0.92))
+        } else if dragOffset.width < 0 {
+            swipeBadge(text: "Skip", systemName: "xmark", fill: Color.red.opacity(0.9))
         } else {
-            return []
+            Text(article.source.name)
+                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                .foregroundStyle(.white.opacity(0.8))
         }
     }
-    
-    @Sendable
-    private func loadTask() async {
-        await articleNewsVM.loadArticles()
+
+    private func swipeBadge(text: String, systemName: String, fill: Color) -> some View {
+        Label(text, systemImage: systemName)
+            .font(.system(.headline, design: .rounded).weight(.bold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 10)
+            .background(Capsule().fill(fill))
     }
-    
-    
-    private func refreshTask() {
-        DispatchQueue.main.async {
-            articleNewsVM.fetchTaskToken = FetchTaskToken(category: articleNewsVM.fetchTaskToken.category, token: Date())
+
+    private func cardScale(for offset: Int) -> CGFloat {
+        1 - CGFloat(offset) * 0.05
+    }
+
+    private func completeSwipe(liked: Bool) {
+        if soundEffectManager.soundEnabled {
+            playSound(sound: "swipe", type: "wav")
         }
+
+        haptics.notificationOccurred(.success)
+
+        guard let article = displayedArticles.first else { return }
+
+        if liked {
+            addLikedArticleToUser(article)
+        } else {
+            addDismissedArticleToUser(article)
+        }
+
+        withAnimation(.spring(response: 0.28, dampingFraction: 0.78)) {
+            dragOffset = CGSize(width: liked ? 500 : -500, height: 30)
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+            guard !displayedArticles.isEmpty else { return }
+            displayedArticles.removeFirst()
+            dragOffset = .zero
+            activeArticleVM.activeArticle = displayedArticles.first
+        }
+    }
+
+    private func emptyState(height: CGFloat) -> some View {
+        VStack(spacing: 16) {
+            Image(systemName: "sparkles.rectangle.stack")
+                .font(.system(size: 42))
+                .foregroundStyle(.white.opacity(0.95))
+
+            Text("You’re caught up for now.")
+                .font(.system(size: 28, weight: .bold, design: .rounded))
+                .foregroundStyle(AppStyle.heroTextPrimary)
+
+            Text("Check back later for a fresh batch of stories. The more you save and skip, the sharper your feed will get.")
+                .font(.system(.subheadline, design: .rounded))
+                .multilineTextAlignment(.center)
+                .foregroundStyle(AppStyle.heroTextSecondary)
+        }
+        .padding(.horizontal, 28)
+        .frame(maxWidth: .infinity)
+        .frame(height: max(height * 0.7, 420))
+        .background(AppStyle.heroGradient)
+        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 30, style: .continuous)
+                .stroke(Color.white.opacity(0.16), lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.18), radius: 24, x: 0, y: 16)
+    }
+
+    private func addDismissedArticleToUser(_ article: Article) {
+        AppSession.markDismissed(article: article)
+    }
+
+    private func addLikedArticleToUser(_ article: Article) {
+        AppSession.markLiked(article: article)
     }
 
     @MainActor
@@ -242,11 +189,11 @@ struct SwipeableCardView: View {
         let interests = await AppSession.loadInterests()
         let seenArticles = await AppSession.loadSeenArticleIDs()
         let categories = mappedCategories(from: interests)
-        let quantityToAdd = max(1, 10 / max(categories.count, 1))
+        let quantityToAdd = max(2, 12 / max(categories.count, 1))
 
         for category in categories {
             articleNewsVM.fetchTaskToken = FetchTaskToken(category: category, token: Date())
-            await loadTask()
+            await articleNewsVM.loadArticles()
 
             guard case let .success(articles) = articleNewsVM.phase else {
                 continue
@@ -262,7 +209,7 @@ struct SwipeableCardView: View {
         }
 
         displayedArticles.shuffle()
-        activeArticleVM.activeArticle = displayedArticles.last
+        activeArticleVM.activeArticle = displayedArticles.first
     }
 
     private func mappedCategories(from interests: [String]) -> [Category] {

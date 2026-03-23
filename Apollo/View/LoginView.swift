@@ -6,11 +6,7 @@
 //
 
 import SwiftUI
-import FirebaseAuth
-import FirebaseCore
 import UserNotifications
-import GoogleSignIn
-import GoogleSignInSwift
 
 public var notifAuthorization = false
 
@@ -37,15 +33,13 @@ extension UIApplication {
 struct LoginView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var nightModeManager: NightModeManager
-    @State private var errorMessage = ""
-    @State private var userInterests: [String] = []
-    @State private var userSelectedInterests: Bool = true
-    
-    let backgroundColor = Color(red: 224/255, green: 211/255, blue: 175/255)
+    @State private var alertMessage = ""
+    @State private var showAlert = false
+    @State private var shouldShowInterestSelection = false
     
     var body: some View {
         if authViewModel.isLoggedIn {
-            if !userSelectedInterests {
+            if shouldShowInterestSelection {
                 InterestSelectionView(email: AppSession.currentUserID ?? AppSession.guestUserID)
                     .onAppear() {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.sound]) {
@@ -70,170 +64,160 @@ struct LoginView: View {
     }
     
     var content: some View {
-        
-        NavigationStack{
-            VStack{
-                VStack(alignment: .center, spacing: 25) {
-                    Text("APOLLO")
-                        .font(Font.custom("Bodoni 72 Smallcaps", size: 52))
-                    
-                    Text(errorMessage)
-                        .foregroundStyle(.red)
-                    
-                    VStack(alignment: .leading) {
-                        Text("Username/Email")
-                        TextField("username", text: $authViewModel.username)
-                            .textFieldStyle(.roundedBorder)
-                            .autocapitalization(.none)
-                            .padding(.top, 10)
-                        Text("Password")
-                            .padding(.top, 10)
-                        SecureField("password", text: $authViewModel.password)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.top, 10)
-                        NavigationLink("Forgot password") {
-                            ForgotPasswordView()
-                                .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-//                                .onAppear {
-//                                    nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
-//                                }
-                        }
-                        .controlSize(.small)
-                    }
-                    
-                    Button {
-                        print("loggin")
-                        loginUser()
-                    } label: {
-                        Text("Login")
-                            .modifier(ButtonModifier())
-                    }
-                    
-                    Text("or")
-                    
-                    NavigationLink{
-                        CreateAccountView(userSelectedInterests: self.$userSelectedInterests)
-                            .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-                    } label: {
-                        Text("Create account")
-                            .modifier(ButtonModifier())
-                    }
+        NavigationStack {
+            ZStack {
+                AppBackground()
 
-                    Text("or")
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 24) {
+                        VStack(alignment: .leading, spacing: 16) {
+                            SectionEyebrow(text: "Swipeable News")
 
-                    Button {
-                        AppSession.startGuestSession()
-                        authViewModel.logIn()
-                        refreshInterestSelection()
-                    } label: {
-                        Text("Continue as Guest")
-                            .modifier(ButtonModifier())
-                    }
+                            Text("APOLLO")
+                                .font(Font.custom("Bodoni 72 Smallcaps", size: 54))
+                                .foregroundStyle(AppStyle.surfaceTextPrimary)
 
-                    Text("or")
-                    
-                    GoogleSignInButton(
-                        viewModel: GoogleSignInButtonViewModel(
-                            scheme: .dark,
-                            style: .wide,
-                            state: .normal))
-                    {
-                        Task {
-                            do {
-                                try await googleSignIn()
-                            } catch {
-                                print(error)
+                            Text("A cleaner daily briefing experience with swipeable stories that adapts to what you actually read.")
+                                .font(.system(.title3, design: .rounded).weight(.medium))
+                                .foregroundStyle(AppStyle.surfaceTextSecondary)
+
+                            HStack(spacing: 12) {
+                                landingStat(title: "Swipe", subtitle: "Save or skip in seconds")
+                                landingStat(title: "Learn", subtitle: "Interests sharpen over time")
                             }
                         }
-                    }
-                    .font(.headline)
-                    .padding()
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    .background(
-                        Capsule().fill(Color(red: 83/255, green: 131/255, blue: 236/255))
-                            .frame(height: 50)
-                    )
-                    Spacer()
-                    
-                }
-                .padding(.top, 50)
-                .frame(width: 300)
-                .onAppear {
-                    if AppSession.isGuestModeEnabled {
-                        authViewModel.logIn()
-                        refreshInterestSelection()
-                    }
 
-                    Auth.auth().addStateDidChangeListener {
-                        auth, user in
-                        if user != nil {
-                            AppSession.endGuestSession()
-                            refreshInterestSelection()
-                            authViewModel.logIn()
-                        } else if !AppSession.isGuestModeEnabled {
-                            authViewModel.logOut()
+                        VStack(alignment: .leading, spacing: 18) {
+                            Text("Welcome back")
+                                .font(.system(size: 24, weight: .bold, design: .rounded))
+                                .foregroundStyle(AppStyle.surfaceTextPrimary)
+
+                            if !alertMessage.isEmpty {
+                                Text(alertMessage)
+                                    .font(.system(.subheadline, design: .rounded))
+                                    .foregroundStyle(Color(red: 1.0, green: 0.82, blue: 0.82))
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 12)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Color.red.opacity(0.18)))
+                            }
+
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Username or email")
+                                    .font(.system(.footnote, design: .rounded).weight(.semibold))
+                                    .foregroundStyle(AppStyle.surfaceTextSecondary)
+
+                                TextField("name@example.com", text: $authViewModel.username)
+                                    .textInputAutocapitalization(.never)
+                                    .autocorrectionDisabled()
+                                    .padding(.horizontal, 16)
+                                    .frame(height: 54)
+                                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Color.white.opacity(0.94)))
+                            }
+
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Password")
+                                    .font(.system(.footnote, design: .rounded).weight(.semibold))
+                                    .foregroundStyle(AppStyle.surfaceTextSecondary)
+
+                                SecureField("Enter password", text: $authViewModel.password)
+                                    .padding(.horizontal, 16)
+                                    .frame(height: 54)
+                                    .background(RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Color.white.opacity(0.94)))
+                            }
+
+                            NavigationLink("Forgot password?") {
+                                ForgotPasswordView()
+                                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+                            }
+                            .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                            .foregroundStyle(AppStyle.surfaceTextSecondary)
+
+                            Button {
+                                Task {
+                                    await loginUser()
+                                }
+                            } label: {
+                                Text("Log In")
+                            }
+                            .buttonStyle(FilledActionButtonStyle())
+
+                            NavigationLink {
+                                CreateAccountView(userSelectedInterests: self.$shouldShowInterestSelection)
+                                    .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
+                            } label: {
+                                Text("Create account")
+                            }
+                            .buttonStyle(OutlineActionButtonStyle())
+
+                            Button {
+                                AppSession.startGuestSession()
+                                authViewModel.logIn()
+                                shouldShowInterestSelection = false
+                            } label: {
+                                Text("Continue as Guest")
+                            }
+                            .buttonStyle(OutlineActionButtonStyle())
                         }
+                        .padding(24)
+                        .glassPanel()
                     }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 30)
+                    .padding(.bottom, 24)
                 }
             }
-            .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxWidth: .infinity)
-            .background(Theme.appColors)
+            .onAppear {
+                if AppSession.isGuestModeEnabled {
+                    authViewModel.logIn()
+                    shouldShowInterestSelection = false
+                }
+
+                if AppSession.hasAuthenticatedUser {
+                    AppSession.endGuestSession()
+                    shouldShowInterestSelection = false
+                    authViewModel.logIn()
+                }
+            }
             .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
+            .alert("Unable to Sign In", isPresented: $showAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(alertMessage)
+            }
         }
     }
-    
-    private func loginUser() {
-        Auth.auth().signIn(withEmail: authViewModel.username, password: authViewModel.password) {
-            (authResult,error) in
-                if let error = error as NSError? {
-                    errorMessage = "\(error.localizedDescription)"
-                } else {
-                    errorMessage = ""
-                }
+
+    private func landingStat(title: String, subtitle: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.system(.headline, design: .rounded).weight(.bold))
+                .foregroundStyle(AppStyle.surfaceTextPrimary)
+
+            Text(subtitle)
+                .font(.system(.footnote, design: .rounded))
+                .foregroundStyle(AppStyle.surfaceTextSecondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassPanel()
     }
     
-    private func refreshInterestSelection() {
-        Task {
-            let interests = await AppSession.loadInterests()
+    private func loginUser() async {
+        do {
+            try await AppSession.signIn(email: authViewModel.username, password: authViewModel.password)
             await MainActor.run {
-                userInterests = interests
-                userSelectedInterests = !interests.isEmpty
+                alertMessage = ""
+                shouldShowInterestSelection = false
+                authViewModel.logIn()
+            }
+        } catch {
+            await MainActor.run {
+                alertMessage = error.localizedDescription
+                showAlert = true
             }
         }
-    }
-    
-    private func googleSignIn() async throws {
-        guard let topVC = await UIApplication.getTopViewController() else {
-            throw URLError(.cannotFindHost)
-        }
-        
-        let gidSignInResult = try await GIDSignIn.sharedInstance.signIn(withPresenting: topVC)
-        
-        guard let idToken = gidSignInResult.user.idToken?.tokenString else {
-            throw URLError(.badServerResponse)
-        }
-        
-        let accessToken = gidSignInResult.user.accessToken.tokenString
-        
-        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
-        
-        Auth.auth().signIn(with: credential) {
-            result, error in
-            if let error = error {
-                print(error)
-            }
-            
-            let user = result?.user
-            let email = user?.email
-            if let email {
-                AppSession.startLocalSession(email: email)
-                AppSession.saveInterests([], for: email)
-                errorMessage = ""
-                refreshInterestSelection()
-            }
-        }
-        
     }
 }
 

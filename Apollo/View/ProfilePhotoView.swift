@@ -6,15 +6,15 @@
 //
 
 import SwiftUI
-import Combine
 
 struct ProfilePhotoView: View {
     var userEmail: String
     @State private var showImagePicker = false
     @State private var image: UIImage? = nil
-    @State private var imageURL: String = ""
-    @State private var cancellable: AnyCancellable? = nil
     @State private var newImagePicked = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
+    @State private var showAlert = false
     @EnvironmentObject var nightModeManager: NightModeManager
 
     init(email: String) {
@@ -68,6 +68,11 @@ struct ProfilePhotoView: View {
         .frame(maxWidth: .infinity)
         .background(Theme.appColors)
         .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
+        .alert(alertTitle, isPresented: $showAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(alertMessage)
+        }
     }
 
     func loadProfilePhoto() {
@@ -78,9 +83,20 @@ struct ProfilePhotoView: View {
 
     func uploadImage() {
         if newImagePicked, let image {
-            AppSession.saveProfilePhoto(image)
+            if AppSession.saveProfilePhoto(image) {
+                loadProfilePhoto()
+                presentAlert(title: "Profile Photo Updated", message: "Your new profile photo has been saved.")
+            } else {
+                presentAlert(title: "Unable to Save Photo", message: "Please try selecting your photo again.")
+            }
             newImagePicked = false
         }
+    }
+
+    private func presentAlert(title: String, message: String) {
+        alertTitle = title
+        alertMessage = message
+        showAlert = true
     }
 }
 

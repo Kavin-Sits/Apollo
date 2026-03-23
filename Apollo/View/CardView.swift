@@ -16,85 +16,85 @@ struct CardView: View, Identifiable {
     @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
-        VStack{
-            AsyncImage(url: article.imageURL){ phase in
-                switch phase {
-                case .empty:
-                    Rectangle()
-                        .fill(Color.gray)
-                        .overlay(
-                            HStack{
-                                Spacer()
-                                ProgressView()
-                                Spacer()
-                            })
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                case .failure:
-                    Rectangle()
-                        .fill(Color.gray)
-                        .overlay(
-                            HStack{
-                                Spacer()
-                                Image(systemName: "photo")
-                                    .imageScale(.large)
-                                Spacer()
-                    })
-                @unknown default:
-                    fatalError()
-                }
-            }
-                .scaledToFill()
-                .frame(width:350, height: 550)
-                .clipped()
-                .cornerRadius(24)
-                .overlay(
-                    VStack(alignment: .center, spacing: 12){
-                        Text(article.title)
-                            .foregroundStyle(.black)
-                            .font(.headline)
-                            .fontWeight(.bold)
-                            .shadow(radius: 1)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                            .background(
-                                Rectangle().fill(Color.white)
-                                    .opacity(0.7)
-                            )
+        GeometryReader { geometry in
+            ZStack(alignment: .bottomLeading) {
+                AsyncImage(url: article.imageURL){ phase in
+                    switch phase {
+                    case .empty:
+                        Rectangle()
+                            .fill(Color.white.opacity(0.08))
+                            .overlay(ProgressView().tint(.white))
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    case .failure:
+                        AppStyle.heroGradient
                             .overlay(
-                                Rectangle()
-                                    .fill(Color.white)
-                                    .frame(height:1),
-                                alignment:.bottom
+                                Image(systemName: "newspaper.fill")
+                                    .font(.system(size: 46))
+                                    .foregroundStyle(Color.white.opacity(0.65))
                             )
-                        Text(article.descriptionText)
-                            .foregroundStyle(.black)
-                            .font(.caption)
-                            .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
-                            .fontWeight(.bold)
-                            .frame(minWidth: 85)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .background(
-                                Rectangle().fill(Color.white)
-                                    .opacity(0.7)
-                            )
-                        
-                        
-                        Text(article.captionText)
-                            .foregroundStyle(.black)
-                            .font(.caption)
-                            .background(
-                                Rectangle().fill(Color.white)
-                                    .opacity(0.7)
-                            )
+                    @unknown default:
+                        Rectangle().fill(Color.gray)
                     }
-                        .frame(minWidth: 280)
-                        .padding(.bottom, 50),
-                    alignment: .bottom
+                }
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .clipped()
+                .overlay(
+                    LinearGradient(
+                        colors: [.clear, Color.black.opacity(0.12), Color.black.opacity(0.78)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                        .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                )
+
+                VStack(alignment: .leading, spacing: 14) {
+                    HStack {
+                        Text(article.source.name.uppercased())
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .tracking(1.1)
+                            .foregroundStyle(AppStyle.heroTextPrimary)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(Capsule().fill(Color.white.opacity(0.14)))
+
+                        Spacer()
+
+                        Text(article.captionText)
+                            .font(.system(size: 12, weight: .medium, design: .rounded))
+                            .foregroundStyle(AppStyle.heroTextSecondary)
+                    }
+
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(article.title)
+                            .font(.system(size: 28, weight: .bold, design: .rounded))
+                            .foregroundStyle(AppStyle.heroTextPrimary)
+                            .lineLimit(4)
+
+                        if !article.descriptionText.isEmpty {
+                            Text(article.descriptionText)
+                                .font(.system(.subheadline, design: .rounded))
+                                .foregroundStyle(AppStyle.heroTextSecondary)
+                                .lineLimit(3)
+                        }
+                    }
+
+                    if !article.authorText.isEmpty {
+                        Text("By \(article.authorText)")
+                            .font(.system(size: 13, weight: .semibold, design: .rounded))
+                            .foregroundStyle(AppStyle.heroTextPrimary.opacity(0.9))
+                    }
+                }
+                .padding(22)
+            }
+            .background(AppStyle.heroGradient)
+            .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+            .shadow(color: Color.black.opacity(0.22), radius: 24, x: 0, y: 16)
         }
     }
 }

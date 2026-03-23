@@ -17,57 +17,44 @@ struct FooterView: View {
     let haptics = UINotificationFeedbackGenerator()
     
     var body: some View {
-        HStack{
+        HStack(spacing: 14) {
             Button(action: {
                 self.haptics.notificationOccurred(.success)
                 self.showInfoView.toggle()
             }, label: {
-                Image(systemName: "info.circle")
-                    .font(.system(size: 24, weight: .regular))
+                Image(systemName: "info")
             })
-            .tint(Color.primary)
+            .buttonStyle(CircleActionButtonStyle())
             .sheet(isPresented: $showInfoView, content: {
                 InfoView()
                     .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             })
-            
-            Spacer()
-            
+
             Button(action: {
                 self.haptics.notificationOccurred(.success)
                 self.showBookingAlert.toggle()
                 saveArticle()
             }, label: {
-                Text("Save News Article".uppercased())
-                    .font(.system(.subheadline, design: .rounded))
-                    .fontWeight(.heavy)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 22)
-                    .tint(Color.pink)
-                    .background(
-                        Capsule().stroke(Color.pink, lineWidth: 2)
-                    )
+                Label("Save Article", systemImage: "bookmark.fill")
             })
-            
-            Spacer()
-            
+            .buttonStyle(FilledActionButtonStyle())
+
             Button(action: {
                 self.haptics.notificationOccurred(.success)
                 self.showGuideView.toggle()
             }, label: {
-                Image(systemName: "questionmark.circle")
-                    .font(.system(size: 24, weight: .regular))
+                Image(systemName: "questionmark")
             })
-            .tint(Color.primary)
+            .buttonStyle(CircleActionButtonStyle())
             .sheet(isPresented: $showGuideView, content: {
                 GuideView()
                     .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
             })
         }
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-        .background(Theme.appColors)
         .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
-        .padding()
+        .padding(16)
+        .glassPanel()
     }
     
     private func saveArticle() {
