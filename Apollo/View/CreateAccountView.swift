@@ -7,7 +7,6 @@
 
 import SwiftUI
 import CoreLocationUI
-import FirebaseAuth
 
 let occupationsList = ["accountant", "actor/actress", "artist", "astronaut", "astronomer", "athelete", "banker", "barber", "biologist", "blacksmith", "butler", "cardiologist", "carpenter", "cashier", "chef", "chemist", "contractor", "dentist", "dermatologist", "designer", "doctor", "ecologist", "economist", "engineer", "entrepreneur", "geologist", "geographer", "hairdresser", "intern", "judge", "journalist", "landscaper", "lawyer", "manager", "marketer", "mechanic", "model", "nurse", "optometrist", "paralegal", "pediatrician", "photographer", "physician", "politician", "producer", "professor", "psychologist", "retailer", "salesperson", "scientist", "sheriff", "student", "statistician", "surgeon", "teacher", "technician", "trader", "usher", "veterinarian", "watier/waitress", "writer"]
 
@@ -19,7 +18,6 @@ struct CreateAccountView: View {
     @State private var dateOfBirth = ""
     @State private var occupation = ""
     @State private var location = ""
-    @State private var errorMessage = ""
     @State private var selectedOptions: Set<String> = []
     @Binding var userSelectedInterests: Bool
     @EnvironmentObject var nightModeManager: NightModeManager
@@ -80,23 +78,6 @@ struct CreateAccountView: View {
 //
 //    }
     
-    private func createUser() {
-        Auth.auth().createUser(withEmail: email, password: password) {
-            (authResult,error) in
-                if let error = error as NSError? {
-                    errorMessage = "\(error.localizedDescription)"
-                } else {
-                    errorMessage = ""
-                }
-        }
-    }
-    
-    private func storeUserData() {
-        AppSession.startLocalSession(email: email)
-        AppSession.saveInterests(Array(selectedOptions), for: email)
-        AppSession.saveLocation(location)
-        errorMessage = ""
-    }
 }
 
 struct DobLocationOccupationView: View {
@@ -108,10 +89,13 @@ struct DobLocationOccupationView: View {
     @State private var dateOfBirth = ""
     @State private var occupation = ""
     @State private var location = ""
-    @State private var errorMessage = ""
+    @State private var alertMessage = ""
+    @State private var showAlert = false
     @Binding var selectedOptions: Set<String>
     @Binding var userSelectedInterests: Bool
+    @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var nightModeManager: NightModeManager
+    @Environment(\.dismiss) private var dismiss
     let haptics = UINotificationFeedbackGenerator()
     
     var body: some View {
@@ -138,11 +122,6 @@ struct DobLocationOccupationView: View {
                 TextField("", text: $occupation)
                     .textFieldStyle(.roundedBorder)
                 
-                Text(errorMessage)
-                    .foregroundStyle(.red)
-                    .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
-                    .fixedSize(horizontal: false, vertical: true)
-                
                 Spacer()
                 
             }
@@ -154,15 +133,21 @@ struct DobLocationOccupationView: View {
                 Spacer()
                 
                 Button("Create Account") {
-                    // TODO add code to segue from this screen to set pfp screen
                     if fullName != "" && email != "" && password != "" && dateOfBirth != "" && location != "" && occupation != "" {
-                        createUser()
-                        if errorMessage == "" {
-                            userSelectedInterests = false
-                            storeUserData()
+                        Task {
+                            do {
+                                try await createUser()
+                                await MainActor.run {
+                                    authViewModel.logIn()
+                                    userSelectedInterests = false
+                                    dismiss()
+                                }
+                            } catch {
+                                presentAlert(error.localizedDescription)
+                            }
                         }
                     } else {
-                        errorMessage = "Please go back and ensure that all fields are filled"
+                        presentAlert("Please go back and ensure that all fields are filled.")
                         self.haptics.notificationOccurred(.warning)
                     }
                     
@@ -178,27 +163,31 @@ struct DobLocationOccupationView: View {
         .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxWidth: .infinity)
         .padding(.top, 80)
         .padding(.bottom, 70)
+        .alert("Unable to Create Account", isPresented: $showAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(alertMessage)
+        }
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
         .background(Theme.appColors)
         .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
     }
     
-    private func createUser() {
-        Auth.auth().createUser(withEmail: email, password: password) {
-            (authResult,error) in
-                if let error = error as NSError? {
-                    errorMessage = "\(error.localizedDescription)"
-                } else {
-                    errorMessage = ""
-                }
-        }
+    private func createUser() async throws {
+        try await AppSession.signUp(
+            email: email,
+            password: password,
+            fullName: fullName,
+            dateOfBirth: dateOfBirth,
+            location: location,
+            occupation: occupation,
+            interests: Array(selectedOptions)
+        )
     }
-    
-    private func storeUserData() {
-        AppSession.startLocalSession(email: email)
-        AppSession.saveInterests(Array(selectedOptions), for: email)
-        AppSession.saveLocation(location)
-        errorMessage = ""
+
+    private func presentAlert(_ message: String) {
+        alertMessage = message
+        showAlert = true
     }
 }
 

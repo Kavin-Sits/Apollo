@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 
 struct HeaderView: View {
     
@@ -73,6 +72,9 @@ struct HeaderView: View {
                 .bold()
         }
         .onAppear() {
+            loadProfilePhoto()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .profilePhotoDidChange)) { _ in
             loadProfilePhoto()
         }
         .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)

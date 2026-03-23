@@ -1,1 +1,3 @@
+FORWARD_SLASH = /
+
 #include? "Secrets.xcconfig"

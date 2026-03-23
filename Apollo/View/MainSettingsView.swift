@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseAuth
 import UIKit
 
 enum Theme {
@@ -80,7 +79,7 @@ struct MainSettingsView: View {
                                     Spacer()
                                 }
                             }
-                            NavigationLink(destination: ProfilePhotoView(email: Auth.auth().currentUser?.email ?? "")) {
+                            NavigationLink(destination: ProfilePhotoView(email: AppSession.currentUserID ?? AppSession.guestUserID)) {
                                 Text("Update Profile Photo")
                             }
                         }
@@ -115,16 +114,11 @@ struct MainSettingsView: View {
                         }
 
                         Button(action: {
-                            do {
-                                if AppSession.hasAuthenticatedUser {
-                                    try Auth.auth().signOut()
-                                }
+                            Task {
+                                await AppSession.signOut()
                                 AppSession.endGuestSession()
                                 self.presentationMode.callAsFunction()
                                 self.authViewModel.logOut()
-                                
-                            } catch let signOutError as NSError {
-                                print("Error signing out: \(signOutError)")
                             }
                             
                         }, label:{
@@ -137,30 +131,15 @@ struct MainSettingsView: View {
                             Button(action: {
                                 showAlert = true
                             }) {
-                                Text("Delete Account")
+                                Text("Delete Account (Coming Soon)")
                                     .foregroundColor(.red)
                             }
                             .alert(isPresented: $showAlert) {
                                 Alert(
-                                    title: Text("Are you sure?"),
-                                    message: Text("Are you sure you want to delete your account? This action cannot be undone."),
-                                    primaryButton: .destructive(Text("Delete")) {
-                                        Auth.auth().currentUser?.delete()
-                                        do {
-                                            try Auth.auth().signOut()
-                                            AppSession.endGuestSession()
-                                            self.presentationMode.callAsFunction()
-                                            self.authViewModel.logOut()
-                                        } catch let signOutError as NSError {
-                                            print("Error signing out: \(signOutError)")
-                                        }
-                                        performDelete = true
-                                    },
-                                    secondaryButton: .cancel()
+                                    title: Text("Not Yet Enabled"),
+                                    message: Text("Deleting Supabase accounts needs a secure server-side function. We can add that next."),
+                                    dismissButton: .default(Text("OK"))
                                 )
-                            }
-                            .navigationDestination(isPresented: $performDelete){
-                                LoginView()
                             }
                         }
                     }

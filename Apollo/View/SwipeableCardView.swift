@@ -54,6 +54,7 @@ struct SwipeableCardView: View {
                         .onTapGesture {
                             selectedArticle = displayedArticles[index]
                             activeArticleVM.activeArticle = displayedArticles[index]
+                            AppSession.markOpened(article: displayedArticles[index])
                         }
                         .overlay(
                             ZStack{
@@ -108,8 +109,8 @@ struct SwipeableCardView: View {
                                     if(soundEffectManager.soundEnabled) {
                                         playSound(sound: "swipe", type: "wav")
                                     }
-                                    addLikedArticleToUser(swipedArticleId: displayedArticles[index].url)
-                                    removeCard(at: index)
+                                    addLikedArticleToUser(swipedArticle: displayedArticles[index])
+                                    removeCard(at: index, markAsDisliked: false)
                                     self.haptics.notificationOccurred(.success)
                                     activeCardIndex = nil
                                 }
@@ -180,11 +181,13 @@ struct SwipeableCardView: View {
         }
     }
     
-    private func removeCard(at index: Int) {
+    private func removeCard(at index: Int, markAsDisliked: Bool = true) {
         guard index < displayedArticles.count else { return }
         
         let swipedArticle = displayedArticles[index]
-        addSwipedArticleToUser(swipedArticleId: swipedArticle.url)
+        if markAsDisliked {
+            addSwipedArticleToUser(swipedArticle)
+        }
         
         displayedArticles.remove(at: index)
         
@@ -193,12 +196,12 @@ struct SwipeableCardView: View {
         }
     }
     
-    private func addSwipedArticleToUser(swipedArticleId: String) {
-        AppSession.markSeen(articleID: swipedArticleId)
+    private func addSwipedArticleToUser(_ swipedArticle: Article) {
+        AppSession.markDismissed(article: swipedArticle)
     }
-    
-    private func addLikedArticleToUser(swipedArticleId: String) {
-        AppSession.markLiked(articleID: swipedArticleId)
+
+    private func addLikedArticleToUser(swipedArticle: Article) {
+        AppSession.markLiked(article: swipedArticle)
     }
     
     @ViewBuilder

@@ -6,12 +6,7 @@
 //
 
 import SwiftUI
-import FirebaseAuth
-import FirebaseCore
 import UserNotifications
-import GoogleSignIn
-import GoogleSignInSwift
-
 public var notifAuthorization = false
 
 
@@ -37,15 +32,15 @@ extension UIApplication {
 struct LoginView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var nightModeManager: NightModeManager
-    @State private var errorMessage = ""
-    @State private var userInterests: [String] = []
-    @State private var userSelectedInterests: Bool = true
+    @State private var alertMessage = ""
+    @State private var showAlert = false
+    @State private var shouldShowInterestSelection = false
     
     let backgroundColor = Color(red: 224/255, green: 211/255, blue: 175/255)
     
     var body: some View {
         if authViewModel.isLoggedIn {
-            if !userSelectedInterests {
+            if shouldShowInterestSelection {
                 InterestSelectionView(email: AppSession.currentUserID ?? AppSession.guestUserID)
                     .onAppear() {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.sound]) {
@@ -77,9 +72,6 @@ struct LoginView: View {
                     Text("APOLLO")
                         .font(Font.custom("Bodoni 72 Smallcaps", size: 52))
                     
-                    Text(errorMessage)
-                        .foregroundStyle(.red)
-                    
                     VStack(alignment: .leading) {
                         Text("Username/Email")
                         TextField("username", text: $authViewModel.username)
@@ -102,8 +94,9 @@ struct LoginView: View {
                     }
                     
                     Button {
-                        print("loggin")
-                        loginUser()
+                        Task {
+                            await loginUser()
+                        }
                     } label: {
                         Text("Login")
                             .modifier(ButtonModifier())
@@ -112,7 +105,7 @@ struct LoginView: View {
                     Text("or")
                     
                     NavigationLink{
-                        CreateAccountView(userSelectedInterests: self.$userSelectedInterests)
+                        CreateAccountView(userSelectedInterests: self.$shouldShowInterestSelection)
                             .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
                     } label: {
                         Text("Create account")
@@ -124,35 +117,12 @@ struct LoginView: View {
                     Button {
                         AppSession.startGuestSession()
                         authViewModel.logIn()
-                        refreshInterestSelection()
+                        shouldShowInterestSelection = false
                     } label: {
                         Text("Continue as Guest")
                             .modifier(ButtonModifier())
                     }
 
-                    Text("or")
-                    
-                    GoogleSignInButton(
-                        viewModel: GoogleSignInButtonViewModel(
-                            scheme: .dark,
-                            style: .wide,
-                            state: .normal))
-                    {
-                        Task {
-                            do {
-                                try await googleSignIn()
-                            } catch {
-                                print(error)
-                            }
-                        }
-                    }
-                    .font(.headline)
-                    .padding()
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    .background(
-                        Capsule().fill(Color(red: 83/255, green: 131/255, blue: 236/255))
-                            .frame(height: 50)
-                    )
                     Spacer()
                     
                 }
@@ -161,79 +131,41 @@ struct LoginView: View {
                 .onAppear {
                     if AppSession.isGuestModeEnabled {
                         authViewModel.logIn()
-                        refreshInterestSelection()
+                        shouldShowInterestSelection = false
                     }
 
-                    Auth.auth().addStateDidChangeListener {
-                        auth, user in
-                        if user != nil {
-                            AppSession.endGuestSession()
-                            refreshInterestSelection()
-                            authViewModel.logIn()
-                        } else if !AppSession.isGuestModeEnabled {
-                            authViewModel.logOut()
-                        }
+                    if AppSession.hasAuthenticatedUser {
+                        AppSession.endGuestSession()
+                        shouldShowInterestSelection = false
+                        authViewModel.logIn()
                     }
                 }
             }
             .frame(minWidth: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, maxWidth: .infinity)
             .background(Theme.appColors)
             .environment(\.colorScheme, nightModeManager.isNightMode ? .dark : .light)
+            .alert("Unable to Sign In", isPresented: $showAlert) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(alertMessage)
+            }
         }
     }
     
-    private func loginUser() {
-        Auth.auth().signIn(withEmail: authViewModel.username, password: authViewModel.password) {
-            (authResult,error) in
-                if let error = error as NSError? {
-                    errorMessage = "\(error.localizedDescription)"
-                } else {
-                    errorMessage = ""
-                }
-        }
-    }
-    
-    private func refreshInterestSelection() {
-        Task {
-            let interests = await AppSession.loadInterests()
+    private func loginUser() async {
+        do {
+            try await AppSession.signIn(email: authViewModel.username, password: authViewModel.password)
             await MainActor.run {
-                userInterests = interests
-                userSelectedInterests = !interests.isEmpty
+                alertMessage = ""
+                shouldShowInterestSelection = false
+                authViewModel.logIn()
+            }
+        } catch {
+            await MainActor.run {
+                alertMessage = error.localizedDescription
+                showAlert = true
             }
         }
-    }
-    
-    private func googleSignIn() async throws {
-        guard let topVC = await UIApplication.getTopViewController() else {
-            throw URLError(.cannotFindHost)
-        }
-        
-        let gidSignInResult = try await GIDSignIn.sharedInstance.signIn(withPresenting: topVC)
-        
-        guard let idToken = gidSignInResult.user.idToken?.tokenString else {
-            throw URLError(.badServerResponse)
-        }
-        
-        let accessToken = gidSignInResult.user.accessToken.tokenString
-        
-        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
-        
-        Auth.auth().signIn(with: credential) {
-            result, error in
-            if let error = error {
-                print(error)
-            }
-            
-            let user = result?.user
-            let email = user?.email
-            if let email {
-                AppSession.startLocalSession(email: email)
-                AppSession.saveInterests([], for: email)
-                errorMessage = ""
-                refreshInterestSelection()
-            }
-        }
-        
     }
 }
 
