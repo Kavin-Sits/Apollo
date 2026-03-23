@@ -32,50 +32,57 @@ struct MainSettingsView: View {
     
     @Environment(\.dismiss) var presentationMode
 
+    private var isGuestMode: Bool {
+        AppSession.isGuestModeEnabled && !AppSession.hasAuthenticatedUser
+    }
+
     var body: some View {
         NavigationView {
             VStack{
                 Form {
                     Section(header: Text("Account")) {
-                        Button(action: {
-                            isModalPresented = true
-                        }) {
-                            Text("Update Password")
+                        if !isGuestMode {
+                            Button(action: {
+                                isModalPresented = true
+                            }) {
+                                Text("Update Password")
+                            }
                         }
-                        
-                        NavigationLink(destination: InterestUpdateView(email: Auth.auth().currentUser?.email ?? "")) {
+
+                        NavigationLink(destination: InterestUpdateView(email: AppSession.currentUserID ?? AppSession.guestUserID)) {
                             Text("Update Preferences")
                         }
-                        NavigationLink(destination: UpdateLocationView()) {
-                            Text("Update Location")
-                        }
-                        //TODO change user data
-                        Button(action: {
-                            isPickerVisible.toggle()
-                        }) {
-                            Text("Update Occupation")
-                        }
-                        if isPickerVisible {
-                            Picker("Select Occupation", selection: $selectedOccupationIndex) {
-                                ForEach(0..<occupationsList.count, id: \.self) { index in
-                                    Text(occupationsList[index]).tag(index)
+                        if !isGuestMode {
+                            NavigationLink(destination: UpdateLocationView()) {
+                                Text("Update Location")
+                            }
+                            Button(action: {
+                                isPickerVisible.toggle()
+                            }) {
+                                Text("Update Occupation")
+                            }
+                            if isPickerVisible {
+                                Picker("Select Occupation", selection: $selectedOccupationIndex) {
+                                    ForEach(0..<occupationsList.count, id: \.self) { index in
+                                        Text(occupationsList[index]).tag(index)
+                                    }
+                                }
+                                .pickerStyle(WheelPickerStyle())
+                                .padding()
+                                HStack {
+                                    Spacer()
+                                    Button(action: {
+                                        isPickerVisible.toggle()
+                                    }) {
+                                        Text("OK")
+                                            .padding()
+                                    }
+                                    Spacer()
                                 }
                             }
-                            .pickerStyle(WheelPickerStyle())
-                            .padding()
-                            HStack {
-                                Spacer()
-                                Button(action: {
-                                    isPickerVisible.toggle()
-                                }) {
-                                    Text("OK")
-                                        .padding()
-                                }
-                                Spacer()
+                            NavigationLink(destination: ProfilePhotoView(email: Auth.auth().currentUser?.email ?? "")) {
+                                Text("Update Profile Photo")
                             }
-                        }
-                        NavigationLink(destination: ProfilePhotoView(email: Auth.auth().currentUser?.email ?? "")) {
-                            Text("Update Profile Photo")
                         }
                     }
                     .sheet(isPresented: $isModalPresented) {
@@ -106,12 +113,13 @@ struct MainSettingsView: View {
                             .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)) {
                             Text("View Saved Articles")
                         }
-                        
-                        @EnvironmentObject var authViewModel: AuthViewModel
-                        
+
                         Button(action: {
                             do {
-                                try Auth.auth().signOut()
+                                if AppSession.hasAuthenticatedUser {
+                                    try Auth.auth().signOut()
+                                }
+                                AppSession.endGuestSession()
                                 self.presentationMode.callAsFunction()
                                 self.authViewModel.logOut()
                                 
@@ -120,37 +128,40 @@ struct MainSettingsView: View {
                             }
                             
                         }, label:{
-                            Text("Sign Out")
+                            Text(isGuestMode ? "Exit Guest Mode" : "Sign Out")
                                 .foregroundColor(.blue)
                             
                         })
-                        
-                        Button(action: {
-                            showAlert = true
-                        }) {
-                            Text("Delete Account")
-                                .foregroundColor(.red)
-                        }
-                        .alert(isPresented: $showAlert) {
-                            Alert(
-                                title: Text("Are you sure?"),
-                                message: Text("Are you sure you want to delete your account? This action cannot be undone."),
-                                primaryButton: .destructive(Text("Delete")) {
-                                    Auth.auth().currentUser?.delete()
-                                    do {
-                                        try Auth.auth().signOut()
-                                        self.presentationMode.callAsFunction()
-                                        self.authViewModel.logOut()
-                                    } catch let signOutError as NSError {
-                                        print("Error signing out: \(signOutError)")
-                                    }
-                                    performDelete = true
-                                },
-                                secondaryButton: .cancel()
-                            )
-                        }
-                        .navigationDestination(isPresented: $performDelete){
-                            LoginView()
+
+                        if !isGuestMode {
+                            Button(action: {
+                                showAlert = true
+                            }) {
+                                Text("Delete Account")
+                                    .foregroundColor(.red)
+                            }
+                            .alert(isPresented: $showAlert) {
+                                Alert(
+                                    title: Text("Are you sure?"),
+                                    message: Text("Are you sure you want to delete your account? This action cannot be undone."),
+                                    primaryButton: .destructive(Text("Delete")) {
+                                        Auth.auth().currentUser?.delete()
+                                        do {
+                                            try Auth.auth().signOut()
+                                            AppSession.endGuestSession()
+                                            self.presentationMode.callAsFunction()
+                                            self.authViewModel.logOut()
+                                        } catch let signOutError as NSError {
+                                            print("Error signing out: \(signOutError)")
+                                        }
+                                        performDelete = true
+                                    },
+                                    secondaryButton: .cancel()
+                                )
+                            }
+                            .navigationDestination(isPresented: $performDelete){
+                                LoginView()
+                            }
                         }
                     }
                     Button(action: {

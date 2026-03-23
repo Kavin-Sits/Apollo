@@ -12,6 +12,7 @@
 		205DE1F32B1D4D74001D91E1 /* SoundEffectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205DE1F22B1D4D74001D91E1 /* SoundEffectManager.swift */; };
 		209A710C2B05A904007F4F5D /* NightModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209A710B2B05A904007F4F5D /* NightModeManager.swift */; };
 		209A710E2B05C3F3007F4F5D /* InterestUpdateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 209A710D2B05C3F3007F4F5D /* InterestUpdateView.swift */; };
+		20C102302BFEA10000A0AA01 /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C1022F2BFEA10000A0AA01 /* AppSession.swift */; };
 		8A2B78F32AFB140E00765A4A /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */; };
 		8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F72AFB24FC00765A4A /* CardTransition.swift */; };
 		8A2B78FA2AFB254000765A4A /* SymbolModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F92AFB254000765A4A /* SymbolModifier.swift */; };
@@ -115,6 +116,7 @@
 		205DE1F22B1D4D74001D91E1 /* SoundEffectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundEffectManager.swift; sourceTree = "<group>"; };
 		209A710B2B05A904007F4F5D /* NightModeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightModeManager.swift; sourceTree = "<group>"; };
 		209A710D2B05C3F3007F4F5D /* InterestUpdateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterestUpdateView.swift; sourceTree = "<group>"; };
+		20C1022F2BFEA10000A0AA01 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
 		8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
 		8A2B78F72AFB24FC00765A4A /* CardTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTransition.swift; sourceTree = "<group>"; };
 		8A2B78F92AFB254000765A4A /* SymbolModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolModifier.swift; sourceTree = "<group>"; };
@@ -175,35 +177,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F054F3D72AE3154A008597B6 /* FirebaseDatabase in Frameworks */,
-				F054F3E52AE3154A008597B6 /* FirebaseFunctionsCombine-Community in Frameworks */,
-				F054F3DD2AE3154A008597B6 /* FirebaseFirestore in Frameworks */,
-				F054F3C92AE3154A008597B6 /* FirebaseAnalyticsSwift in Frameworks */,
-				F054F3C52AE3154A008597B6 /* FirebaseAnalytics in Frameworks */,
-				F054F3C72AE3154A008597B6 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
-				F054F3E12AE3154A008597B6 /* FirebaseFirestoreSwift in Frameworks */,
 				F093DCC32AFA0628009E8DCC /* GoogleSignInSwift in Frameworks */,
-				F054F3EF2AE3154A008597B6 /* FirebaseMLModelDownloader in Frameworks */,
-				F054F3CD2AE3154A008597B6 /* FirebaseAppCheck in Frameworks */,
-				F054F3CB2AE3154A008597B6 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
-				F054F3ED2AE3154A008597B6 /* FirebaseMessaging in Frameworks */,
 				F054F3D12AE3154A008597B6 /* FirebaseAuth in Frameworks */,
-				F054F3F52AE3154A008597B6 /* FirebaseRemoteConfigSwift in Frameworks */,
 				F093DCC12AFA0628009E8DCC /* GoogleSignIn in Frameworks */,
-				F054F3D52AE3154A008597B6 /* FirebaseCrashlytics in Frameworks */,
-				F054F3E72AE3154A008597B6 /* FirebaseInAppMessaging-Beta in Frameworks */,
-				F054F3D92AE3154A008597B6 /* FirebaseDatabaseSwift in Frameworks */,
-				F054F3F92AE3154A008597B6 /* FirebaseStorageCombine-Community in Frameworks */,
-				F054F3F32AE3154A008597B6 /* FirebaseRemoteConfig in Frameworks */,
-				F054F3E32AE3154A008597B6 /* FirebaseFunctions in Frameworks */,
-				F054F3CF2AE3154A008597B6 /* FirebaseAppDistribution-Beta in Frameworks */,
-				F054F3F12AE3154A008597B6 /* FirebasePerformance in Frameworks */,
-				F054F3D32AE3154A008597B6 /* FirebaseAuthCombine-Community in Frameworks */,
-				F054F3F72AE3154A008597B6 /* FirebaseStorage in Frameworks */,
-				F054F3E92AE3154A008597B6 /* FirebaseInAppMessagingSwift-Beta in Frameworks */,
-				F054F3DB2AE3154A008597B6 /* FirebaseDynamicLinks in Frameworks */,
-				F054F3DF2AE3154A008597B6 /* FirebaseFirestoreCombine-Community in Frameworks */,
-				F054F3EB2AE3154A008597B6 /* FirebaseInstallations in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +248,14 @@
 			path = Sound;
 			sourceTree = "<group>";
 		};
+		20C102312BFEA40000A0AA01 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				20C1022F2BFEA10000A0AA01 /* AppSession.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
 		8AB2E2CA2AD0DEEA0066AB1A = {
 			isa = PBXGroup;
 			children = (
@@ -298,6 +282,7 @@
 			children = (
 				8ACC1EBE2AFED082009BE432 /* Testing */,
 				8A2B78FB2AFB257400765A4A /* Sound */,
+				20C102312BFEA40000A0AA01 /* Support */,
 				8A2B78F62AFB24E200765A4A /* Extension */,
 				8A2B78F52AFB148A00765A4A /* Info */,
 				8A2B78F42AFB141400765A4A /* Modifier */,
@@ -433,33 +418,7 @@
 			);
 			name = Apollo;
 			packageProductDependencies = (
-				F054F3C42AE3154A008597B6 /* FirebaseAnalytics */,
-				F054F3C62AE3154A008597B6 /* FirebaseAnalyticsOnDeviceConversion */,
-				F054F3C82AE3154A008597B6 /* FirebaseAnalyticsSwift */,
-				F054F3CA2AE3154A008597B6 /* FirebaseAnalyticsWithoutAdIdSupport */,
-				F054F3CC2AE3154A008597B6 /* FirebaseAppCheck */,
-				F054F3CE2AE3154A008597B6 /* FirebaseAppDistribution-Beta */,
 				F054F3D02AE3154A008597B6 /* FirebaseAuth */,
-				F054F3D22AE3154A008597B6 /* FirebaseAuthCombine-Community */,
-				F054F3D42AE3154A008597B6 /* FirebaseCrashlytics */,
-				F054F3D62AE3154A008597B6 /* FirebaseDatabase */,
-				F054F3D82AE3154A008597B6 /* FirebaseDatabaseSwift */,
-				F054F3DA2AE3154A008597B6 /* FirebaseDynamicLinks */,
-				F054F3DC2AE3154A008597B6 /* FirebaseFirestore */,
-				F054F3DE2AE3154A008597B6 /* FirebaseFirestoreCombine-Community */,
-				F054F3E02AE3154A008597B6 /* FirebaseFirestoreSwift */,
-				F054F3E22AE3154A008597B6 /* FirebaseFunctions */,
-				F054F3E42AE3154A008597B6 /* FirebaseFunctionsCombine-Community */,
-				F054F3E62AE3154A008597B6 /* FirebaseInAppMessaging-Beta */,
-				F054F3E82AE3154A008597B6 /* FirebaseInAppMessagingSwift-Beta */,
-				F054F3EA2AE3154A008597B6 /* FirebaseInstallations */,
-				F054F3EC2AE3154A008597B6 /* FirebaseMessaging */,
-				F054F3EE2AE3154A008597B6 /* FirebaseMLModelDownloader */,
-				F054F3F02AE3154A008597B6 /* FirebasePerformance */,
-				F054F3F22AE3154A008597B6 /* FirebaseRemoteConfig */,
-				F054F3F42AE3154A008597B6 /* FirebaseRemoteConfigSwift */,
-				F054F3F62AE3154A008597B6 /* FirebaseStorage */,
-				F054F3F82AE3154A008597B6 /* FirebaseStorageCombine-Community */,
 				F093DCC02AFA0628009E8DCC /* GoogleSignIn */,
 				F093DCC22AFA0628009E8DCC /* GoogleSignInSwift */,
 			);
@@ -596,6 +555,7 @@
 				8AB2E2E02AD0DEED0066AB1A /* Persistence.swift in Sources */,
 				8AB2E31C2AD63FA90066AB1A /* SafariView.swift in Sources */,
 				F0D733002ADCFE2F0088DDAB /* LoginView.swift in Sources */,
+				20C102302BFEA10000A0AA01 /* AppSession.swift in Sources */,
 				202117DF2ADC8BD70083BC0B /* MainSettingsView.swift in Sources */,
 				8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */,
 				8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */,
@@ -798,7 +758,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Apollo/Info/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to curate relevant local news";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Apollo uses your photo library so you can choose a profile image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -831,7 +791,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Apollo/Info/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to curate relevant local news";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Apollo uses your photo library so you can choose a profile image.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -28,3 +28,5 @@ struct SavedArticle {
 extension SavedArticle: Identifiable {
     var id: String {url}
 }
+
+extension SavedArticle: Codable {}

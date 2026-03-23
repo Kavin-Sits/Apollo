@@ -6,9 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseAuth
-import FirebaseFirestore
-
 struct FooterView: View {
     
     @Binding var showBookingAlert: Bool
@@ -75,26 +72,7 @@ struct FooterView: View {
     
     private func saveArticle() {
         guard let article = activeArticleVM.activeArticle else { return }
-        
-        guard let userId = Auth.auth().currentUser?.email else { return }
-        
-        let articleRef = Firestore.firestore().collection("articles").document()
-        articleRef.setData([
-            "id": articleRef.documentID,
-            "author": article.authorText,
-            "description": article.descriptionText,
-            "publishedAt": article.publishedAt,
-            "source": article.source.name,
-            "title": article.title,
-            "url": article.url,
-            "urlToImage": article.urlToImage ?? ""
-        ]) { error in
-            if let error = error {
-                print("Error saving article: \(error)")
-            } else {
-                let userDocRef = Firestore.firestore().collection("users").document(userId)
-                userDocRef.updateData(["savedArticles": FieldValue.arrayUnion([articleRef.documentID])])
-            }
-        }
+
+        AppSession.saveArticle(article)
     }
 }

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Firebase
 import FirebaseAuth
 
 struct ForgotPasswordView: View {

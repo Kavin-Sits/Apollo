@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseAuth
-import FirebaseFirestore
 
 struct SavedArticlesView: View {
     @StateObject private var viewModel = SavedArticlesViewModel()
@@ -32,8 +30,8 @@ struct SavedArticlesView: View {
                 SafariView(url: $0.articleURL)
             })
             .onAppear {
-                if let userID = Auth.auth().currentUser?.email {
-                    viewModel.fetchSavedArticles(userId: userID)
+                Task {
+                    await viewModel.fetchSavedArticles()
                 }
             }
             .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)

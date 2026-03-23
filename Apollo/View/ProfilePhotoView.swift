@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseStorage
-import FirebaseFirestore
 import Combine
 
 struct ProfilePhotoView: View {
@@ -73,53 +71,14 @@ struct ProfilePhotoView: View {
     }
 
     func loadProfilePhoto() {
-        Firestore.firestore().collection("users").document(userEmail).getDocument { (document, error) in
-            if let document = document, document.exists {
-                if let urlString = document.data()?["profilePhotoURL"] as? String, let url = URL(string: urlString) {
-                    self.cancellable = URLSession.shared.dataTaskPublisher(for: url)
-                        .map { UIImage(data: $0.data) }
-                        .replaceError(with: nil)
-                        .receive(on: DispatchQueue.main)
-                        .sink { downloadedImage in
-                            self.image = downloadedImage
-                        }
-                }
-            } else {
-                print("Document does not exist")
-            }
+        if let image = AppSession.loadProfilePhoto() {
+            self.image = image
         }
     }
 
     func uploadImage() {
-        if newImagePicked {
-            guard let imageData = image?.jpegData(compressionQuality: 0.8) else { return }
-            
-            let storageRef = Storage.storage().reference(withPath: "profilePhotos/\(UUID().uuidString).jpg")
-            let uploadMetadata = StorageMetadata()
-            uploadMetadata.contentType = "image/jpeg"
-            
-            storageRef.putData(imageData, metadata: uploadMetadata) { (downloadMetadata, error) in
-                if let error = error {
-                    print("Error uploading image: \(error.localizedDescription)")
-                    return
-                }
-                
-                storageRef.downloadURL { (url, error) in
-                    guard let downloadURL = url else {
-                        print("Error getting the download URL")
-                        return
-                    }
-                    
-                    self.imageURL = downloadURL.absoluteString
-                    Firestore.firestore().collection("users").document(self.userEmail).setData(["profilePhotoURL": self.imageURL], merge: true) { error in
-                        if let error = error {
-                            print("Error writing document: \(error)")
-                        } else {
-                            print("Document successfully written!")
-                        }
-                    }
-                }
-            }
+        if newImagePicked, let image {
+            AppSession.saveProfilePhoto(image)
             newImagePicked = false
         }
     }

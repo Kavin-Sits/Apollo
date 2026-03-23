@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseFirestore
-
 struct InterestSelectionView: View {
     var userEmail: String
     @State private var selectedOptions: Set<String> = []
@@ -97,18 +95,14 @@ struct InterestSelectionView: View {
     }
     
     private func storeInterestSelections() {
-        Firestore.firestore().collection("users").document(userEmail).setData(["interests": Array(selectedOptions)], merge: true)
+        AppSession.saveInterests(Array(selectedOptions), for: userEmail)
     }
     
     private func loadUserPreferences() {
-            Firestore.firestore().collection("users").document(userEmail).getDocument { document, error in
-                if let document = document, document.exists {
-                    if let data = document.data(), let interests = data["interests"] as? [String] {
-                        selectedOptions = Set(interests)
-                        print("here")
-                    }
-                } else {
-                    print("Document does not exist")
+            Task {
+                let interests = await AppSession.loadInterests()
+                await MainActor.run {
+                    selectedOptions = Set(interests)
                 }
             }
         }

@@ -8,8 +8,6 @@
 import SwiftUI
 import CoreLocation
 import MapKit
-import FirebaseAuth
-import FirebaseFirestore
 
 struct UpdateLocationView: View {
     @StateObject private var locationPermission: LocationPermission = LocationPermission()
@@ -81,7 +79,7 @@ class LocationPermission:NSObject, ObservableObject, CLLocationManagerDelegate {
         geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
             if let placemark = placemarks?.first {
                 self.placemark = placemark
-                Firestore.firestore().collection("users").document(Auth.auth().currentUser?.email ?? "").setData(["location": placemark.locality!], merge: true)
+                AppSession.saveLocation(placemark.locality ?? "Unknown")
             }
         }
     }

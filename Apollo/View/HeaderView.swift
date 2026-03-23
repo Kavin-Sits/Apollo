@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseAuth
-import FirebaseFirestore
 import Combine
 
 struct HeaderView: View {
@@ -16,7 +14,6 @@ struct HeaderView: View {
     @Binding var showSettingsView:Bool
     let haptics = UINotificationFeedbackGenerator()
     @State private var image: UIImage? = nil
-    @State private var cancellable: AnyCancellable? = nil
     @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
@@ -90,25 +87,8 @@ struct HeaderView: View {
     }
     
     func loadProfilePhoto() {
-        guard let currentUserEmail = Auth.auth().currentUser?.email else {
-            return
-        }
-        let doc = Firestore.firestore().collection("users").document(currentUserEmail)
-        doc.addSnapshotListener { (document, error) in
-            if let document = document, document.exists {
-                if let urlString = document.data()?["profilePhotoURL"] as? String, let url = URL(string: urlString) {
-                    self.cancellable = URLSession.shared.dataTaskPublisher(for: url)
-                        .map { UIImage(data: $0.data) }
-                        .replaceError(with: nil)
-                        .receive(on: DispatchQueue.main)
-                        .sink { downloadedImage in
-                            self.image = downloadedImage
-                        }
-                }
-            } else {
-                print("Document does not exist")
-            }
+        if let image = AppSession.loadProfilePhoto() {
+            self.image = image
         }
     }
 }
-

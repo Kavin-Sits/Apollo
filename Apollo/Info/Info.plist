@@ -22,5 +22,7 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Apollo uses your photo library so you can choose a profile image.</string>
 </dict>
 </plist>

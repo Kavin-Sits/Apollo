@@ -8,7 +8,6 @@
 import SwiftUI
 import CoreLocationUI
 import FirebaseAuth
-import FirebaseFirestore
 
 let occupationsList = ["accountant", "actor/actress", "artist", "astronaut", "astronomer", "athelete", "banker", "barber", "biologist", "blacksmith", "butler", "cardiologist", "carpenter", "cashier", "chef", "chemist", "contractor", "dentist", "dermatologist", "designer", "doctor", "ecologist", "economist", "engineer", "entrepreneur", "geologist", "geographer", "hairdresser", "intern", "judge", "journalist", "landscaper", "lawyer", "manager", "marketer", "mechanic", "model", "nurse", "optometrist", "paralegal", "pediatrician", "photographer", "physician", "politician", "producer", "professor", "psychologist", "retailer", "salesperson", "scientist", "sheriff", "student", "statistician", "surgeon", "teacher", "technician", "trader", "usher", "veterinarian", "watier/waitress", "writer"]
 
@@ -93,26 +92,10 @@ struct CreateAccountView: View {
     }
     
     private func storeUserData() {
-        let userData = [
-            "email": email,
-            "fullName": fullName,
-            "dateOfBirth": dateOfBirth,
-            "location": location,
-            "occupation": occupation,
-            "interests": Array(selectedOptions),
-            "seenArticles": [],
-            "savedArticles": [],
-            "likedArticles": []
-        ] as [String : Any]
-        
-        Firestore.firestore().collection("users").document(email).setData(userData) {
-            error in
-            if let error = error {
-                errorMessage = "\(error)"
-            } else {
-                errorMessage = ""
-            }
-        }
+        AppSession.startLocalSession(email: email)
+        AppSession.saveInterests(Array(selectedOptions), for: email)
+        AppSession.saveLocation(location)
+        errorMessage = ""
     }
 }
 
@@ -212,25 +195,10 @@ struct DobLocationOccupationView: View {
     }
     
     private func storeUserData() {
-        let userData = [
-            "email": email,
-            "fullName": fullName,
-            "dateOfBirth": dateOfBirth,
-            "location": location,
-            "occupation": occupation,
-            "interests": Array(selectedOptions),
-            "seenArticles": [],
-            "savedArticles": []
-        ] as [String : Any]
-        
-        Firestore.firestore().collection("users").document(email).setData(userData) {
-            error in
-            if let error = error {
-                errorMessage = "\(error)"
-            } else {
-                errorMessage = ""
-            }
-        }
+        AppSession.startLocalSession(email: email)
+        AppSession.saveInterests(Array(selectedOptions), for: email)
+        AppSession.saveLocation(location)
+        errorMessage = ""
     }
 }
 

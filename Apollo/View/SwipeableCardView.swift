@@ -7,8 +7,6 @@
 
 import SwiftUI
 import CoreData
-import FirebaseAuth
-import FirebaseFirestore
 
 struct SwipeableCardView: View {
     
@@ -125,68 +123,7 @@ struct SwipeableCardView: View {
             })
             .onAppear{
                 Task{
-                    if let userId = Auth.auth().currentUser?.email {
-                        let userDocRef = Firestore.firestore().collection("users").document(userId)
-                        let userDocument = try? await userDocRef.getDocument()
-                        
-                        if let userDocument = userDocument, userDocument.exists {
-                            let userData = userDocument.data()
-                            let interests = userData?["interests"] as? [String] ?? []
-                            
-                            
-                            
-                            let quantityToAdd:Int = Int(10/interests.count)
-                            
-                            for interest in interests {
-                                switch(interest){
-                                case "Sports":
-                                    articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.sports, token: Date())
-                                case "Business":
-                                    articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.business, token: Date())
-                                case "Technology":
-                                    articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.technology, token: Date())
-                                case "Health and Medicine":
-                                    articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.health, token: Date())
-                                case "Entertainment":
-                                    articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.entertainment, token: Date())
-                                default:
-                                    articleNewsVM.fetchTaskToken = FetchTaskToken(category: Category.general, token: Date())
-                                }
-                                await loadTask()
-                                if case let .success(articles) = articleNewsVM.phase {
-                                    
-                                    let filteredArticles = articles.filter { $0.url != "https://removed.com" }
-                                    
-                                    let noRepeatArticles = filteredArticles.filter { article in !displayedArticles.contains {$0.url == article.url}
-                                    }
-                                    var categoryArticles = Array(noRepeatArticles.prefix(quantityToAdd))
-                                    
-                                    guard let userId = Auth.auth().currentUser?.email else { return }
-                                    
-                                    let userDocRef = Firestore.firestore().collection("users").document(userId)
-                                    let userDocument = try? await userDocRef.getDocument()
-                                    
-                                    if let userDocument = userDocument, userDocument.exists {
-                                        let userData = userDocument.data()
-                                        let seenArticles = userData?["seenArticles"] as? [String] ?? []
-                                        
-                                        categoryArticles = categoryArticles.filter { !seenArticles.contains($0.id)}
-                                        
-                                        displayedArticles.append(contentsOf: Array(categoryArticles.prefix(quantityToAdd)))
-                                        
-                                        displayedArticles.shuffle()
-                                        
-                                        if displayedArticles.indices.contains(0) {
-                                            activeArticleVM.activeArticle = displayedArticles.last
-                                        }
-                                    } else {
-                                        print("user does not exist")
-                                    }
-                                    
-                                }
-                            }
-                        }
-                    }
+                    await loadDisplayedArticles()
                 }
             }
             .zIndex(1)
@@ -257,37 +194,11 @@ struct SwipeableCardView: View {
     }
     
     private func addSwipedArticleToUser(swipedArticleId: String) {
-        guard let userId = Auth.auth().currentUser?.email else { return }
-        
-        Firestore.firestore().collection("users").document(userId).updateData(["seenArticles": FieldValue.arrayUnion([swipedArticleId])]) { error in
-            if let error = error {
-                print("Error adding article: \(error)")
-            } else {
-                print("Swiped article successfully added!")
-            }
-        }
-                                                           
-        let userDocRef = Firestore.firestore().collection("users").document(userId)
-        userDocRef.updateData([
-            "seenArticles": FieldValue.arrayUnion([swipedArticleId])
-        ])
+        AppSession.markSeen(articleID: swipedArticleId)
     }
     
     private func addLikedArticleToUser(swipedArticleId: String) {
-        guard let userId = Auth.auth().currentUser?.email else { return }
-        
-        Firestore.firestore().collection("users").document(userId).updateData(["likedArticles": FieldValue.arrayUnion([swipedArticleId])]) { error in
-            if let error = error {
-                print("Error adding article: \(error)")
-            } else {
-                print("Liked article successfully added!")
-            }
-        }
-                                                           
-        let userDocRef = Firestore.firestore().collection("users").document(userId)
-        userDocRef.updateData([
-            "likedArticles": FieldValue.arrayUnion([swipedArticleId])
-        ])
+        AppSession.markLiked(articleID: swipedArticleId)
     }
     
     @ViewBuilder
@@ -322,6 +233,57 @@ struct SwipeableCardView: View {
         DispatchQueue.main.async {
             articleNewsVM.fetchTaskToken = FetchTaskToken(category: articleNewsVM.fetchTaskToken.category, token: Date())
         }
+    }
+
+    @MainActor
+    private func loadDisplayedArticles() async {
+        displayedArticles = []
+
+        let interests = await AppSession.loadInterests()
+        let seenArticles = await AppSession.loadSeenArticleIDs()
+        let categories = mappedCategories(from: interests)
+        let quantityToAdd = max(1, 10 / max(categories.count, 1))
+
+        for category in categories {
+            articleNewsVM.fetchTaskToken = FetchTaskToken(category: category, token: Date())
+            await loadTask()
+
+            guard case let .success(articles) = articleNewsVM.phase else {
+                continue
+            }
+
+            let filteredArticles = articles.filter { article in
+                article.url != "https://removed.com" &&
+                !seenArticles.contains(article.id) &&
+                !displayedArticles.contains(where: { $0.url == article.url })
+            }
+
+            displayedArticles.append(contentsOf: Array(filteredArticles.prefix(quantityToAdd)))
+        }
+
+        displayedArticles.shuffle()
+        activeArticleVM.activeArticle = displayedArticles.last
+    }
+
+    private func mappedCategories(from interests: [String]) -> [Category] {
+        let categories = interests.map { interest in
+            switch interest {
+            case "Sports":
+                return Category.sports
+            case "Business":
+                return Category.business
+            case "Technology":
+                return Category.technology
+            case "Health and Medicine":
+                return Category.health
+            case "Entertainment":
+                return Category.entertainment
+            default:
+                return Category.general
+            }
+        }
+
+        return categories.isEmpty ? [.general] : Array(Set(categories))
     }
 }
 

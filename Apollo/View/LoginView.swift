@@ -7,7 +7,6 @@
 
 import SwiftUI
 import FirebaseAuth
-import FirebaseFirestore
 import FirebaseCore
 import UserNotifications
 import GoogleSignIn
@@ -47,7 +46,7 @@ struct LoginView: View {
     var body: some View {
         if authViewModel.isLoggedIn {
             if !userSelectedInterests {
-                InterestSelectionView(email: (Auth.auth().currentUser?.email)!)
+                InterestSelectionView(email: AppSession.currentUserID ?? AppSession.guestUserID)
                     .onAppear() {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.badge,.sound]) {
                             (granted,error) in
@@ -115,14 +114,22 @@ struct LoginView: View {
                     NavigationLink{
                         CreateAccountView(userSelectedInterests: self.$userSelectedInterests)
                             .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
-//                            .onAppear {
-//                                nightModeManager.isNightMode = UserDefaults.standard.bool(forKey: "nightModeEnabled")
-//                            }
                     } label: {
                         Text("Create account")
                             .modifier(ButtonModifier())
                     }
-                    
+
+                    Text("or")
+
+                    Button {
+                        AppSession.startGuestSession()
+                        authViewModel.logIn()
+                        refreshInterestSelection()
+                    } label: {
+                        Text("Continue as Guest")
+                            .modifier(ButtonModifier())
+                    }
+
                     Text("or")
                     
                     GoogleSignInButton(
@@ -152,20 +159,20 @@ struct LoginView: View {
                 .padding(.top, 50)
                 .frame(width: 300)
                 .onAppear {
+                    if AppSession.isGuestModeEnabled {
+                        authViewModel.logIn()
+                        refreshInterestSelection()
+                    }
+
                     Auth.auth().addStateDidChangeListener {
                         auth, user in
                         if user != nil {
-                            Task {
-                                do {
-                                    try await getUserInterestSelection()
-                                } catch {
-                                    print(error)
-                                }
-                            }
+                            AppSession.endGuestSession()
+                            refreshInterestSelection()
                             authViewModel.logIn()
-                            
+                        } else if !AppSession.isGuestModeEnabled {
+                            authViewModel.logOut()
                         }
-                        
                     }
                 }
             }
@@ -186,34 +193,13 @@ struct LoginView: View {
         }
     }
     
-    private func getUserInterestSelection() async throws {
-        let user = Auth.auth().currentUser
-        if let user = user {
-            let email = user.email!
-            
-            await Firestore.firestore().collection("users").getDocuments { snapshot, error in
-                
-                if let error = error {
-                    errorMessage = "\(error)"
-                    return
-                }
-                
-                if let snapshot = snapshot {
-                    for document in snapshot.documents {
-                        if let docEmail = document["email"] as? String,
-                           docEmail.caseInsensitiveCompare(email) == .orderedSame {
-                            userInterests = document["interests"] as! [String]
-                            if userInterests.count == 0 {
-                                userSelectedInterests = false
-                            }
-                            break
-                        }
-                    }
-                }
+    private func refreshInterestSelection() {
+        Task {
+            let interests = await AppSession.loadInterests()
+            await MainActor.run {
+                userInterests = interests
+                userSelectedInterests = !interests.isEmpty
             }
-            
-        } else {
-            print("this shouldn't happen")
         }
     }
     
@@ -240,16 +226,11 @@ struct LoginView: View {
             
             let user = result?.user
             let email = user?.email
-            
-            let userData = ["email": email!, "interests": []] as [String : Any]
-            
-            Firestore.firestore().collection("users").document(email!).setData(userData) {
-                error in
-                if let error = error {
-                    errorMessage = "\(error)"
-                } else {
-                    errorMessage = ""
-                }
+            if let email {
+                AppSession.startLocalSession(email: email)
+                AppSession.saveInterests([], for: email)
+                errorMessage = ""
+                refreshInterestSelection()
             }
         }
         
