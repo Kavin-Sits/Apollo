@@ -39,7 +39,9 @@ struct LoginView: View {
     var body: some View {
         if authViewModel.isLoggedIn {
             if shouldShowInterestSelection {
-                InterestSelectionView(email: AppSession.currentUserID ?? AppSession.guestUserID)
+                InterestSelectionView(email: AppSession.currentUserID ?? AppSession.guestUserID) {
+                    shouldShowInterestSelection = false
+                }
                     .onAppear {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
                             if granted {

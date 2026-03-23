@@ -43,10 +43,18 @@ struct CardView: View, Identifiable {
                 .clipped()
                 .overlay(
                     LinearGradient(
-                        colors: [.clear, Color.black.opacity(0.12), Color.black.opacity(0.78)],
+                        colors: [
+                            AppStyle.articleOverlayTop,
+                            AppStyle.articleOverlayMiddle,
+                            AppStyle.articleOverlayBottom
+                        ],
                         startPoint: .top,
                         endPoint: .bottom
                     )
+                )
+                .overlay(
+                    Rectangle()
+                        .fill(Color.black.opacity(0.14))
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 30, style: .continuous)
@@ -72,13 +80,13 @@ struct CardView: View, Identifiable {
 
                     VStack(alignment: .leading, spacing: 10) {
                         Text(article.title)
-                            .font(.system(size: 28, weight: .bold, design: .rounded))
+                            .font(.system(size: 30, weight: .bold, design: .rounded))
                             .foregroundStyle(AppStyle.heroTextPrimary)
                             .lineLimit(4)
 
                         if !article.descriptionText.isEmpty {
                             Text(article.descriptionText)
-                                .font(.system(.subheadline, design: .rounded))
+                                .font(.system(size: 15, weight: .medium, design: .rounded))
                                 .foregroundStyle(AppStyle.heroTextSecondary)
                                 .lineLimit(3)
                         }

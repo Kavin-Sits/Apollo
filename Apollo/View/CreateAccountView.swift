@@ -139,7 +139,7 @@ struct DobLocationOccupationView: View {
                                 try await createUser()
                                 await MainActor.run {
                                     authViewModel.logIn()
-                                    userSelectedInterests = false
+                                    userSelectedInterests = true
                                     dismiss()
                                 }
                             } catch {

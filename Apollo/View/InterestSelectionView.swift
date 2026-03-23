@@ -8,6 +8,7 @@
 import SwiftUI
 struct InterestSelectionView: View {
     var userEmail: String
+    var onComplete: (() -> Void)?
     @State private var selectedOptions: Set<String> = []
     @State private var updateOptions: Bool = false
     @State private var alertMessage: String = ""
@@ -15,8 +16,9 @@ struct InterestSelectionView: View {
     @EnvironmentObject var nightModeManager: NightModeManager
     let haptics = UINotificationFeedbackGenerator()
 
-    init(email: String) {
+    init(email: String, onComplete: (() -> Void)? = nil) {
         userEmail = email
+        self.onComplete = onComplete
     }
     
     let optionNames = [
@@ -73,7 +75,11 @@ struct InterestSelectionView: View {
                         do {
                             try await storeInterestSelections()
                             await MainActor.run {
-                                updateOptions = true
+                                if let onComplete {
+                                    onComplete()
+                                } else {
+                                    updateOptions = true
+                                }
                             }
                         } catch {
                             await MainActor.run {

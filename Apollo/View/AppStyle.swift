@@ -26,6 +26,9 @@ enum AppStyle {
     static let heroTextSecondary = Color.white.opacity(0.76)
     static let panelFill = Color.white.opacity(0.56)
     static let panelStroke = Color.black.opacity(0.08)
+    static let articleOverlayTop = Color.black.opacity(0.18)
+    static let articleOverlayMiddle = Color.black.opacity(0.42)
+    static let articleOverlayBottom = Color.black.opacity(0.88)
 
     static var backgroundGradient: LinearGradient {
         LinearGradient(

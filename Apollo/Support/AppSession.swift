@@ -8,16 +8,17 @@ import UIKit
 
 extension Notification.Name {
     static let profilePhotoDidChange = Notification.Name("apollo.profilePhotoDidChange")
+    static let interestsDidChange = Notification.Name("apollo.interestsDidChange")
 }
 
 enum AppSession {
     static let guestUserID = "guest@apollo.local"
 
     private static let guestModeKey = "apollo.guestMode"
-    private static let guestInterestsKey = "apollo.guestInterests"
-    private static let guestSeenArticlesKey = "apollo.guestSeenArticles"
-    private static let guestLikedArticlesKey = "apollo.guestLikedArticles"
-    private static let guestSavedArticlesKey = "apollo.guestSavedArticles"
+    private static let interestsKeyPrefix = "apollo.interests."
+    private static let seenArticlesKeyPrefix = "apollo.seenArticles."
+    private static let likedArticlesKeyPrefix = "apollo.likedArticles."
+    private static let savedArticlesKeyPrefix = "apollo.savedArticles."
     private static let locationKeyPrefix = "apollo.location."
     private static let profilePhotoKeyPrefix = "apollo.profilePhoto."
 
@@ -90,11 +91,11 @@ enum AppSession {
             do {
                 return try await SupabaseService.shared.fetchInterests()
             } catch {
-                return UserDefaults.standard.stringArray(forKey: guestInterestsKey) ?? []
+                return UserDefaults.standard.stringArray(forKey: interestsStorageKey) ?? []
             }
         }
 
-        return UserDefaults.standard.stringArray(forKey: guestInterestsKey) ?? []
+        return UserDefaults.standard.stringArray(forKey: interestsStorageKey) ?? []
     }
 
     static func saveInterests(_ interests: [String], for userID: String? = nil) async throws {
@@ -103,12 +104,14 @@ enum AppSession {
         if hasAuthenticatedUser {
             try await SupabaseService.shared.replaceInterests(normalized)
         } else {
-            UserDefaults.standard.set(normalized, forKey: guestInterestsKey)
+            UserDefaults.standard.set(normalized, forKey: interestsStorageKey)
         }
+
+        NotificationCenter.default.post(name: .interestsDidChange, object: nil)
     }
 
     static func loadSeenArticleIDs() async -> Set<String> {
-        let localSeen = Set(UserDefaults.standard.stringArray(forKey: guestSeenArticlesKey) ?? [])
+        let localSeen = Set(UserDefaults.standard.stringArray(forKey: seenArticlesStorageKey) ?? [])
 
         guard hasAuthenticatedUser else {
             return localSeen
@@ -124,18 +127,18 @@ enum AppSession {
 
     static func markDismissed(article: Article) {
         recordFeedback(for: article, actions: [.disliked, .seen])
-        updateLocalStringArray(forKey: guestSeenArticlesKey, appending: article.id)
+        updateLocalStringArray(forKey: seenArticlesStorageKey, appending: article.id)
     }
 
     static func markLiked(article: Article) {
         recordFeedback(for: article, actions: [.liked, .seen])
-        updateLocalStringArray(forKey: guestLikedArticlesKey, appending: article.id)
-        updateLocalStringArray(forKey: guestSeenArticlesKey, appending: article.id)
+        updateLocalStringArray(forKey: likedArticlesStorageKey, appending: article.id)
+        updateLocalStringArray(forKey: seenArticlesStorageKey, appending: article.id)
     }
 
     static func markOpened(article: Article) {
         recordFeedback(for: article, actions: [.opened])
-        updateLocalStringArray(forKey: guestSeenArticlesKey, appending: article.id)
+        updateLocalStringArray(forKey: seenArticlesStorageKey, appending: article.id)
     }
 
     static func saveArticle(_ article: Article, completion: @escaping (Bool) -> Void = { _ in }) {
@@ -143,10 +146,10 @@ enum AppSession {
             Task {
                 do {
                     try await SupabaseService.shared.saveArticle(article)
-                    try? await SupabaseService.shared.recordArticleFeedback(articleURL: article.url, action: .saved)
+                    try? await SupabaseService.shared.recordArticleFeedback(articleURL: article.url, actions: [.saved])
                     completion(true)
                 } catch {
-                    saveGuestArticle(
+                    saveLocalArticle(
                         SavedArticle(
                             title: article.title,
                             url: article.url,
@@ -160,7 +163,7 @@ enum AppSession {
             return
         }
 
-        saveGuestArticle(
+        saveLocalArticle(
             SavedArticle(
                 title: article.title,
                 url: article.url,
@@ -176,11 +179,11 @@ enum AppSession {
             do {
                 return try await SupabaseService.shared.fetchSavedArticles()
             } catch {
-                return loadGuestSavedArticles()
+                return loadLocalSavedArticles()
             }
         }
 
-        return loadGuestSavedArticles()
+        return loadLocalSavedArticles()
     }
 
     static func saveLocation(_ location: String) {
@@ -231,8 +234,8 @@ enum AppSession {
         }
     }
 
-    private static func saveGuestArticle(_ article: SavedArticle) {
-        var articles = loadGuestSavedArticles()
+    private static func saveLocalArticle(_ article: SavedArticle) {
+        var articles = loadLocalSavedArticles()
         articles.removeAll { $0.url == article.url }
         articles.insert(article, at: 0)
 
@@ -240,11 +243,11 @@ enum AppSession {
             return
         }
 
-        UserDefaults.standard.set(encoded, forKey: guestSavedArticlesKey)
+        UserDefaults.standard.set(encoded, forKey: savedArticlesStorageKey)
     }
 
-    private static func loadGuestSavedArticles() -> [SavedArticle] {
-        guard let data = UserDefaults.standard.data(forKey: guestSavedArticlesKey),
+    private static func loadLocalSavedArticles() -> [SavedArticle] {
+        guard let data = UserDefaults.standard.data(forKey: savedArticlesStorageKey),
               let articles = try? JSONDecoder().decode([SavedArticle].self, from: data) else {
             return []
         }
@@ -258,6 +261,26 @@ enum AppSession {
             values.append(value)
         }
         UserDefaults.standard.set(values, forKey: key)
+    }
+
+    private static var storageUserKey: String {
+        currentUserID ?? guestUserID
+    }
+
+    private static var interestsStorageKey: String {
+        interestsKeyPrefix + storageUserKey
+    }
+
+    private static var seenArticlesStorageKey: String {
+        seenArticlesKeyPrefix + storageUserKey
+    }
+
+    private static var likedArticlesStorageKey: String {
+        likedArticlesKeyPrefix + storageUserKey
+    }
+
+    private static var savedArticlesStorageKey: String {
+        savedArticlesKeyPrefix + storageUserKey
     }
 
     private static func ensureProfileExists() async throws {
@@ -276,12 +299,11 @@ enum AppSession {
         }
 
         Task {
-            for action in actions {
-                do {
-                    try await SupabaseService.shared.recordArticleFeedback(articleURL: article.url, action: action)
-                } catch {
-                    print("Failed to record article feedback (\(action.rawValue)): \(error.localizedDescription)")
-                }
+            do {
+                try await SupabaseService.shared.recordArticleFeedback(articleURL: article.url, actions: actions)
+            } catch {
+                let actionSummary = actions.map(\.rawValue).joined(separator: ",")
+                print("Failed to record article feedback (\(actionSummary)): \(error.localizedDescription)")
             }
         }
     }

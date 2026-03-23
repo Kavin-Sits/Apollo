@@ -425,7 +425,7 @@ final class SupabaseService {
         ) as [[String: String]]
     }
 
-    func recordArticleFeedback(articleURL: String, action: ArticleFeedbackAction) async throws {
+    func recordArticleFeedback(articleURL: String, actions: [ArticleFeedbackAction]) async throws {
         struct ArticleFeedbackPayload: Encodable {
             let userID: String
             let articleURL: String
@@ -442,19 +442,20 @@ final class SupabaseService {
             throw SupabaseServiceError.unauthenticated
         }
 
-        let payload = [
+        let uniqueActions = Array(Set(actions))
+        let payload = uniqueActions.map { action in
             ArticleFeedbackPayload(
                 userID: userID,
                 articleURL: articleURL,
                 action: action.rawValue
             )
-        ]
+        }
 
         _ = try await sendRestRequest(
-            path: "/rest/v1/article_feedback",
+            path: "/rest/v1/article_feedback?on_conflict=user_id,article_url,action",
             method: "POST",
             body: payload,
-            extraHeaders: ["Prefer": "return=representation"]
+            extraHeaders: ["Prefer": "resolution=merge-duplicates,return=representation"]
         ) as [[String: String]]
     }
 

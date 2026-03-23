@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SwipeableCardView: View {
-
+    let refreshToken: UUID
     @StateObject var articleNewsVM = ArticleNewsViewModel()
     @EnvironmentObject var activeArticleVM: ActiveArticleViewModel
     @EnvironmentObject var nightModeManager: NightModeManager
@@ -16,11 +16,12 @@ struct SwipeableCardView: View {
     @State private var displayedArticles: [Article] = []
     @State private var selectedArticle: Article?
     @State private var dragOffset: CGSize = .zero
+    @State private var dragRotation: Double = 0
 
     let haptics = UINotificationFeedbackGenerator()
     @ObservedObject private var soundEffectManager = SoundEffectManager()
 
-    private let swipeThreshold: CGFloat = 110
+    private let swipeThreshold: CGFloat = 96
     private let maxVisibleCards = 3
 
     var body: some View {
@@ -39,9 +40,9 @@ struct SwipeableCardView: View {
                                 .scaleEffect(cardScale(for: offset))
                                 .offset(
                                     x: isTopCard ? dragOffset.width : 0,
-                                    y: isTopCard ? dragOffset.height : CGFloat(offset * 14)
+                                    y: isTopCard ? dragOffset.height : CGFloat(offset * 18)
                                 )
-                                .rotationEffect(.degrees(isTopCard ? Double(dragOffset.width / 18) : 0))
+                                .rotationEffect(.degrees(isTopCard ? dragRotation : 0))
                                 .overlay(alignment: .top) {
                                     swipeFeedback(for: article)
                                         .opacity(isTopCard ? feedbackOpacity : 0)
@@ -55,19 +56,25 @@ struct SwipeableCardView: View {
                                     AppSession.markOpened(article: article)
                                 }
                                 .gesture(dragGesture, including: isTopCard ? .all : .subviews)
-                                .animation(.spring(response: 0.32, dampingFraction: 0.82), value: dragOffset)
-                                .animation(.spring(response: 0.32, dampingFraction: 0.82), value: displayedArticles)
+                                .animation(.interactiveSpring(response: 0.26, dampingFraction: 0.84, blendDuration: 0.18), value: dragOffset)
+                                .animation(.interactiveSpring(response: 0.34, dampingFraction: 0.84, blendDuration: 0.2), value: displayedArticles)
                         }
                     }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxHeight: .infinity)
         .sheet(item: $selectedArticle) {
             SafariView(url: $0.articleURL)
         }
         .task {
             await loadDisplayedArticles()
+        }
+        .onChange(of: refreshToken) { _ in
+            Task {
+                await loadDisplayedArticles()
+            }
         }
     }
 
@@ -75,6 +82,7 @@ struct SwipeableCardView: View {
         DragGesture()
             .onChanged { value in
                 dragOffset = value.translation
+                dragRotation = Double(value.translation.width / 18)
             }
             .onEnded { value in
                 let horizontalMovement = value.translation.width
@@ -85,7 +93,7 @@ struct SwipeableCardView: View {
                 } else if horizontalMovement > swipeThreshold || predictedMovement > swipeThreshold {
                     completeSwipe(liked: true)
                 } else {
-                    dragOffset = .zero
+                    resetDragState()
                 }
             }
     }
@@ -97,9 +105,9 @@ struct SwipeableCardView: View {
     @ViewBuilder
     private func swipeFeedback(for article: Article) -> some View {
         if dragOffset.width > 0 {
-            swipeBadge(text: "Save", systemName: "heart.fill", fill: Color.green.opacity(0.92))
+            swipeBadge(systemName: "heart.fill", fill: Color.green.opacity(0.92))
         } else if dragOffset.width < 0 {
-            swipeBadge(text: "Skip", systemName: "xmark", fill: Color.red.opacity(0.9))
+            swipeBadge(systemName: "xmark", fill: Color.red.opacity(0.9))
         } else {
             Text(article.source.name)
                 .font(.system(size: 12, weight: .semibold, design: .rounded))
@@ -107,17 +115,18 @@ struct SwipeableCardView: View {
         }
     }
 
-    private func swipeBadge(text: String, systemName: String, fill: Color) -> some View {
-        Label(text, systemImage: systemName)
-            .font(.system(.headline, design: .rounded).weight(.bold))
+    private func swipeBadge(systemName: String, fill: Color) -> some View {
+        Image(systemName: systemName)
+            .font(.system(size: 22, weight: .bold))
             .foregroundStyle(.white)
-            .padding(.horizontal, 18)
-            .padding(.vertical, 10)
-            .background(Capsule().fill(fill))
+            .frame(width: 54, height: 54)
+            .background(Circle().fill(fill))
+            .overlay(Circle().stroke(Color.white.opacity(0.22), lineWidth: 1))
+            .shadow(color: fill.opacity(0.28), radius: 12, x: 0, y: 6)
     }
 
     private func cardScale(for offset: Int) -> CGFloat {
-        1 - CGFloat(offset) * 0.05
+        1 - CGFloat(offset) * 0.04
     }
 
     private func completeSwipe(liked: Bool) {
@@ -135,16 +144,22 @@ struct SwipeableCardView: View {
             addDismissedArticleToUser(article)
         }
 
-        withAnimation(.spring(response: 0.28, dampingFraction: 0.78)) {
-            dragOffset = CGSize(width: liked ? 500 : -500, height: 30)
+        withAnimation(.interactiveSpring(response: 0.22, dampingFraction: 0.8, blendDuration: 0.16)) {
+            dragOffset = CGSize(width: liked ? 560 : -560, height: 22)
+            dragRotation = liked ? 22 : -22
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
             guard !displayedArticles.isEmpty else { return }
             displayedArticles.removeFirst()
-            dragOffset = .zero
+            resetDragState()
             activeArticleVM.activeArticle = displayedArticles.first
         }
+    }
+
+    private func resetDragState() {
+        dragOffset = .zero
+        dragRotation = 0
     }
 
     private func emptyState(height: CGFloat) -> some View {
@@ -235,5 +250,5 @@ struct SwipeableCardView: View {
 }
 
 #Preview {
-    SwipeableCardView()
+    SwipeableCardView(refreshToken: UUID())
 }

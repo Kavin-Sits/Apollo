@@ -14,6 +14,7 @@ struct TestHomeView: View {
     @State var showAlert:Bool = false
     @State var showGuide:Bool = false
     @State var showInfo:Bool = false
+    @State private var deckRefreshToken = UUID()
     @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
@@ -22,7 +23,7 @@ struct TestHomeView: View {
             
             Spacer()
             
-            SwipeableCardView()
+            SwipeableCardView(refreshToken: deckRefreshToken)
             
             Spacer()
             

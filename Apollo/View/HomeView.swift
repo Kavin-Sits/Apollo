@@ -15,27 +15,33 @@ struct HomeView: View {
     @State var showAlert:Bool = false
     @State var showGuide:Bool = false
     @State var showInfo:Bool = false
+    @State private var deckRefreshToken = UUID()
     @EnvironmentObject var nightModeManager: NightModeManager
     
     var body: some View {
         ZStack {
             AppBackground()
 
-            VStack(spacing: 22) {
+            VStack(spacing: 14) {
                 HeaderView(showSettingsView: $showSettings)
                     .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
 
-                SwipeableCardView()
+                SwipeableCardView(refreshToken: deckRefreshToken)
                     .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
                     .environmentObject(activeArticleVM)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .onReceive(NotificationCenter.default.publisher(for: .interestsDidChange)) { _ in
+                        activeArticleVM.activeArticle = nil
+                        deckRefreshToken = UUID()
+                    }
 
                 FooterView(showBookingAlert: $showAlert, showGuideView: $showGuide , showInfoView: $showInfo)
                     .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)
                     .environmentObject(activeArticleVM)
             }
             .padding(.horizontal, 20)
-            .padding(.top, 14)
-            .padding(.bottom, 24)
+            .padding(.top, 10)
+            .padding(.bottom, 18)
         }
         .alert(isPresented: $showAlert, content: {
             Alert(title: Text("SUCCESS"),
