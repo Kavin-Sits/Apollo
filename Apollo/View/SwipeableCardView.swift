@@ -9,11 +9,13 @@ import SwiftUI
 
 struct SwipeableCardView: View {
     let refreshToken: UUID
-    @StateObject var articleNewsVM = ArticleNewsViewModel()
     @EnvironmentObject var activeArticleVM: ActiveArticleViewModel
     @EnvironmentObject var nightModeManager: NightModeManager
 
-    @State private var displayedArticles: [Article] = []
+    @State private var displayedArticles: [RecommendedArticle] = []
+    @State private var interests: [String] = []
+    @State private var recommendationState = RecommendationState(profile: nil, topicPreferences: [])
+    @State private var profile: SupabaseProfile?
     @State private var selectedArticle: Article?
     @State private var dragOffset: CGSize = .zero
     @State private var dragRotation: Double = 0
@@ -31,10 +33,11 @@ struct SwipeableCardView: View {
                     emptyState(height: geometry.size.height)
                 } else {
                     ZStack {
-                        ForEach(Array(displayedArticles.prefix(maxVisibleCards).enumerated()), id: \.element.id) { offset, article in
+                        ForEach(Array(displayedArticles.prefix(maxVisibleCards).enumerated()), id: \.element.id) { offset, recommendation in
                             let isTopCard = offset == 0
+                            let article = recommendation.article
 
-                            CardView(article: article)
+                            CardView(article: article, recommendationExplanation: recommendation.explanation)
                                 .environmentObject(nightModeManager)
                                 .frame(height: geometry.size.height)
                                 .scaleEffect(cardScale(for: offset))
@@ -53,7 +56,12 @@ struct SwipeableCardView: View {
                                 .onTapGesture {
                                     selectedArticle = article
                                     activeArticleVM.activeArticle = article
-                                    AppSession.markOpened(article: article)
+                                    recommendationState = AppSession.markOpened(
+                                        article: article,
+                                        currentState: recommendationState,
+                                        profile: profile
+                                    ) ?? recommendationState
+                                    rerankDisplayedArticles()
                                 }
                                 .gesture(dragGesture, including: isTopCard ? .all : .subviews)
                                 .animation(.interactiveSpring(response: 0.26, dampingFraction: 0.84, blendDuration: 0.18), value: dragOffset)
@@ -71,7 +79,7 @@ struct SwipeableCardView: View {
         .task {
             await loadDisplayedArticles()
         }
-        .onChange(of: refreshToken) { _ in
+        .onChange(of: refreshToken) {
             Task {
                 await loadDisplayedArticles()
             }
@@ -136,7 +144,8 @@ struct SwipeableCardView: View {
 
         haptics.notificationOccurred(.success)
 
-        guard let article = displayedArticles.first else { return }
+        guard let topRecommendation = displayedArticles.first else { return }
+        let article = topRecommendation.article
 
         if liked {
             addLikedArticleToUser(article)
@@ -152,8 +161,9 @@ struct SwipeableCardView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
             guard !displayedArticles.isEmpty else { return }
             displayedArticles.removeFirst()
+            rerankDisplayedArticles()
             resetDragState()
-            activeArticleVM.activeArticle = displayedArticles.first
+            activeArticleVM.activeArticle = displayedArticles.first?.article
         }
     }
 
@@ -190,62 +200,50 @@ struct SwipeableCardView: View {
     }
 
     private func addDismissedArticleToUser(_ article: Article) {
-        AppSession.markDismissed(article: article)
+        recommendationState = AppSession.markDismissed(
+            article: article,
+            currentState: recommendationState,
+            profile: profile
+        ) ?? recommendationState
     }
 
     private func addLikedArticleToUser(_ article: Article) {
-        AppSession.markLiked(article: article)
+        recommendationState = AppSession.markLiked(
+            article: article,
+            currentState: recommendationState,
+            profile: profile
+        ) ?? recommendationState
     }
 
     @MainActor
     private func loadDisplayedArticles() async {
         displayedArticles = []
 
-        let interests = await AppSession.loadInterests()
+        interests = await AppSession.loadInterests()
+        profile = await AppSession.loadProfile()
+        recommendationState = await AppSession.loadRecommendationState(interests: interests, profile: profile)
         let seenArticles = await AppSession.loadSeenArticleIDs()
-        let categories = mappedCategories(from: interests)
-        let quantityToAdd = max(2, 12 / max(categories.count, 1))
-
-        for category in categories {
-            articleNewsVM.fetchTaskToken = FetchTaskToken(category: category, token: Date())
-            await articleNewsVM.loadArticles()
-
-            guard case let .success(articles) = articleNewsVM.phase else {
-                continue
-            }
-
-            let filteredArticles = articles.filter { article in
-                article.url != "https://removed.com" &&
-                !seenArticles.contains(article.id) &&
-                !displayedArticles.contains(where: { $0.url == article.url })
-            }
-
-            displayedArticles.append(contentsOf: Array(filteredArticles.prefix(quantityToAdd)))
-        }
-
-        displayedArticles.shuffle()
-        activeArticleVM.activeArticle = displayedArticles.first
+        let context = RecommendationRefreshContext(
+            interests: interests,
+            profile: profile,
+            recommendationState: recommendationState,
+            seenArticleIDs: seenArticles
+        )
+        displayedArticles = await RecommendationService.shared.loadArticles(for: context)
+        activeArticleVM.activeArticle = displayedArticles.first?.article
     }
 
-    private func mappedCategories(from interests: [String]) -> [Category] {
-        let categories = interests.map { interest in
-            switch interest {
-            case "Sports":
-                return Category.sports
-            case "Business":
-                return Category.business
-            case "Technology":
-                return Category.technology
-            case "Health and Medicine":
-                return Category.health
-            case "Entertainment":
-                return Category.entertainment
-            default:
-                return Category.general
-            }
-        }
-
-        return categories.isEmpty ? [.general] : Array(Set(categories))
+    private func rerankDisplayedArticles() {
+        let context = RecommendationRefreshContext(
+            interests: interests,
+            profile: profile,
+            recommendationState: recommendationState,
+            seenArticleIDs: []
+        )
+        displayedArticles = RecommendationService.shared.rerankExistingArticles(
+            displayedArticles.map(\.article),
+            context: context
+        )
     }
 }
 

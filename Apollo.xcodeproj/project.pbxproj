@@ -15,6 +15,7 @@
 		20C102302BFEA10000A0AA01 /* AppSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C1022F2BFEA10000A0AA01 /* AppSession.swift */; };
 		20C102332BFF110000A0AA01 /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C102322BFF110000A0AA01 /* AppStyle.swift */; };
 		20E102332C00000000A0AA01 /* SupabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E102322C00000000A0AA01 /* SupabaseService.swift */; };
+		20E102352C00000100A0AA01 /* RecommendationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E102342C00000100A0AA01 /* RecommendationService.swift */; };
 		8A2B78F32AFB140E00765A4A /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */; };
 		8A2B78F82AFB24FC00765A4A /* CardTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F72AFB24FC00765A4A /* CardTransition.swift */; };
 		8A2B78FA2AFB254000765A4A /* SymbolModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2B78F92AFB254000765A4A /* SymbolModifier.swift */; };
@@ -122,6 +123,7 @@
 		20C1022F2BFEA10000A0AA01 /* AppSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSession.swift; sourceTree = "<group>"; };
 		20C102322BFF110000A0AA01 /* AppStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
 		20E102322C00000000A0AA01 /* SupabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseService.swift; sourceTree = "<group>"; };
+		20E102342C00000100A0AA01 /* RecommendationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationService.swift; sourceTree = "<group>"; };
 		8A2B78F22AFB140E00765A4A /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
 		8A2B78F72AFB24FC00765A4A /* CardTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTransition.swift; sourceTree = "<group>"; };
 		8A2B78F92AFB254000765A4A /* SymbolModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolModifier.swift; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 			isa = PBXGroup;
 			children = (
 				20C1022F2BFEA10000A0AA01 /* AppSession.swift */,
+				20E102342C00000100A0AA01 /* RecommendationService.swift */,
 				20E102322C00000000A0AA01 /* SupabaseService.swift */,
 			);
 			path = Support;
@@ -567,6 +570,7 @@
 				F0D733002ADCFE2F0088DDAB /* LoginView.swift in Sources */,
 				20C102302BFEA10000A0AA01 /* AppSession.swift in Sources */,
 				20C102332BFF110000A0AA01 /* AppStyle.swift in Sources */,
+				20E102352C00000100A0AA01 /* RecommendationService.swift in Sources */,
 				20E102332C00000000A0AA01 /* SupabaseService.swift in Sources */,
 				202117DF2ADC8BD70083BC0B /* MainSettingsView.swift in Sources */,
 				8A674DB82AD78C1C00A63CC1 /* RetryView.swift in Sources */,

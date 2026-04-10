@@ -81,6 +81,50 @@ private struct UserInterestsRow: Codable {
     }
 }
 
+private struct RecommendationProfileRow: Codable {
+    let userID: String
+    let ageBucket: String?
+    let locationCountry: String?
+    let occupationKeywords: [String]
+    let positiveQueryTerms: [String]
+    let negativeQueryTerms: [String]
+    let lastBackfilledAt: Date?
+    let updatedAt: Date?
+
+    enum CodingKeys: String, CodingKey {
+        case userID = "user_id"
+        case ageBucket = "age_bucket"
+        case locationCountry = "location_country"
+        case occupationKeywords = "occupation_keywords"
+        case positiveQueryTerms = "positive_query_terms"
+        case negativeQueryTerms = "negative_query_terms"
+        case lastBackfilledAt = "last_backfilled_at"
+        case updatedAt = "updated_at"
+    }
+}
+
+private struct TopicPreferenceRow: Codable {
+    let userID: String
+    let topic: String
+    let score: Double
+    let positiveInteractions: Int
+    let negativeInteractions: Int
+    let lastPositiveAt: Date?
+    let lastNegativeAt: Date?
+    let updatedAt: Date?
+
+    enum CodingKeys: String, CodingKey {
+        case userID = "user_id"
+        case topic
+        case score
+        case positiveInteractions = "positive_interactions"
+        case negativeInteractions = "negative_interactions"
+        case lastPositiveAt = "last_positive_at"
+        case lastNegativeAt = "last_negative_at"
+        case updatedAt = "updated_at"
+    }
+}
+
 enum ArticleFeedbackAction: String, CaseIterable {
     case seen
     case liked
@@ -123,7 +167,10 @@ final class SupabaseService {
     private let jsonEncoder = JSONEncoder()
     private let jsonDecoder = JSONDecoder()
 
-    private init() {}
+    private init() {
+        jsonEncoder.dateEncodingStrategy = .iso8601
+        jsonDecoder.dateDecodingStrategy = .iso8601
+    }
 
     private(set) var session: SupabaseSession? {
         get {
@@ -457,6 +504,108 @@ final class SupabaseService {
             body: payload,
             extraHeaders: ["Prefer": "resolution=merge-duplicates,return=representation"]
         ) as [[String: String]]
+    }
+
+    func fetchRecommendationProfile() async throws -> RecommendationProfile? {
+        guard let userID = currentUserID else {
+            throw SupabaseServiceError.unauthenticated
+        }
+
+        let rows: [RecommendationProfileRow] = try await sendRestRequest(
+            path: "/rest/v1/user_recommendation_profiles?user_id=eq.\(userID)&select=*",
+            method: "GET",
+            body: nil as String?
+        )
+
+        guard let row = rows.first else {
+            return nil
+        }
+
+        return RecommendationProfile(
+            userID: row.userID,
+            ageBucket: row.ageBucket,
+            locationCountry: row.locationCountry,
+            occupationKeywords: row.occupationKeywords,
+            positiveQueryTerms: row.positiveQueryTerms,
+            negativeQueryTerms: row.negativeQueryTerms,
+            lastBackfilledAt: row.lastBackfilledAt,
+            updatedAt: row.updatedAt
+        )
+    }
+
+    func fetchTopicPreferences() async throws -> [TopicPreference] {
+        guard let userID = currentUserID else {
+            throw SupabaseServiceError.unauthenticated
+        }
+
+        let rows: [TopicPreferenceRow] = try await sendRestRequest(
+            path: "/rest/v1/user_topic_preferences?user_id=eq.\(userID)&select=*&order=score.desc",
+            method: "GET",
+            body: nil as String?
+        )
+
+        return rows.map {
+            TopicPreference(
+                userID: $0.userID,
+                topic: $0.topic,
+                score: $0.score,
+                positiveInteractions: $0.positiveInteractions,
+                negativeInteractions: $0.negativeInteractions,
+                lastPositiveAt: $0.lastPositiveAt,
+                lastNegativeAt: $0.lastNegativeAt,
+                updatedAt: $0.updatedAt
+            )
+        }
+    }
+
+    func upsertRecommendationState(_ state: RecommendationState) async throws {
+        guard let userID = currentUserID else {
+            throw SupabaseServiceError.unauthenticated
+        }
+
+        if let profile = state.profile {
+            let profilePayload = [
+                RecommendationProfileRow(
+                    userID: userID,
+                    ageBucket: profile.ageBucket,
+                    locationCountry: profile.locationCountry,
+                    occupationKeywords: profile.occupationKeywords,
+                    positiveQueryTerms: profile.positiveQueryTerms,
+                    negativeQueryTerms: profile.negativeQueryTerms,
+                    lastBackfilledAt: profile.lastBackfilledAt,
+                    updatedAt: profile.updatedAt ?? Date()
+                )
+            ]
+
+            _ = try await sendRestRequest(
+                path: "/rest/v1/user_recommendation_profiles?on_conflict=user_id",
+                method: "POST",
+                body: profilePayload,
+                extraHeaders: ["Prefer": "resolution=merge-duplicates,return=representation"]
+            ) as [RecommendationProfileRow]
+        }
+
+        let topicPayload = state.topicPreferences.prefix(40).map { preference in
+            TopicPreferenceRow(
+                userID: userID,
+                topic: preference.topic,
+                score: preference.score,
+                positiveInteractions: preference.positiveInteractions,
+                negativeInteractions: preference.negativeInteractions,
+                lastPositiveAt: preference.lastPositiveAt,
+                lastNegativeAt: preference.lastNegativeAt,
+                updatedAt: preference.updatedAt ?? Date()
+            )
+        }
+
+        if !topicPayload.isEmpty {
+            _ = try await sendRestRequest(
+                path: "/rest/v1/user_topic_preferences?on_conflict=user_id,topic",
+                method: "POST",
+                body: topicPayload,
+                extraHeaders: ["Prefer": "resolution=merge-duplicates,return=representation"]
+            ) as [TopicPreferenceRow]
+        }
     }
 
     private var publishableKey: String? {

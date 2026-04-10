@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct CardView: View, Identifiable {
-    
     let id = UUID()
-    
     let article: Article
-    
+    let recommendationExplanation: String?
+
     @EnvironmentObject var nightModeManager: NightModeManager
+    @State private var isShowingRecommendationReason = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -97,6 +97,34 @@ struct CardView: View, Identifiable {
                             .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundStyle(AppStyle.heroTextPrimary.opacity(0.9))
                     }
+
+                    if let recommendationExplanation, !recommendationExplanation.isEmpty {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Button {
+                                isShowingRecommendationReason.toggle()
+                            } label: {
+                                Label("Why this story?", systemImage: "sparkles")
+                                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(Capsule().fill(Color.white.opacity(0.14)))
+                            }
+                            .buttonStyle(.plain)
+
+                            if isShowingRecommendationReason {
+                                Text(recommendationExplanation)
+                                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                                    .foregroundStyle(AppStyle.heroTextSecondary)
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 10)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                            .fill(Color.black.opacity(0.28))
+                                    )
+                            }
+                        }
+                    }
                 }
                 .padding(22)
             }
@@ -108,5 +136,5 @@ struct CardView: View, Identifiable {
 }
 
 #Preview {
-    CardView(article: .previewData[0])
+    CardView(article: .previewData[0], recommendationExplanation: "Recommended because you engaged with technology and innovation stories.")
 }

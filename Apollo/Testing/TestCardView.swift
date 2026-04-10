@@ -46,7 +46,7 @@ struct TestCardView: View {
     var body: some View {
         ZStack {
             ForEach(displayedArticles.indices, id: \.self){ index in
-                CardView(article: displayedArticles[index])
+                CardView(article: displayedArticles[index], recommendationExplanation: nil)
                     .onTapGesture {
                         selectedArticle = displayedArticles[index]
                         activeArticleVM.activeArticle = displayedArticles[index]

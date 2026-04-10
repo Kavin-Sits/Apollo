@@ -65,6 +65,7 @@ struct MainSettingsView: View {
                                 HStack {
                                     Spacer()
                                     Button(action: {
+                                        AppSession.saveOccupation(occupationsList[selectedOccupationIndex])
                                         isPickerVisible.toggle()
                                     }) {
                                         Text("OK")

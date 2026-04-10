@@ -26,11 +26,23 @@ struct NewsAPI {
     }
     
     func fetch(from category: Category) async throws -> [Article] {
+        try await fetch(
+            using: NewsQueryPlan(
+                endpoint: .topHeadlines,
+                query: nil,
+                category: category,
+                country: "us",
+                pageSize: 20
+            )
+        )
+    }
+
+    func fetch(using plan: NewsQueryPlan) async throws -> [Article] {
         guard !apiKey.isEmpty else {
-            return fallbackArticles(for: category)
+            return fallbackArticles(for: plan.category ?? .general, matching: plan.query)
         }
 
-        let request = generateNewsRequest(from: category)
+        let request = generateNewsRequest(using: plan)
         do {
             let (data, response) = try await session.data(for: request)
         
@@ -51,7 +63,7 @@ struct NewsAPI {
                 throw generateError(description: "A server error occurred")
             }
         } catch {
-            return fallbackArticles(for: category)
+            return fallbackArticles(for: plan.category ?? .general, matching: plan.query)
         }
     }
     
@@ -59,31 +71,71 @@ struct NewsAPI {
         NSError(domain: "NewsAPI", code: code, userInfo: [NSLocalizedDescriptionKey: description])
     }
     
-    private func generateNewsRequest(from category: Category) -> URLRequest {
-        var components = URLComponents(string: "https://newsapi.org/v2/top-headlines")!
-        components.queryItems = [
+    private func generateNewsRequest(using plan: NewsQueryPlan) -> URLRequest {
+        let endpointPath = plan.endpoint == .everything ? "everything" : "top-headlines"
+        var components = URLComponents(string: "https://newsapi.org/v2/\(endpointPath)")!
+        var queryItems = [
             URLQueryItem(name: "language", value: "en"),
-            URLQueryItem(name: "country", value: "us"),
-            URLQueryItem(name: "category", value: category.rawValue),
-            URLQueryItem(name: "pageSize", value: "20")
+            URLQueryItem(name: "pageSize", value: "\(plan.pageSize)")
         ]
+
+        if let query = plan.query, !query.isEmpty {
+            queryItems.append(URLQueryItem(name: "q", value: query))
+        }
+
+        if let country = plan.country, plan.endpoint == .topHeadlines {
+            queryItems.append(URLQueryItem(name: "country", value: country))
+        }
+
+        if let category = plan.category {
+            queryItems.append(URLQueryItem(name: "category", value: category.rawValue))
+        }
+
+        if plan.endpoint == .everything {
+            queryItems.append(URLQueryItem(name: "sortBy", value: "publishedAt"))
+        }
+
+        components.queryItems = queryItems
 
         var request = URLRequest(url: components.url!)
         request.setValue(apiKey, forHTTPHeaderField: "X-Api-Key")
         return request
     }
 
-    private func fallbackArticles(for category: Category) -> [Article] {
+    private func fallbackArticles(for category: Category, matching query: String? = nil) -> [Article] {
         let bundledArticles = Article.previewData
 
-        guard category != .general else {
-            return bundledArticles
+        var filteredArticles = bundledArticles
+
+        if category != .general {
+            filteredArticles = filteredArticles.filter { article in
+                article.title.localizedCaseInsensitiveContains(category.text) ||
+                article.descriptionText.localizedCaseInsensitiveContains(category.text) ||
+                article.source.name.localizedCaseInsensitiveContains(category.text)
+            }
         }
 
-        let filteredArticles = bundledArticles.filter { article in
-            article.title.localizedCaseInsensitiveContains(category.text) ||
-            article.descriptionText.localizedCaseInsensitiveContains(category.text) ||
-            article.source.name.localizedCaseInsensitiveContains(category.text)
+        if let query, !query.isEmpty {
+            let terms = query
+                .replacingOccurrences(of: "\"", with: "")
+                .components(separatedBy: " OR ")
+                .filter { !$0.isEmpty }
+
+            let queryFiltered = filteredArticles.filter { article in
+                terms.contains { term in
+                    article.title.localizedCaseInsensitiveContains(term) ||
+                    article.descriptionText.localizedCaseInsensitiveContains(term) ||
+                    article.source.name.localizedCaseInsensitiveContains(term)
+                }
+            }
+
+            if !queryFiltered.isEmpty {
+                return queryFiltered
+            }
+        }
+
+        guard category != .general else {
+            return filteredArticles
         }
 
         return filteredArticles.isEmpty ? bundledArticles : filteredArticles

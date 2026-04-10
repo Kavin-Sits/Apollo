@@ -34,6 +34,10 @@ struct HomeView: View {
                         activeArticleVM.activeArticle = nil
                         deckRefreshToken = UUID()
                     }
+                    .onReceive(NotificationCenter.default.publisher(for: .recommendationSignalsDidChange)) { _ in
+                        activeArticleVM.activeArticle = nil
+                        deckRefreshToken = UUID()
+                    }
 
                 FooterView(showBookingAlert: $showAlert, showGuideView: $showGuide , showInfoView: $showInfo)
                     .preferredColorScheme(nightModeManager.isNightMode ? .dark : .light)

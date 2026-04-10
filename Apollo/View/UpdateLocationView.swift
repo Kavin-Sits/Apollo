@@ -79,7 +79,7 @@ class LocationPermission:NSObject, ObservableObject, CLLocationManagerDelegate {
         geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
             if let placemark = placemarks?.first {
                 self.placemark = placemark
-                AppSession.saveLocation(placemark.locality ?? "Unknown")
+                AppSession.saveLocation(placemark.country ?? placemark.locality ?? "Unknown")
             }
         }
     }
